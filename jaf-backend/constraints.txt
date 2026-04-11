@@ -1,0 +1,4 @@
+# Constraints file to prevent installation of deprecated pinecone plugins
+pinecone-plugin-inference==99999
+pinecone-plugin-assistant==99999
+pinecone-plugin-interface==99999 

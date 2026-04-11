@@ -1,0 +1,30 @@
+{
+  "httpMethod": "GET",
+  "path": "/health",
+  "queryStringParameters": {},
+  "headers": {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "User-Agent": "curl/7.68.0"
+  },
+  "body": null,
+  "isBase64Encoded": false,
+  "pathParameters": {
+    "proxy": "health"
+  },
+  "stageVariables": {},
+  "requestContext": {
+    "requestId": "test-request-id",
+    "stage": "Prod",
+    "resourceId": "test-resource-id",
+    "resourcePath": "/{proxy+}",
+    "httpMethod": "GET",
+    "apiId": "test-api-id",
+    "protocol": "HTTP/1.1",
+    "requestTime": "09/Apr/2015:12:34:56 +0000",
+    "requestTimeEpoch": 1428582896000,
+    "identity": {
+      "sourceIp": "127.0.0.1"
+    }
+  }
+} 

@@ -1,0 +1,49 @@
+# SAM configuration file
+version = 0.1
+
+[default]
+[default.global]
+[default.global.parameters]
+stack_name = "jaf-backend-v2"
+region = "us-east-1"
+confirm_changeset = true
+resolve_s3 = true
+s3_prefix = "jaf-backend-v2"
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = []
+
+[default.build]
+[default.build.parameters]
+cached = true
+parallel = true
+
+[default.deploy]
+[default.deploy.parameters]
+image_repositories = []
+disable_rollback = true
+# SECURITY: Never hardcode API keys here! 
+# API keys will be prompted during guided deployment or passed via CLI parameters
+# For automated deployments, use AWS Systems Manager Parameter Store or AWS Secrets Manager
+parameter_overrides = "PineconeEnvironment=\"us-east-1\" PineconeIndexName=\"jaf-vectordb\" PineconeNamespace=\"default\""
+
+[default.package]
+[default.package.parameters]
+resolve_s3 = true
+
+[default.sync]
+[default.sync.parameters]
+watch = true
+
+[default.local_start_api]
+[default.local_start_api.parameters]
+warm_containers = "EAGER"
+# For local development, you can pass environment variables via parameter overrides
+# Set real values locally via env/CLI; do not commit secrets (see README or AWS docs).
+parameter_overrides = "OpenAIApiKey=\"\" PineconeApiKey=\"\" PineconeEnvironment=\"us-east-1\" PineconeIndexName=\"jaf-vectordb\" PineconeNamespace=\"default\" LangsmithApiKey=\"\""
+
+[default.local_start_lambda]
+[default.local_start_lambda.parameters]
+warm_containers = "EAGER"
+# For local development, you can pass environment variables via parameter overrides  
+parameter_overrides = "OpenAIApiKey=\"\" PineconeApiKey=\"\" PineconeEnvironment=\"us-east-1\" PineconeIndexName=\"jaf-vectordb\" PineconeNamespace=\"default\" LangsmithApiKey=\"\""

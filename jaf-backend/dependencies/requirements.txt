@@ -1,0 +1,32 @@
+# Lambda-optimized requirements - reduced package size
+mangum==0.17.0
+
+# Core FastAPI dependencies (lightweight)
+fastapi==0.115.5
+pydantic==2.10.2
+pydantic_settings==2.6.1
+python-dotenv==1.0.1
+
+# Essential web handling
+python-multipart==0.0.9
+
+# Minimal Langchain ecosystem (only what we need)
+langchain-core==0.3.21
+langchain-pinecone==0.2.0
+langchain-openai==0.2.10
+# Note: Using minimal langchain components instead of full langchain package to reduce size
+
+# OpenAI (lightweight)
+openai==1.92.0
+
+# Vector Database - Pinecone (core only)
+pinecone==7.3.0
+
+# Essential dependencies only
+requests==2.32.5
+
+# Document loading (minimal set)
+pypdf==3.17.4
+
+# Optional: LangSmith for tracing (lightweight)
+langsmith==0.1.147 

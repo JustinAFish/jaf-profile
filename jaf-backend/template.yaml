@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: JAF Backend - GenAI-powered CV
+
+Globals:
+  Function:
+    Timeout: 900
+    MemorySize: 1024
+    Environment:
+      Variables:
+        ENVIRONMENT: production
+        PYTHONPATH: /var/task
+
+Parameters:
+  OpenAIApiKey:
+    Type: String
+    NoEcho: true
+    Description: OpenAI API Key for LLM services
+  
+  PineconeApiKey:
+    Type: String
+    NoEcho: true
+    Description: Pinecone API Key for vector database
+  
+  PineconeEnvironment:
+    Type: String
+    Description: Pinecone environment (e.g., us-east1-gcp)
+  
+  PineconeIndexName:
+    Type: String
+    Description: Pinecone index name
+  
+  PineconeNamespace:
+    Type: String
+    Description: Pinecone namespace
+    Default: ""
+  
+  LangsmithApiKey:
+    Type: String
+    NoEcho: true
+    Description: LangSmith API Key for tracing (optional)
+    Default: ""
+
+Resources:
+  JafBackendFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: lambda_handler.handler
+      Runtime: python3.12
+      Architectures:
+        - x86_64
+      # Increase memory for better performance with AI workloads
+      MemorySize: 1536
+      # Increase timeout for AI processing
+      Timeout: 900
+      Environment:
+        Variables:
+          OPENAI_API_KEY: !Ref OpenAIApiKey
+          PINECONE_API_KEY: !Ref PineconeApiKey
+          PINECONE_ENVIRONMENT: !Ref PineconeEnvironment
+          PINECONE_INDEX_NAME: !Ref PineconeIndexName
+          PINECONE_NAMESPACE: !Ref PineconeNamespace
+          LANGSMITH_API_KEY: !Ref LangsmithApiKey
+          LANGSMITH_TRACING: "false"
+          LANGSMITH_PROJECT: "jaf-backend-lambda"
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+        RootEvent:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+      Layers:
+        - !Ref PythonDependenciesLayer
+
+  PythonDependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub "${AWS::StackName}-python-dependencies"
+      Description: Python dependencies for JAF Backend (optimized)
+      ContentUri: dependencies/
+      CompatibleRuntimes:
+        - python3.12
+      RetentionPolicy: Retain
+    Metadata:
+      BuildMethod: python3.12
+      BuildProperties:
+        # Optimize for smaller package size
+        BuildArgs: "--no-cache-dir --compile"
+
+Outputs:
+  JafBackendApi:
+    Description: "API Gateway endpoint URL for JAF Backend"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+  
+  JafBackendFunction:
+    Description: "JAF Backend Lambda Function ARN"
+    Value: !GetAtt JafBackendFunction.Arn
+  
+  JafBackendFunctionIamRole:
+    Description: "Implicit IAM Role created for JAF Backend function"
+    Value: !GetAtt JafBackendFunctionRole.Arn 
