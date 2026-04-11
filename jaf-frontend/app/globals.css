@@ -152,6 +152,12 @@
   --ai-accent-1: #81ecff;
   --ai-accent-2: #7e51ff;
   --ai-glow: rgba(129, 236, 255, 0.12);
+  /* Fixed site header (navbar); used for scroll-margin, sticky top, and main padding */
+  --site-header-height: calc(4.5rem + env(safe-area-inset-top, 0px));
+}
+
+html {
+  scroll-padding-top: var(--site-header-height);
 }
 
 .dark {

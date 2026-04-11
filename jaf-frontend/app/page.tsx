@@ -1,45 +1,31 @@
 "use client";
-import { useEffect } from "react";
 import HomeHero from "@/components/homeHero";
 import HomeAbout from "@/components/homeAbout";
 import HomeSkills from "@/components/homeSkills";
 import HomeExperience from "@/components/homeExperience";
 import HomeContact from "@/components/homeContact";
 import HomeAwardsEdu from "@/components/homeAwardsEdu";
+import { scrollToAboutSectionComplete } from "@/lib/homeAboutSection";
+import { useEffect, useRef } from "react";
 
 export default function Home() {
+  const homeSectionRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
-    const titles = [
-      "Full Stack Data Scientist",
-      "Product Owner",
-      "Solution Architect",
-    ];
-    let index = 0;
-    const changingText = document.getElementById("changing-text");
-
-    if (changingText) {
-      const interval = setInterval(() => {
-        index = (index + 1) % titles.length;
-        changingText.style.opacity = "0";
-
-        setTimeout(() => {
-          changingText.textContent = titles[index];
-          changingText.style.opacity = "1";
-        }, 500);
-      }, 3000);
-
-      return () => clearInterval(interval);
-    } else {
-      console.warn('Element with ID "changing-text" not found');
+    if (typeof window === "undefined" || window.location.hash !== "#about") {
+      return;
     }
+    const t = window.setTimeout(() => {
+      scrollToAboutSectionComplete({ behavior: "auto" });
+    }, 100);
+    return () => window.clearTimeout(t);
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground pt-16">
+    <div className="flex min-h-screen bg-black text-foreground pt-[var(--site-header-height)]">
       <main className="flex-1 w-full">
-        <HomeHero />
+        <HomeHero ref={homeSectionRef} />
 
-        <HomeAbout />
+        <HomeAbout homeSectionRef={homeSectionRef} />
 
         <HomeSkills />
 

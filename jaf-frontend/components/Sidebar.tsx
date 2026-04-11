@@ -104,7 +104,7 @@ export function Sidebar() {
 
   return (
     <div className="flex">
-      <div className="w-36 md:w-64 bg-surface-container/95 backdrop-blur-lg flex flex-col min-h-screen pt-16">
+      <div className="w-36 md:w-64 bg-surface-container/95 backdrop-blur-lg flex flex-col min-h-screen pt-[var(--site-header-height)]">
         <div className="p-4">
           <button
             type="button"

@@ -2,7 +2,10 @@ import { Card, CardHeader } from "./ui/card";
 
 export default function HomeAwardsEdu() {
   return (
-    <section id="awards" className="py-20 px-16 bg-background">
+    <section
+      id="awards"
+      className="scroll-mt-[var(--site-header-height)] py-20 px-4 sm:px-8 md:px-12 lg:px-16 bg-background"
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <Card className="group relative rounded-md glass-surface bg-surface-container-high/85 border-0 shadow-none transform transition-all duration-300 hover:scale-[1.01] hover:-translate-y-1 hover:shadow-[0_40px_60px_rgba(129,236,255,0.08)] flex flex-col">
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md pointer-events-none">
