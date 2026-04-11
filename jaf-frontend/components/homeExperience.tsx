@@ -2,14 +2,14 @@
 
 export default function HomeExperience() {
   return (
-    <section id="resume" className="py-20 px-16 bg-background">
-      <h2 className="text-4xl md:text-5xl font-bold mb-6 text-center text-header">
+    <section id="resume" className="py-20 px-16 bg-surface-container-low">
+      <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-center text-header">
         Work Experience
       </h2>
 
       <div className="space-y-16">
         <div>
-          <h3 className="text-3xl font-bold mb-6 text-primary flex justify-between items-center">
+          <h3 className="text-3xl font-heading font-bold mb-6 text-primary flex justify-between items-center flex-wrap gap-2">
             <div>
               <span className="mr-2">Capgemini Invent</span>
               <span className="text-paragraph">
@@ -21,9 +21,16 @@ export default function HomeExperience() {
             </span>
           </h3>
           <div className="space-y-8">
-            <div className="relative pl-8 border-l-2 border-primary">
-              <div className="absolute w-4 h-4 bg-primary rounded-full -left-[9px]"></div>
-              <h4 className="text-2xl font-bold text-white">
+            <div className="relative pl-10">
+              <div
+                className="absolute left-[7px] top-1 bottom-1 w-0.5 rounded-full bg-gradient-to-b from-primary/55 via-primary/25 to-transparent"
+                aria-hidden
+              />
+              <div
+                className="absolute left-[3px] top-2.5 w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_rgba(129,236,255,0.4)]"
+                aria-hidden
+              />
+              <h4 className="text-2xl font-heading font-bold text-header">
                 UK Government Innovation Lab Solution Architect
               </h4>
               <h5 className="text-lg text-paragraph font-semibold mb-6">
@@ -70,9 +77,16 @@ export default function HomeExperience() {
               </ul>
             </div>
 
-            <div className="relative pl-8 border-l-2 border-primary">
-              <div className="absolute w-4 h-4 bg-primary rounded-full -left-[9px]"></div>
-              <h4 className="text-2xl font-bold text-white">
+            <div className="relative pl-10">
+              <div
+                className="absolute left-[7px] top-1 bottom-1 w-0.5 rounded-full bg-gradient-to-b from-primary/55 via-primary/25 to-transparent"
+                aria-hidden
+              />
+              <div
+                className="absolute left-[3px] top-2.5 w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_rgba(129,236,255,0.4)]"
+                aria-hidden
+              />
+              <h4 className="text-2xl font-heading font-bold text-header">
                 AI Innovation Product Lead
               </h4>
               <ul className="mt-4 space-y-2 text-lg text-paragraph list-disc pl-4">
@@ -106,9 +120,16 @@ export default function HomeExperience() {
               </ul>
             </div>
 
-            <div className="relative pl-8 border-l-2 border-primary">
-              <div className="absolute w-4 h-4 bg-primary rounded-full -left-[9px]"></div>
-              <h4 className="text-2xl font-bold text-white">
+            <div className="relative pl-10">
+              <div
+                className="absolute left-[7px] top-1 bottom-1 w-0.5 rounded-full bg-gradient-to-b from-primary/55 via-primary/25 to-transparent"
+                aria-hidden
+              />
+              <div
+                className="absolute left-[3px] top-2.5 w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_rgba(129,236,255,0.4)]"
+                aria-hidden
+              />
+              <h4 className="text-2xl font-heading font-bold text-header">
                 Head of the GenAI Demo Division
               </h4>
               <h5 className="text-lg text-paragraph font-semibold mb-6">
@@ -142,9 +163,16 @@ export default function HomeExperience() {
               </ul>
             </div>
 
-            <div className="relative pl-8 border-l-2 border-primary">
-              <div className="absolute w-4 h-4 bg-primary rounded-full -left-[9px]"></div>
-              <h4 className="text-2xl font-bold text-white">
+            <div className="relative pl-10">
+              <div
+                className="absolute left-[7px] top-1 bottom-1 w-0.5 rounded-full bg-gradient-to-b from-primary/55 via-primary/25 to-transparent"
+                aria-hidden
+              />
+              <div
+                className="absolute left-[3px] top-2.5 w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_rgba(129,236,255,0.4)]"
+                aria-hidden
+              />
+              <h4 className="text-2xl font-heading font-bold text-header">
                 UK Government AI Security Institute
               </h4>
               <h5 className="text-lg text-paragraph font-semibold mb-6">
@@ -183,7 +211,7 @@ export default function HomeExperience() {
 
         {/* PA Consulting */}
         <div>
-          <h3 className="text-3xl font-bold mb-6 text-primary flex justify-between items-center">
+          <h3 className="text-3xl font-heading font-bold mb-6 text-primary flex justify-between items-center flex-wrap gap-2">
             <div>
               <span className="mr-2">PA Consulating</span>
               <span className="text-paragraph">| Data Science Consultant</span>
@@ -194,8 +222,15 @@ export default function HomeExperience() {
           </h3>
 
           <div className="space-y-8">
-            <div className="relative pl-8 border-l-2 border-primary 2xl:max-w-10/12">
-              <div className="absolute w-4 h-4 bg-primary rounded-full -left-[9px]"></div>
+            <div className="relative pl-10 2xl:max-w-10/12">
+              <div
+                className="absolute left-[7px] top-1 bottom-1 w-0.5 rounded-full bg-gradient-to-b from-primary/55 via-primary/25 to-transparent"
+                aria-hidden
+              />
+              <div
+                className="absolute left-[3px] top-2.5 w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_rgba(129,236,255,0.4)]"
+                aria-hidden
+              />
               <h5 className="text-lg text-paragraph font-semibold mb-6">
                 Application of a wide range of data science skills to five
                 different sectors including Healthcare, Consumer, Financial
@@ -238,7 +273,7 @@ export default function HomeExperience() {
 
         {/* SAV */}
         <div>
-          <h3 className="text-3xl font-bold mb-6 text-primary flex justify-between items-center">
+          <h3 className="text-3xl font-heading font-bold mb-6 text-primary flex justify-between items-center flex-wrap gap-2">
             <div>
               <span className="mr-2">SAV</span>
               <span className="text-paragraph">
@@ -250,8 +285,15 @@ export default function HomeExperience() {
             </span>
           </h3>
           <div className="space-y-8">
-            <div className="relative pl-8 border-l-2 border-primary">
-              <div className="absolute w-4 h-4 bg-primary rounded-full -left-[9px]"></div>
+            <div className="relative pl-10">
+              <div
+                className="absolute left-[7px] top-1 bottom-1 w-0.5 rounded-full bg-gradient-to-b from-primary/55 via-primary/25 to-transparent"
+                aria-hidden
+              />
+              <div
+                className="absolute left-[3px] top-2.5 w-3 h-3 rounded-full bg-primary shadow-[0_0_12px_rgba(129,236,255,0.4)]"
+                aria-hidden
+              />
               <ul className="mt-4 space-y-2 text-lg text-paragraph list-disc pl-4">
                 <li>
                   Led expansion of energy metering department, later integrating

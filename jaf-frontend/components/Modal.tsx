@@ -1,10 +1,7 @@
 /**
- * Reusable Modal component - Renders a centered modal dialog with a semi-transparent background overlay.
- * (a modal is just the proper word for a popup)
- * This renders the modal container centered on the screen with rounded corners and a dark background
- * Allows the parent component to pass in the content to be displayed inside the modal
-**/
-import React, { useEffect, useState } from 'react';
+ * Centered modal with tonal overlay (DESIGN.md ambient / glass).
+ */
+import React, { useEffect, useState } from "react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -19,24 +16,24 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
     setIsMounted(true);
   }, []);
 
-  // If the `isOpen` prop is false, the component will return null and not render anything
-  // Also don't render during SSR to prevent hydration mismatch
   if (!isOpen || !isMounted) return null;
 
   return (
-
-    // Background overlay
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-41" onClick={onClose}>
-      
-      {/* Modal container*/}
-      <div 
-        className="bg-[#282828]/70 rounded-lg p-6 w-full max-w-3xl mx-4 relative"
-        onClick={e => e.stopPropagation()} 
+    <div
+      className="fixed inset-0 bg-surface/80 backdrop-blur-sm flex items-center justify-center z-[60]"
+      onClick={onClose}
+      role="presentation"
+    >
+      <div
+        className="glass-surface bg-surface-container-high/90 rounded-md p-6 w-full max-w-3xl mx-4 relative ghost-border ambient-float"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
       >
-        {/* Close button */}
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-400 hover:text-white transition-colors"
+          className="absolute top-2 right-2 text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Close modal"
         >
           <svg
@@ -55,9 +52,7 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
           </svg>
         </button>
 
-        {/* The actual modal content (children) */}
         {children}
-
       </div>
     </div>
   );

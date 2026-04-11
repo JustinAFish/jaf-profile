@@ -1,51 +1,72 @@
-/**
- * frontend/src/store/chatStore.ts
- * Manages the state and actions for the chat history functionality using Zustand.
- */
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import type { Chat, Message, Source } from "@/types/chat";
 
-// Define the data structures for the chat store
-export interface Chat {
-  id: string;
-  title: string;
-  messages: Message[];
-  starred?: boolean;
-  createdAt: Date;
-  lastUpdated: Date;
+const STORAGE_NAME = "jaf-chat-storage";
+const LEGACY_STORAGE_NAME = "honda-chat-storage";
+
+function normalizeSource(raw: Record<string, unknown>): Source {
+  const relevance = raw.relevance;
+  return {
+    title: String(raw.title ?? ""),
+    content: String(raw.content ?? ""),
+    document_title: String(raw.document_title ?? raw.title ?? ""),
+    document_path: String(raw.document_path ?? ""),
+    relevance:
+      typeof relevance === "number"
+        ? relevance
+        : Number(relevance) || 0,
+  };
 }
 
-interface Source {
-  title: string;
-  content: string;
-  document_path: string;
-  document_title: string;
-  relevance: number;
+function rehydrateDates(chats: Chat[]): void {
+  for (const chat of chats) {
+    const raw = chat as unknown as {
+      createdAt: unknown;
+      lastUpdated?: unknown;
+      updatedAt?: unknown;
+    };
+    chat.createdAt = new Date(raw.createdAt as string | number);
+    const lu = raw.lastUpdated ?? raw.updatedAt ?? raw.createdAt;
+    chat.lastUpdated = new Date(lu as string | number);
+    delete (chat as unknown as { updatedAt?: unknown }).updatedAt;
+    for (const m of chat.messages) {
+      m.timestamp = new Date(m.timestamp as unknown as string | number);
+    }
+  }
 }
 
-interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  sources?: Source[];
-  timestamp: Date;
-}
+const dualLocalStorage = {
+  getItem: (name: string): string | null => {
+    let s = localStorage.getItem(name);
+    if (!s && name === STORAGE_NAME) {
+      s = localStorage.getItem(LEGACY_STORAGE_NAME);
+    }
+    return s;
+  },
+  setItem: (name: string, value: string) => localStorage.setItem(name, value),
+  removeItem: (name: string) => {
+    localStorage.removeItem(name);
+    if (name === STORAGE_NAME) {
+      localStorage.removeItem(LEGACY_STORAGE_NAME);
+    }
+  },
+};
 
-// Define the chat store interface with state and actions
 interface ChatStore {
-  
-  // Define states
-  chats: Chat[];                    // An array of Chat objects, representing the user's chat history
-  currentChatId: string | null;     // The ID of the currently active chat
-  isExamplesOpen: boolean;          // Whether the example questions panel is open
-  
-  // Define the actions that can be performed on the chat store's state
+  chats: Chat[];
+  currentChatId: string | null;
+  isExamplesOpen: boolean;
+
   createChat: () => string;
   deleteChat: (id: string) => void;
   setCurrentChat: (id: string) => void;
   updateChatTitle: (id: string, title: string) => void;
   toggleStarChat: (id: string) => void;
-  addMessage: (chatId: string, message: Omit<Message, 'id' | 'timestamp'>) => void;
+  addMessage: (
+    chatId: string,
+    message: Omit<Message, "id" | "timestamp">,
+  ) => void;
   getCurrentChat: () => Chat | undefined;
   ensureActiveChat: () => void;
   setChats: (chats: Chat[]) => void;
@@ -53,49 +74,49 @@ interface ChatStore {
   setIsExamplesOpen: (isOpen: boolean) => void;
 }
 
-// Create the chat store using Zustand
+export const selectCurrentChat = (state: ChatStore): Chat | undefined =>
+  state.currentChatId
+    ? state.chats.find((c) => c.id === state.currentChatId)
+    : undefined;
+
+export type { Chat, Message };
+
 export const useChatStore = create<ChatStore>()(
   persist(
     (set, get) => ({
-
-      // Initialize the state
       chats: [],
       currentChatId: null,
       isExamplesOpen: false,
 
-      // Action to create a new chat
       createChat: () => {
         const newChat: Chat = {
           id: crypto.randomUUID(),
-          title: 'New Chat',
+          title: "New Chat",
           messages: [],
           createdAt: new Date(),
-          lastUpdated: new Date()
+          lastUpdated: new Date(),
         };
-        
-        // Add the new chat to the state
-        set(state => ({
+
+        set((state) => ({
           chats: [newChat, ...state.chats],
-          currentChatId: newChat.id
+          currentChatId: newChat.id,
         }));
 
         return newChat.id;
       },
 
-      // Action to delete a chat
       deleteChat: (id: string) => {
         const state = get();
-        const currentIndex = state.chats.findIndex(chat => chat.id === id);
+        const currentIndex = state.chats.findIndex((chat) => chat.id === id);
         const isCurrentChat = id === state.currentChatId;
 
-        // Remove the chat from the state
-        const newChats = state.chats.filter(chat => chat.id !== id);
+        const newChats = state.chats.filter((chat) => chat.id !== id);
 
-        // Set the new current chat or create a new one if necessary
         let nextChatId: string | null = state.currentChatId;
         if (isCurrentChat) {
           if (newChats.length > 0) {
-            const nextChat = newChats[currentIndex] || newChats[currentIndex - 1];
+            const nextChat =
+              newChats[currentIndex] || newChats[currentIndex - 1];
             nextChatId = nextChat ? nextChat.id : null;
           } else {
             const newChatId = get().createChat();
@@ -105,70 +126,66 @@ export const useChatStore = create<ChatStore>()(
 
         set({
           chats: newChats,
-          currentChatId: nextChatId
+          currentChatId: nextChatId,
         });
       },
 
-      // Action to set the current chat
       setCurrentChat: (id: string) => {
         set({ currentChatId: id });
       },
 
-      // Action to update the title of a chat
       updateChatTitle: (id: string, title: string) => {
-        set(state => ({
-          chats: state.chats.map(chat =>
-            chat.id === id ? { ...chat, title } : chat
-          )
+        set((state) => ({
+          chats: state.chats.map((chat) =>
+            chat.id === id ? { ...chat, title } : chat,
+          ),
         }));
       },
 
-      // Action to toggle the starred status of a chat
       toggleStarChat: (id: string) => {
-        set(state => ({
-          chats: state.chats.map(chat =>
-            chat.id === id ? { ...chat, starred: !chat.starred } : chat
-          )
+        set((state) => ({
+          chats: state.chats.map((chat) =>
+            chat.id === id ? { ...chat, starred: !chat.starred } : chat,
+          ),
         }));
       },
 
-      // Action to add a new message to a chat
       addMessage: (chatId: string, message) => {
         const fullMessage: Message = {
           id: crypto.randomUUID(),
           ...message,
           timestamp: new Date(),
-          // Sources are now passed through directly since they match type
-          sources: message.sources
+          sources: message.sources,
         };
 
-        
-        set(state => ({
-          chats: state.chats.map(chat =>
+        set((state) => ({
+          chats: state.chats.map((chat) =>
             chat.id === chatId
               ? {
                   ...chat,
                   messages: [...chat.messages, fullMessage],
                   lastUpdated: new Date(),
-                  title: chat.title === 'New Chat' && chat.messages.length === 0
-                    ? `${message.content.slice(0, 30)}...`
-                    : chat.title
+                  title:
+                    chat.title === "New Chat" && chat.messages.length === 0
+                      ? `${message.content.slice(0, 30)}...`
+                      : chat.title,
                 }
-              : chat
-          )
+              : chat,
+          ),
         }));
       },
 
-      // Action to get the current chat
       getCurrentChat: () => {
         const state = get();
-        return state.chats.find(chat => chat.id === state.currentChatId);
+        return state.chats.find((chat) => chat.id === state.currentChatId);
       },
 
-      // Action to ensure there is an active chat
       ensureActiveChat: () => {
         const state = get();
-        if (!state.currentChatId || !state.chats.find(chat => chat.id === state.currentChatId)) {
+        if (
+          !state.currentChatId ||
+          !state.chats.find((chat) => chat.id === state.currentChatId)
+        ) {
           if (state.chats.length > 0) {
             set({ currentChatId: state.chats[0].id });
           } else {
@@ -177,113 +194,105 @@ export const useChatStore = create<ChatStore>()(
         }
       },
 
-      // Action to set the chats
       setChats: (chats: Chat[]) => {
         set({
-          chats: chats,
-          currentChatId: chats.length > 0 ? chats[0].id : null
+          chats,
+          currentChatId: chats.length > 0 ? chats[0].id : null,
         });
       },
 
-      // Add this function to fetch chats from the backend
       fetchUserChats: async () => {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+        if (!backendUrl) {
+          return;
+        }
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
         try {
-          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-          
-          // Get token from localStorage
-          const authStorageJson = localStorage.getItem('auth-storage');
-          const authStorage = authStorageJson ? JSON.parse(authStorageJson) : {};
-          const token = authStorage.state?.token || '';
-          
-          if (!token) {
-            console.warn("No authentication token found, skipping chat fetch");
-            return;
-          }
-          
-          console.log("Fetching user chats...");
-          
-          // Use AbortController to prevent hanging requests
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000);
-          
-          try {
-            const response = await fetch(`${backendUrl}/api/chat/user/chats`, {
-              method: "GET",
-              headers: {
-                // "Authorization": `Bearer ${token}` // Temporarily disabled for testing
-              },
-              signal: controller.signal
-            });
-            
-            clearTimeout(timeoutId);
-            
-            if (!response.ok) {
-              if (response.status === 404) {
-                console.warn("Chats endpoint not found, initializing empty chat list");
-                set({ chats: [] });
-                return;
-              }
-              console.warn(`Failed to fetch chats: ${response.status}`);
+          const response = await fetch(`${backendUrl}/api/chat/user/chats`, {
+            method: "GET",
+            signal: controller.signal,
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            if (response.status === 404) {
+              set({ chats: [] });
               return;
             }
-            
-            const data = await response.json();
-            
-            // Transform the data to match the store's format
-            const transformedChats = Array.isArray(data.chats) ? data.chats.map((chat: { 
-              id: string;
-              title?: string;
-              messages?: Array<{
-                role: 'user' | 'assistant';
-                content: string;
-                sources?: Source[];
-                created_at: string;
-              }>;
-              created_at: string;
-              updated_at: string;
-            }) => ({
-              id: chat.id,
-              title: chat.title || "New Chat",
-              messages: Array.isArray(chat.messages) ? chat.messages.map(msg => ({
-                role: msg.role,
-                content: msg.content,
-                sources: msg.sources || [],
-                timestamp: new Date(msg.created_at)
-              })) : [],
-              createdAt: new Date(chat.created_at),
-              updatedAt: new Date(chat.updated_at)
-            })) : [];
-            
-            // Update the chats in the store
-            set({ chats: transformedChats });
-            
-            // If there are chats and no current chat is selected, select the first one
-            if (transformedChats.length > 0 && !get().currentChatId) {
-              set({ currentChatId: transformedChats[0].id });
-            }
-            
-            console.log(`Fetched ${transformedChats.length} chats from server`);
-          } catch (fetchError) {
-            clearTimeout(timeoutId);
-            console.error("Error fetching chats:", fetchError instanceof Error ? fetchError.message : "Unknown error");
+            return;
           }
-        } catch (error) {
-          console.error("Error in fetchUserChats:", error instanceof Error ? error.message : "Unknown error");
+
+          const data = await response.json();
+
+          type ServerMsg = {
+            id?: string;
+            role: "user" | "assistant";
+            content: string;
+            sources?: Record<string, unknown>[];
+            created_at: string;
+          };
+
+          const transformedChats: Chat[] = Array.isArray(data.chats)
+            ? data.chats.map(
+                (chat: {
+                  id: string;
+                  title?: string;
+                  messages?: ServerMsg[];
+                  created_at: string;
+                  updated_at: string;
+                }) => ({
+                  id: chat.id,
+                  title: chat.title || "New Chat",
+                  messages: Array.isArray(chat.messages)
+                    ? chat.messages.map((msg) => ({
+                        id: msg.id || crypto.randomUUID(),
+                        role: msg.role,
+                        content: msg.content,
+                        sources: Array.isArray(msg.sources)
+                          ? msg.sources.map((s) =>
+                              normalizeSource(s as Record<string, unknown>),
+                            )
+                          : [],
+                        timestamp: new Date(msg.created_at),
+                      }))
+                    : [],
+                  createdAt: new Date(chat.created_at),
+                  lastUpdated: new Date(chat.updated_at),
+                }),
+              )
+            : [];
+
+          set({ chats: transformedChats });
+
+          if (transformedChats.length > 0 && !get().currentChatId) {
+            set({ currentChatId: transformedChats[0].id });
+          }
+        } catch {
+          clearTimeout(timeoutId);
         }
       },
 
-      // Action to set isExamplesOpen
       setIsExamplesOpen: (isOpen: boolean) => {
         set({ isExamplesOpen: isOpen });
       },
     }),
-
     {
-      name: 'honda-chat-storage',
+      name: STORAGE_NAME,
+      version: 1,
+      storage: createJSONStorage(() => dualLocalStorage),
       partialize: (state) => ({
         chats: state.chats,
-        currentChatId: state.currentChatId
-      })
-    }
-  )
+        currentChatId: state.currentChatId,
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (state?.chats?.length) {
+          rehydrateDates(state.chats);
+        }
+      },
+    },
+  ),
 );

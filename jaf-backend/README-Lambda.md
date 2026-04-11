@@ -271,6 +271,17 @@ Internet → API Gateway → Lambda Function → Pinecone/OpenAI
 - **CloudWatch**: Logging and monitoring
 - **IAM Roles**: Secure access permissions
 
+## Automated tests (API)
+
+From `jaf-backend/`:
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+Tests mock the RAG pipeline so OpenAI and Pinecone are not required. Optional real-service checks can be marked `@pytest.mark.integration` (excluded from default runs).
+
 ## 📞 Support
 
 If you encounter issues:

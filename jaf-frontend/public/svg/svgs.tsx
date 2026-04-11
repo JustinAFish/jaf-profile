@@ -215,6 +215,25 @@ export const Icons = {
     </svg>
   ),
 
+  pinecone: () => (
+    <svg
+      width="100"
+      height="100"
+      viewBox="0 0 100 100"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <title>Pinecone vector DB</title>
+      <path
+        fill="#1c1c30"
+        d="M50 8 L88 38 L88 62 L50 92 L12 62 L12 38 Z"
+      />
+      <path
+        fill="#8b9cf4"
+        d="M50 28 L74 45 L74 55 L50 72 L26 55 L26 45 Z"
+      />
+    </svg>
+  ),
+
   chromadb: () => (
     <svg
       width="256px"

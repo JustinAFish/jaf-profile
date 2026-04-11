@@ -8,9 +8,10 @@ It includes debugging and testing capabilities to verify search functionality
 and result scoring.
 """
 
-from typing import List, Optional
+import logging
 import os
 import sys
+from typing import List, Optional
 from functools import lru_cache
 
 # Handle deprecated pinecone plugin import issues
@@ -18,13 +19,15 @@ try:
     from pinecone import Pinecone
 except Exception as e:
     if "pinecone-plugin-inference" in str(e) and "deprecated" in str(e).lower():
-        print(f"⚠️  WARNING: Deprecated Pinecone plugin detected, attempting workaround...")
+        logging.getLogger(__name__).warning(
+            "Deprecated Pinecone plugin detected, attempting workaround: %s", e
+        )
         
         # Remove pinecone modules from cache and try again
         modules_to_remove = [key for key in sys.modules.keys() if 'pinecone' in key.lower()]
         for module in modules_to_remove:
             if module in sys.modules:
-                print(f"Removing module: {module}")
+                logging.getLogger(__name__).debug("Removing module: %s", module)
                 del sys.modules[module]
         
         # Import again
@@ -36,6 +39,8 @@ from langchain_pinecone import PineconeVectorStore
 from langchain_core.documents import Document
 from app.core.embeddings import EmbeddingsManager
 from app.config import get_settings
+
+logger = logging.getLogger(__name__)
 
 
 class PineconeService:
@@ -53,7 +58,7 @@ class PineconeService:
         self.embeddings_manager = EmbeddingsManager()
         
         # Initialize Pinecone client
-        print("Initializing Pinecone client...")
+        logger.info("Initializing Pinecone client")
         if not settings.PINECONE_API_KEY:
             raise ValueError("PINECONE_API_KEY environment variable is required")
             
@@ -73,7 +78,11 @@ class PineconeService:
             namespace=self.namespace
         )
         
-        print(f"Connected to Pinecone - Index: {index_name}, Namespace: {self.namespace}")
+        logger.info(
+            "Connected to Pinecone - Index: %s, Namespace: %s",
+            index_name,
+            self.namespace,
+        )
 
     def similarity_search(self, query: str, k: int = None) -> List[Document]:
         """Perform similarity search for given query text."""
@@ -93,7 +102,7 @@ class PineconeService:
                 similarity_score = max(0.0, min(1.0, float(score)))
                 doc.metadata['relevance'] = similarity_score
                 processed_docs.append(doc)
-                print(f"Processing document with score {similarity_score}")
+                logger.debug("Processing document with score %s", similarity_score)
                 
             return processed_docs
         except Exception as e:
@@ -122,7 +131,7 @@ class PineconeService:
         """
         try:
             ids = self.vector_store.add_documents(documents)
-            print(f"Added {len(documents)} documents to Pinecone")
+            logger.info("Added %s documents to Pinecone", len(documents))
             return ids
         except Exception as e:
             raise Exception(f"Error adding documents: {str(e)}")
@@ -131,9 +140,11 @@ class PineconeService:
         """Delete all vectors in the namespace (useful for testing or data refresh)."""
         try:
             self.index.delete(delete_all=True, namespace=self.namespace)
-            print(f"Deleted all documents in Pinecone namespace: {self.namespace}")
+            logger.info(
+                "Deleted all documents in Pinecone namespace: %s", self.namespace
+            )
         except Exception as e:
-            print(f"Error deleting namespace: {str(e)}")
+            logger.warning("Error deleting namespace: %s", e)
     
     def count_documents(self) -> int:
         """Get the number of documents in the namespace."""
@@ -142,5 +153,5 @@ class PineconeService:
             namespace_stats = stats.get('namespaces', {}).get(self.namespace, {})
             return namespace_stats.get('vector_count', 0)
         except Exception as e:
-            print(f"Error counting documents: {str(e)}")
+            logger.warning("Error counting documents: %s", e)
             return 0 

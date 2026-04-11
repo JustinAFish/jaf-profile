@@ -1,5 +1,5 @@
 """
-/backend/app/services/chromadb_service.py
+# Legacy: moved from app/services/chromadb_service.py (not imported by the app).
 Service for managing ChromaDB vector search operations. Provides a cached
 singleton interface for vector similarity searches and document retrieval. This 
 service component handles all database interactions, vector search operations, 

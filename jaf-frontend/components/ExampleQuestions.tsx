@@ -1,14 +1,5 @@
 /**
- * ExampleQuestions component - Provides categorized example questions for users.
- * Features:
- * - Floating panel with categorized questions
- * - Clear visual hierarchy with dividers
- * - Accent divider under main title
- * - Right-aligned with the lightbulb button
- * - Click-to-send functionality
- * - Visual grouping for related questions
- *
- * Used within ChatInput to provide quick access to example questions.
+ * ExampleQuestions — floating panel of sample prompts (no hard dividers).
  */
 import React from "react";
 
@@ -32,17 +23,12 @@ export function ExampleQuestions({
   onClose,
   onQuestionClick,
 }: ExampleQuestionsProps) {
-  // Declare what example questions to ask
   const questionCategories: QuestionCategory[] = [
     {
       title: "Test the chat with common queries",
       questions: [
-        {
-          text: "What makes Justin a good fit for my business?",
-        },
-        {
-          text: "Provide examples of successful client deliveries?",
-        },
+        { text: "What makes Justin a good fit for my business?" },
+        { text: "Provide examples of successful client deliveries?" },
         {
           text: "What are Justin's unique selling points that will drive value for my organisation?",
         },
@@ -54,30 +40,30 @@ export function ExampleQuestions({
 
   return (
     <>
-      {/* Invisible overlay to handle clicks outside */}
-      <div className="fixed inset-0" onClick={onClose} />
+      <div className="fixed inset-0" onClick={onClose} aria-hidden />
 
-      {/* Examples Panel*/}
       <div
         style={{ zIndex: 39 }}
         className="absolute bottom-full right-0 mb-2 w-96 animate-fadeIn"
       >
-        <div className="card bg-card/95 backdrop-blur-lg border border-border/50 shadow-xl">
+        <div className="card bg-surface-container-high/95 backdrop-blur-lg rounded-md ghost-border ambient-float">
           <div className="p-5">
-            {/* Main title with larger text and red divider */}
-            <div className="border-b-2 border-primary/30 pb-4 mb-4">
-              <h2 className="text-xl font-semibold text-primary">
+            <div className="pb-4 mb-4 bg-surface-container-low/50 rounded-md px-3 py-3">
+              <h2 className="text-xl font-heading font-semibold text-primary">
                 Example Questions
               </h2>
             </div>
 
-            {/* Map categories from questionCategories */}
             <div className="space-y-6">
               {questionCategories.map((category, categoryIndex) => (
-                <div key={categoryIndex} className="animate-fadeIn" style={{ animationDelay: `${categoryIndex * 100}ms` }}>
+                <div
+                  key={categoryIndex}
+                  className="animate-fadeIn"
+                  style={{ animationDelay: `${categoryIndex * 100}ms` }}
+                >
                   <div className="space-y-3">
                     <div className="mb-3">
-                      <h4 className="text-white font-medium text-lg">
+                      <h4 className="text-foreground font-medium text-lg">
                         {category.title}
                       </h4>
                     </div>
@@ -85,16 +71,16 @@ export function ExampleQuestions({
                     <div className="space-y-2">
                       {category.questions.map((question, questionIndex) => (
                         <button
+                          type="button"
                           key={questionIndex}
                           onClick={() => onQuestionClick(question.text)}
                           className={`
-                            w-full text-left p-3 rounded-lg text-white
-                            hover:bg-primary/5 hover:text-primary transition-all duration-200 text-sm
+                            w-full text-left p-3 rounded-md text-foreground
+                            hover:bg-primary/10 hover:text-primary transition-all duration-200 text-sm
                             ${question.isSequence ? "pl-8 relative" : ""}
-                            hover:shadow-md hover-lift
+                            hover:shadow-[0_0_20px_rgba(129,236,255,0.06)] hover-lift
                           `}
                         >
-                          {/* Sequence indicator */}
                           {question.isSequence && (
                             <span className="absolute left-3 text-muted-foreground">
                               {question.sequenceNumber}
@@ -106,9 +92,8 @@ export function ExampleQuestions({
                     </div>
                   </div>
 
-                  {/* Add divider if not the last category */}
                   {categoryIndex < questionCategories.length - 1 && (
-                    <div className="my-4 border-t border-border/30" />
+                    <div className="my-6 h-3" aria-hidden />
                   )}
                 </div>
               ))}

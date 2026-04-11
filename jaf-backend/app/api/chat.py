@@ -1,78 +1,38 @@
 """
-/backend/app/api/chat.py
-FastAPI router handling the chat functionality for jaf,
-directs incoming web requests to the right handler functions.
+FastAPI router for chat: delegates to ChatService (RAG pipeline).
 """
-from fastapi import APIRouter, HTTPException, Depends, status
-from app.core.models import ChatMessage, ChatResponse, Source, AssistantResponse, MessageHistory
-from app.core.rag import RAGPipeline
-from pydantic import BaseModel, Field
-from typing import List, Optional
+import logging
 from functools import lru_cache
+
+from fastapi import APIRouter, Depends, HTTPException
+from app.core.models import ChatMessage, ChatResponse
 from app.services.chat import ChatService
 
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
-@lru_cache(maxsize=1)
-def get_rag_pipeline() -> RAGPipeline:
-    """Get or create cached RAGPipeline instance"""
-    print("Creating new RAGPipeline instance")
-    return RAGPipeline()
 
 @lru_cache(maxsize=1)
 def get_chat_service() -> ChatService:
-    """Get or create cached ChatService instance"""
-    print("Creating new ChatService instance")
     return ChatService()
 
-class ChatMessageWithHistory(ChatMessage):
-    """Extend ChatMessage model that includes conversation history"""
-    conversation_history: Optional[List[dict]] = None
-    
+
 @router.post("/chat/message", response_model=ChatResponse)
 async def process_message(
-    message: ChatMessageWithHistory,
-    rag: RAGPipeline = Depends(get_rag_pipeline)
-    ):
+    message: ChatMessage,
+    chat_service: ChatService = Depends(get_chat_service),
+):
     """
     Process a chat message and return response with structured sources.
-    
-    Args:
-        message: The chat message with optional conversation history
-        rag: RAGPipeline instance (injected by FastAPI)
-        
-    Returns:
-        ChatResponse: Contains the assistant's response, sources, and escalation status
     """
     try:
-        # Convert the conversation history to MessageHistory objects
-        # Done for type safety and validation purposes
-        conversation_history = None
-        if message.conversation_history:
-            conversation_history = [
-                MessageHistory(
-                    role=str(msg.get('role')),
-                    content=str(msg.get('content')),
-                )
-                for msg in message.conversation_history
-            ]
-        
-        # Get response from RAG pipeline with conversation history
-        assistant_response: AssistantResponse = await rag.get_response(
-            question=message.content,
-            conversation_history=conversation_history
+        return await chat_service.process_message(
+            message.content,
+            message.conversation_history,
         )
-
-        # Convert AssistantResponse to ChatResponse for API consistency
-        return ChatResponse(
-            response=assistant_response.answer,
-            sources=assistant_response.sources,
-            escalate_to_hypercare=assistant_response.needs_escalation,
-        )
-        
     except Exception as e:
-        print(f"Error in process_message: {str(e)}")
+        logger.exception("Error in process_message")
         raise HTTPException(
             status_code=500,
-            detail=f"Error processing message: {str(e)}"
-        )
+            detail=f"Error processing message: {str(e)}",
+        ) from e

@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, email, message, recipient } = await request.json();
+    const { name, email, message } = await request.json();
 
     // Validate input
     if (!name || !email || !message) {
@@ -31,10 +31,12 @@ export async function POST(request: Request) {
       },
     });
 
-    // Email content
+    const toAddress =
+      process.env.CONTACT_TO_EMAIL || "JustinAnthonyFish@gmail.com";
+
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: recipient || 'JustinAnthonyFish@gmail.com',
+      to: toAddress,
       subject: `New Contact Form Submission from ${name}`,
       text: `
         Name: ${name}

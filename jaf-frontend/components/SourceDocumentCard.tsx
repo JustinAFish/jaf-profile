@@ -70,19 +70,19 @@ export function SourceDocumentCard({ source, forceExpanded }: SourceDocumentCard
           <h2 className="text-2xl font-semibold text-red-500 mb-4">Source Document Access Restricted</h2>
         </div>
       </Modal>
-      <div 
+      <div
         ref={containerRef}
-        className="card hover-lift bg-card/50 backdrop-blur-sm transition-all duration-300"
+        className="card hover-lift bg-surface-container-high/70 backdrop-blur-sm transition-all duration-300 rounded-md ghost-border"
       >
         <div className="flex">
-          <div className="w-16 p-4 flex items-center justify-center rounded-xl">
-            <FileText className="w-6 h-6 text-white" />
+          <div className="w-16 p-4 flex items-center justify-center rounded-md">
+            <FileText className="w-6 h-6 text-primary" />
           </div>
-          
+
           <div className="flex-1 p-4">
             <div className="flex items-start justify-between">
               <div>
-                <h4 className="text-sm font-medium text-white mb-2">
+                <h4 className="text-sm font-medium text-foreground mb-2">
                   {source.title || source.document_path.split('/').pop()}
                 </h4>
                 
@@ -110,29 +110,29 @@ export function SourceDocumentCard({ source, forceExpanded }: SourceDocumentCard
           </div>
         </div>
 
-        <div 
+        <div
           className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            isExpanded ? 'max-h-96' : 'max-h-0'
+            isExpanded ? "max-h-96" : "max-h-0"
           }`}
         >
-          <div className="p-4 bg-secondary/30 border-t border-border/50">
+          <div className="p-4 bg-surface-container-lowest/90 mt-1 rounded-b-md">
             <div className="mb-3 flex items-center">
               <span className="text-xs text-muted-foreground">Path:</span>
-              <code className="ml-2 text-xs px-1.5 py-0.5 rounded bg-secondary/50 text-white font-mono">
+              <code className="ml-2 text-xs px-1.5 py-0.5 rounded-md bg-surface-container text-foreground font-mono">
                 {source.document_path}
               </code>
             </div>
 
-            {typeof source.relevance === 'number' && (
+            {typeof source.relevance === "number" && (
               <div className="mb-3 flex items-center">
                 <span className="text-xs text-muted-foreground">Relevance:</span>
-                <code className="ml-2 text-xs px-1.5 py-0.5 rounded bg-secondary/50 text-white font-mono">
+                <code className="ml-2 text-xs px-1.5 py-0.5 rounded-md bg-surface-container text-foreground font-mono">
                   {formatRelevance(source.relevance)}
                 </code>
               </div>
             )}
 
-            <div className="text-sm text-white whitespace-pre-wrap rounded-lg bg-secondary/20 p-3">
+            <div className="text-sm text-paragraph whitespace-pre-wrap rounded-md bg-surface-container/80 p-3">
               {formatContent(source.content)}
             </div>
           </div>

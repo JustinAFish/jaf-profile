@@ -1,89 +1,90 @@
-'use client'
-import { useEffect, useState } from 'react'
-import { signInWithRedirect, getCurrentUser } from 'aws-amplify/auth'
+"use client";
+import { useEffect, useState } from "react";
+import { signInWithRedirect, getCurrentUser } from "aws-amplify/auth";
+import { appUrl } from "@/lib/appOrigin";
 
-
+const spinner = (
+  <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto" />
+);
 
 export default function SignUp() {
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkAuthAndRedirect = async () => {
       try {
-        // Check if user is already authenticated
-        await getCurrentUser()
-        // If authenticated, redirect to chat
-        window.location.href = 'https://main.d325l4yh4si1cx.amplifyapp.com/chat'
-        return
+        await getCurrentUser();
+        window.location.href = appUrl("/chat");
+        return;
       } catch {
-        // User not authenticated, proceed with sign up
-        console.log('User not authenticated, showing sign up')
+        /* not signed in */
       }
 
-      // Check if this is a callback from Cognito (has 'code' parameter)
-      const urlParams = new URLSearchParams(window.location.search)
-      if (urlParams.has('code')) {
-        // This is a callback from Cognito, let Amplify handle it
-        setIsLoading(true)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has("code")) {
+        setIsLoading(true);
         try {
-          // Wait a moment for Amplify to process the callback
-          await new Promise(resolve => setTimeout(resolve, 1000))
-          await getCurrentUser()
-          window.location.href = 'https://main.d325l4yh4si1cx.amplifyapp.com/chat'
-          return
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await getCurrentUser();
+          window.location.href = appUrl("/chat");
+          return;
         } catch {
-          console.error('Error processing OAuth callback')
-          setIsLoading(false)
+          console.error("Error processing OAuth callback");
+          setIsLoading(false);
         }
       } else {
-        // Not a callback, show sign up button
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    checkAuthAndRedirect()
-  }, [])
+    void checkAuthAndRedirect();
+  }, []);
 
   const handleSignUp = async () => {
     try {
-      setIsLoading(true)
-      // Use signInWithRedirect but direct to sign-up flow
-      await signInWithRedirect()
+      setIsLoading(true);
+      await signInWithRedirect();
     } catch {
-      console.error('Error signing up')
-      setIsLoading(false)
+      console.error("Error signing up");
+      setIsLoading(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (
-      <div className="mt-24 p-6 flex flex-col items-center justify-center min-h-[400px]">
-        <div className="text-white mb-4">Loading...</div>
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      <div className="mt-24 p-6 flex flex-col items-center justify-center min-h-[400px] text-foreground">
+        <div className="text-paragraph mb-4">Loading...</div>
+        {spinner}
       </div>
-    )
+    );
   }
 
   return (
-    <div className="mt-24 p-6 flex flex-col items-center justify-center min-h-[400px]">
-      <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h1 className="text-2xl font-bold text-white mb-6 text-center">Sign Up</h1>
-        <p className="text-gray-300 mb-6 text-center">
+    <div className="mt-24 p-6 flex flex-col items-center justify-center min-h-[400px] text-foreground">
+      <div className="glass-surface bg-surface-container-high/90 rounded-md p-8 max-w-md w-full ghost-border ambient-float">
+        <h1 className="text-2xl font-heading font-bold text-header mb-6 text-center">
+          Sign Up
+        </h1>
+        <p className="text-paragraph mb-6 text-center">
           Create an account to access the chat interface
         </p>
         <button
-          onClick={handleSignUp}
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200"
+          type="button"
+          onClick={() => void handleSignUp()}
+          className="w-full bg-primary text-on-primary font-medium py-3 px-4 rounded-md transition duration-200 primary-glow hover:bg-primary/90"
         >
           Sign Up with AWS Cognito
         </button>
-        <p className="text-gray-400 text-center">
-          Already have an account?{' '}
-          <a href="https://main.d325l4yh4si1cx.amplifyapp.com/chat/sign-in" className="text-blue-400 hover:text-blue-300">
+        <p className="text-muted-foreground text-center mt-6 text-sm">
+          Already have an account?{" "}
+          <a
+            href={appUrl("/chat/sign-in")}
+            className="text-primary-dim hover:text-primary underline-offset-4 hover:underline"
+          >
             Sign in here
           </a>
         </p>
       </div>
     </div>
-  )
-} 
+  );
+}

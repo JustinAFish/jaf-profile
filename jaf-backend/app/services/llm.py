@@ -6,13 +6,16 @@ This service component handles all direct LLM interactions, ensuring consistent
 configuration and error handling across the application.
 """
 
-from typing import Dict, Any
+import logging
 import os
+from typing import Any, Dict
 from openai import OpenAI
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.messages import HumanMessage
 from functools import lru_cache
 from app.config import get_settings
+
+logger = logging.getLogger(__name__)
 
 # LangSmith tracing setup
 try:
@@ -39,7 +42,10 @@ class LLMService:
             if settings.LANGSMITH_API_KEY:
                 os.environ["LANGCHAIN_API_KEY"] = settings.LANGSMITH_API_KEY
             os.environ["LANGCHAIN_PROJECT"] = settings.LANGSMITH_PROJECT
-            print(f"LangSmith tracing enabled for project: {settings.LANGSMITH_PROJECT}")
+            logger.info(
+                "LangSmith tracing enabled for project: %s",
+                settings.LANGSMITH_PROJECT,
+            )
         
         self.client = OpenAI(
             api_key=settings.OPENAI_API_KEY

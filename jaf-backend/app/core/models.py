@@ -5,7 +5,7 @@ and validation. These Pydantic models ensure consistent data structure for chat
 messages, responses, and error handling.
 """
 
-from typing import List, Optional, Dict, Any
+from typing import List, Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
 
@@ -18,7 +18,14 @@ class MessageHistory(BaseModel):
 class ChatMessage(BaseModel):
     """Input message model with conversation history"""
     content: str
-    conversation_history: Optional[List[MessageHistory]] = Field(default=None, description="Previous messages in the conversation")
+    conversation_history: Optional[List[MessageHistory]] = Field(
+        default=None,
+        description="Previous messages in the conversation",
+    )
+    chat_id: Optional[str] = Field(
+        default=None,
+        description="Client-side chat id; accepted for forward compatibility, not persisted",
+    )
 
 class Source(BaseModel):
     """Enhanced model for a source reference with document metadata"""

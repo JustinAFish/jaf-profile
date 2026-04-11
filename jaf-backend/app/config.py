@@ -65,6 +65,9 @@ class Settings(BaseSettings):
     
     # Environment
     ENVIRONMENT: str = "development"
+
+    # CORS: comma-separated origins; empty = allow all (credentials disabled)
+    CORS_ORIGINS: Optional[str] = None
     
     # System Prompt Configuration
     SYSTEM_PROMPT: str = """
