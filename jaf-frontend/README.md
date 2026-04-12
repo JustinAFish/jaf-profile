@@ -34,3 +34,41 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Deploy on Railway (monorepo)
+
+You can deploy this app as **two** Railway services from the same repo. Set **Root Directory** to `jaf-backend` or `jaf-frontend` respectively. Build and start commands are defined in each folder’s [`railway.json`](railway.json).
+
+1. Deploy **backend** first, then copy its public URL.
+2. Add **frontend** variables (below) and redeploy so `NEXT_PUBLIC_*` values are baked into the build.
+
+**Backend (`jaf-backend`) — variables (Railway dashboard)**
+
+| Variable | Notes |
+|----------|--------|
+| `ENVIRONMENT` | `production` (required for startup validation) |
+| `OPENAI_API_KEY` | Required in production |
+| `PINECONE_API_KEY` | Required in production |
+| `PINECONE_ENVIRONMENT`, `PINECONE_INDEX_NAME`, `PINECONE_NAMESPACE` | As used locally / Lambda |
+| `CORS_ORIGINS` | Comma-separated; include your frontend origin, e.g. `https://your-app.up.railway.app` |
+| Optional | LangSmith vars if you use tracing |
+
+**Frontend (`jaf-frontend`) — variables**
+
+| Variable | Notes |
+|----------|--------|
+| `NEXT_PUBLIC_BACKEND_URL` | Full URL of the Railway backend (set **before** `npm run build`) |
+| `NEXT_PUBLIC_APP_ORIGIN` | Canonical frontend URL (same as the site users open) |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | From Supabase project settings |
+| `EMAIL_USER`, `EMAIL_PASSWORD` | SMTP for the contact API route |
+| `CONTACT_TO_EMAIL` | Optional override for the contact form recipient |
+
+**Supabase (dashboard — required for auth in production)**
+
+In the Supabase project: **Authentication → URL configuration**, set **Site URL** to your Railway frontend URL and add **Redirect URLs** for each path users return to after sign-in (replace the host with your Railway frontend URL), for example:
+
+- `https://<your-frontend-host>/auth/callback`
+
+Without this, OAuth and magic-link redirects will not return users to the Railway deployment.
+
+**CLI:** from a linked service directory, `npx @railway/cli@latest up` (after `railway login`).

@@ -13,6 +13,9 @@ python-dotenv==1.0.1
 # Essential web handling
 python-multipart==0.0.9
 
+# ASGI server (Railway / start.py; not used on Lambda)
+uvicorn[standard]==0.32.1
+
 # Minimal Langchain ecosystem (only what we need)
 langchain-core==0.3.21
 langchain==0.3.9
