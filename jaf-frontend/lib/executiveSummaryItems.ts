@@ -7,39 +7,35 @@ export type ExecutiveSummaryItem = {
 export const executiveSummaryItems: ExecutiveSummaryItem[] = [
   {
     id: "1",
-    text: "Innovative and strategic leader with a proven track record of driving business growth through emerging technologies, including Generative AI",
+    text: "Highly Commended MCA Technology Consultant of the Year 2025 — recognised for bridging complex AI engineering and executive-level business value.",
   },
   {
     id: "2",
-    text: "Adept at identifying opportunities, developing robust strategies, and delivering high-impact solutions that accelerate organisational success",
+    text: "AI Consultant with 8+ years driving enterprise AI transformation — from identifying high-impact opportunities to building and deploying production-ready solutions with measurable business outcomes.",
   },
   {
     id: "3",
-    text: "Combines deep technical expertise with business acumen to apply design thinking and orchestrate AI-driven initiatives",
+    text: "Proven track record leading multidisciplinary teams of up to 15 to deliver Generative AI, LLM, and agentic solutions for major UK Government and Enterprise clients — including £350m in cost efficiency and 50% reductions in processing time.",
   },
   {
     id: "4",
-    text: "Creates user-centric solutions that address key stakeholder needs",
+    text: "Skilled at engaging stakeholders at all levels — from frontline engineering teams to C-suite executives — through technical workshops, solution discovery, and clear business communication.",
   },
   {
     id: "5",
-    text: "Experienced in leading multi-disciplinary teams to deliver high-value AI-driven initiatives that enhance revenue streams and competitive advantage",
+    text: "Full-stack AI engineering capability: Python with LLM integration (LangChain, RAG pipelines, agentic architectures), React/Next.js frontends, CI/CD, and cloud deployment across AWS, Azure, and GCP.",
   },
   {
     id: "6",
-    text: "Articulate communicator skilled in crafting compelling business/technical documentation and delivering engaging presentations to diverse audiences",
+    text: "Strong product leadership — owning the end-to-end product lifecycle, translating AI capabilities into business value propositions, securing £5M+ in executive investment, and driving 90%+ user adoption through iterative design.",
   },
   {
     id: "7",
-    text: "Full Stack Developer with strong Data Science expertise:",
+    text: "Cloud-certified across AWS, Azure, and GCP:",
     subpoints: [
-      "Experienced in building Python backends with LLM integration",
-      "Develop Next.js/React frontends and connecting APIs with FastAPI",
-      "Proficient in deploying end-to-end solutions on cloud platforms",
+      "Google Cloud Professional Data Engineer",
+      "AWS Certified Solutions Architect — Associate",
+      "Microsoft Azure OpenAI Service · Databricks Lakehouse Fundamentals",
     ],
-  },
-  {
-    id: "8",
-    text: "Technology Consultant of the Year nominee for 2025 MCA Awards (Winner announced November 2025)",
   },
 ];

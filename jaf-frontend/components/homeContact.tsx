@@ -13,12 +13,13 @@ export default function HomeContact() {
         </div>
         <CardHeader>
           <h2 className="text-4xl font-heading font-bold mb-4 text-header">
-            Contact Me
+            Get in Touch
           </h2>
           <p className="text-lg md:text-xl text-paragraph mb-2">
-            I&apos;m currently open to new opportunities and collaborations.
-            Feel free to reach out if you&apos;d like to discuss potential
-            opportunities
+            Open to senior AI consulting, solutions architecture, and AI product
+            leadership roles. If you&apos;re building something ambitious with
+            AI — or looking for someone to bridge the gap between cutting-edge
+            technology and real-world business impact — let&apos;s talk.
           </p>
         </CardHeader>
         <CardContent className="relative z-10 px-4 sm:px-6 md:px-8">

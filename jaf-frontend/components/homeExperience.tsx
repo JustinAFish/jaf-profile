@@ -87,7 +87,7 @@ export default function HomeExperience() {
                     </span>
                     <span className="mt-1 block text-sm uppercase tracking-widest text-secondary">
                       <span className="text-paragraph">
-                        | Data Science and AI Product Managing Consultant
+                        | Senior Managing AI Consultant — Data Science &amp; AI Products
                       </span>
                     </span>
                   </h3>
@@ -121,65 +121,40 @@ export default function HomeExperience() {
                   </div>
                   <div className="rounded border-l-4 border-primary bg-surface-container p-6 transition-colors duration-300 hover:bg-surface-container-high md:p-8">
                     <h4 className="font-heading text-2xl font-bold text-primary-dim">
-                      UK Government Innovation Lab Solution Architect
+                      UK Government — Innovation Lab
                     </h4>
                     <h5 className="mt-1 text-xs tracking-tighter text-muted-foreground md:text-sm">
-                      £350m Cost Efficiency • 14 PoVs • 50+ Reusable Assets • 6
-                      Solutions Operationalised
+                      £350m Cost Efficiency • 14 Solutions Designed &amp; Deployed • 50+ Reusable Assets • 4 Solutions Operationalised • 30+ Technologies Explored
                     </h5>
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Led client engagement and multidisciplinary team of 15
-                          (including 7 Data Scientists) in developing user-centric
-                          solutions using Analytics and AI, primarily Generative AI
+                          Led client engagement and a multidisciplinary team of 15 in developing user-centric AI solutions for UK Government, delivering state-of-the-art PoCs using Generative AI and advanced analytics that proved production viability
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Developed operating model for identifying opportunities,
-                          delivering MVPs, and scaling solutions through
-                          cross-functional collaboration
+                          Architected and led development of a Generative AI-powered app enabling real-time document analysis, vulnerability detection, and RAG-based Q&amp;A from policy documents — improving both user and customer outcomes
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Established GenAI Center of Excellence (COE) through
-                          workshops and use case collection, building reusable
-                          assets for department-wide adoption
+                          Established and scaled a Generative AI Centre of Excellence (CoE), running knowledge-sharing sessions, capturing department-wide use cases, and building reusable GenAI assets adopted across multiple teams
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Led development of GenAI-powered app for real-time
-                          document analysis and vulnerability detection, improving
-                          user experience and social outcomes
+                          Collaborated with AWS, Azure, and GCP to integrate cloud AI offerings into PoCs, accelerating multi-cloud development and briefing senior stakeholders up to C-suite level
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Partnered with AWS, Azure, GCP, and startups to integrate
-                          technologies accelerating proof-of-concept development
+                          Managed full project lifecycle for multiple concurrent prototypes — timelines, budgets, risk mitigation — regularly building trust with executive sponsors to secure continued investment
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Led expansion of energy metering department, later
-                          integrating wiring division to create cross-functional
-                          capabilities
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Developed billing application for thermal disconnect
-                          systems that facilitated joint venture partnership
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Managed full project lifecycle from concept to
-                          operations, overseeing technical implementation and
-                          stakeholder alignment
+                          Developed and implemented the operating model for repeatedly identifying business opportunities, delivering MVPs, and scaling solutions cross-functionally from concept to production
                         </p>
                       </li>
                     </ul>
@@ -196,46 +171,25 @@ export default function HomeExperience() {
                   />
                   <div className="rounded border-l-4 border-outline-variant/30 bg-surface-container p-6 transition-all duration-300 hover:border-primary hover:bg-surface-container-high md:p-8">
                     <h4 className="font-heading text-2xl font-bold text-header">
-                      AI Innovation Product Lead
+                      UK Government — AI Safety Institute
                     </h4>
+                    <h5 className="mt-1 text-xs tracking-tighter text-muted-foreground md:text-sm">
+                      Technology Strategy • Enterprise Governance • Data-Driven Insights
+                    </h5>
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Founding leader driving operationalization of AI products
-                          from concept to production
+                          Led a strategic engagement defining the technology strategy and operating model for a national AI Safety Institute, establishing enterprise governance frameworks to improve cross-departmental alignment
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Own end-to-end product lifecycle management with 100%
-                          on-time delivery of major features
+                          Architected a data strategy delivering financial and talent management insights through advanced analytics, enabling data-driven decision-making at scale
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Translate technical capabilities into business value
-                          propositions for C-suite stakeholders, securing £5M+ in
-                          AI initiative funding
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Lead user-centered design processes achieving 90%+
-                          adoption rates through iterative UI/UX improvements
-                          based on customer feedback
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Orchestrate cross-functional teams (data engineers,
-                          scientists, developers) to deliver enterprise-grade AI
-                          solutions meeting strict success criteria
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Pioneer communication frameworks bridging technical
-                          implementation with strategic business objectives
+                          Designed testing protocols and evaluation frameworks for assessing the societal impacts of advanced AI systems across diverse demographics
                         </p>
                       </li>
                     </ul>
@@ -252,45 +206,25 @@ export default function HomeExperience() {
                   />
                   <div className="rounded border-l-4 border-outline-variant/30 bg-surface-container p-6 transition-all duration-300 hover:border-primary hover:bg-surface-container-high md:p-8">
                     <h4 className="font-heading text-2xl font-bold text-header">
-                      Head of the GenAI Demo Division
+                      UK Police Forces
                     </h4>
                     <h5 className="mt-1 text-xs tracking-tighter text-muted-foreground md:text-sm">
-                      12 PoCs Developed • 10 different clients engaged (Public and
-                      Private)
+                      50% Processing Time Reduction • £250K Annual Cost Savings • Production AI Deployment
                     </h5>
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Founded and led GenAI capability for product delivery
-                          supporting client proposals and maintaining market
-                          leadership in AI transformation
+                          Led design and delivery of an AI-enabled FOI response accelerator, reducing processing time by 50% and delivering up to £250K in annual cost savings, mitigating statutory non-compliance risk amid rising request volumes
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Designed program delivery model for three workstreams:
-                          GenAI knowledge dissemination, L&D, and
-                          client-specific product development
+                          Developed strategy to deliver multiple AI products enhancing operational decision-making, improving efficiency and resilience across policing
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Implemented CI/CD pipelines, opportunity tracking, and
-                          marketplace asset management systems for simultaneous
-                          multi-client development
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Ensured product quality through hands-on technical
-                          leadership and mentorship of junior developers/product
-                          owners
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Drove development of industry-specific solutions while
-                          maintaining best practices for value-driven outcomes
+                          Led end-to-end product development of an AI solution with geofencing, providing frontline officers with real-time patrol intelligence
                         </p>
                       </li>
                     </ul>
@@ -304,48 +238,30 @@ export default function HomeExperience() {
                   />
                   <div className="rounded border-l-4 border-outline-variant/30 bg-surface-container p-6 transition-all duration-300 hover:border-primary hover:bg-surface-container-high md:p-8">
                     <h4 className="font-heading text-2xl font-bold text-header">
-                      UK Government AI Security Institute
+                      AI Innovation Product Lead &amp; GenAI GTM
                     </h4>
                     <h5 className="mt-1 text-xs tracking-tighter text-muted-foreground md:text-sm">
-                      AI Security Infrastructure • Cross-Departmental Alignment •
-                      Data-Driven Insights
+                      12 PoCs Developed • 10 Clients Engaged (Public &amp; Private) • £5M+ Investment Secured
                     </h5>
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Led strategy and operations for government department
-                          overseeing AI safety research and infrastructure
-                          development
+                          Founded and led GenAI capability, establishing the delivery model across three workstreams: knowledge dissemination, L&amp;D, and client-specific product development to support go-to-market growth
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Established enterprise governance frameworks improving
-                          cross-departmental alignment on AI safety initiatives
+                          Oversaw end-to-end product lifecycle management with 100% on-time delivery of major features, translating AI capabilities into business value propositions for C-suite stakeholders
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Architected data strategy delivering financial and talent
-                          insights through advanced analytics
+                          Secured £5M+ in AI initiative funding by articulating LLM solutions as strategic business value to executive sponsors
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Developed testing protocols for advanced AI systems&apos;
-                          societal impacts and safety measures
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Spearheaded infrastructure development for large-scale AI
-                          safety evaluation frameworks
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Implemented metrics-driven approach to quantify AI&apos;s
-                          societal impacts across diverse demographics
+                          Implemented CI/CD pipelines, opportunity tracking, and reusable asset management to support simultaneous multi-client development at scale
                         </p>
                       </li>
                     </ul>
@@ -368,7 +284,7 @@ export default function HomeExperience() {
                 <div className="min-w-0 flex-1">
                   <h3 className="font-heading font-bold text-header">
                     <span className="block text-3xl">
-                      <span className="mr-2">PA Consulating</span>
+                      <span className="mr-2">PA Consulting</span>
                     </span>
                     <span className="mt-1 block text-sm uppercase tracking-widest text-secondary">
                       <span className="text-paragraph">
@@ -406,49 +322,27 @@ export default function HomeExperience() {
                   </div>
                   <div className="rounded border-l-4 border-primary bg-surface-container p-6 transition-colors duration-300 hover:bg-surface-container-high md:p-8">
                     <h5 className="text-xs tracking-tighter text-muted-foreground md:text-sm">
-                      Application of a wide range of data science skills to five
-                      different sectors including Healthcare, Consumer, Financial
-                      Services, Energy and Utilities, and Public Services. The
-                      projects involved delivering the insights or the products to
-                      the client by presenting it in a clear manner ensuring a deep
-                      understanding during the handover. Most project involved the
-                      usage of project management tools and collaboration within a
-                      team.
+                      Delivered data science solutions across Healthcare, Public Sector, Consumer, Energy &amp; Utilities, and Financial Services — translating complex analyses into actionable insights and user-friendly tools for clients.
                     </h5>
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Led team of 5 data scientists developing machine learning
-                          model to predict elderly patient falls, deployed via web
-                          app for actionable insights
+                          Led a team of 5 data scientists to develop a machine learning model predicting elderly patient fall risk, deployed as a web application enabling easy access to predictive insights for healthcare end-users
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Analyzed wind turbine performance using Random Forest
-                          regression/classification and neural networks to predict
-                          failures and optimize maintenance schedules
+                          Improved hospital theatre scheduling through data-driven patient workflow analysis and forecasting, increasing utilisation, reducing wait times, and optimising resource allocation
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Digitized unstructured PDF documents into searchable
-                          databases using AWS extraction tools enhanced with NLP
-                          features
+                          Designed a cloud-based text analytics pipeline using AWS and NLP (text classification, summarisation) to digitise unstructured government documents into a searchable knowledge base
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Designed and deployed supply chain resilience tool combining
-                          ML text-classification, NLP text-extraction/summarization,
-                          and geospatial visualizations
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Developed LSTM model predicting telemetry alarm occurrences
-                          at distribution sites, enabling optimized scheduling and
-                          operational cost savings
+                          Applied advanced ML methods (Random Forests, LSTM neural networks) to optimise energy sector operations — predicting equipment failures and enabling preventative maintenance to reduce downtime and costs
                         </p>
                       </li>
                     </ul>
@@ -508,22 +402,12 @@ export default function HomeExperience() {
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Led expansion of energy metering department, later
-                          integrating wiring division to create cross-functional
-                          capabilities
+                          Developed a software application for a thermal disconnect billing system, enabling a new service offering and facilitating a joint venture partnership
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Developed billing application for thermal disconnect
-                          systems that facilitated joint venture partnership
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Managed full project lifecycle from concept to operations,
-                          overseeing technical implementation and stakeholder
-                          alignment
+                          Managed R&amp;D projects and daily operations, coordinating engineering teams and stakeholders to deliver innovative energy-efficiency solutions on schedule
                         </p>
                       </li>
                     </ul>

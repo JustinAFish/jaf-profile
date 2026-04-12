@@ -92,7 +92,7 @@ export function ContactForm({ compact, onSuccess }: ContactFormProps) {
             id={nameId}
             name="name"
             className={inputClass}
-            placeholder="Your Name"
+            placeholder="Your name or company"
             value={formData.name}
             onChange={handleChange}
             required
@@ -131,7 +131,7 @@ export function ContactForm({ compact, onSuccess }: ContactFormProps) {
           name="message"
           rows={textRows}
           className={`${inputClass} resize-none`}
-          placeholder="Your message..."
+          placeholder="Tell me about the role or opportunity..."
           value={formData.message}
           onChange={handleChange}
           required
@@ -150,13 +150,13 @@ export function ContactForm({ compact, onSuccess }: ContactFormProps) {
 
       {submitStatus === "success" && (
         <p className="text-tertiary mt-2">
-          Your message has been sent successfully!
+          Your message has been sent — I&apos;ll be in touch soon!
         </p>
       )}
 
       {submitStatus === "error" && (
         <p className="text-destructive mt-2">
-          Failed to send message. Please try again later.
+          Something went wrong. Please try again or email me directly.
         </p>
       )}
     </form>

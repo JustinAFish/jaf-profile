@@ -16,22 +16,17 @@ export default function HomeAwardsEdu() {
               Awards and Certifications
             </h2>
             <ul className="space-y-4 text-lg md:text-xl text-paragraph list-disc pl-6 flex-1">
+              <li>Highly Commended MCA Technology Consultant of the Year 2025</li>
+              <li>Google Cloud Professional Data Engineer</li>
+              <li>AWS Certified Solutions Architect — Associate</li>
+              <li>AWS Partner: Generative AI Essentials</li>
               <li>
-                2025 MCA Technology Consultant of the Year Finalist (Winner
-                announced November 2025)
+                Microsoft: Develop Generative AI Solutions with Azure OpenAI
+                Service
               </li>
-              <li>
-                AWS Certifications: Certified Solutions Architect - Associate,
-                Generative AI Essentials
-              </li>
-              <li>
-                Microsoft Certified: Develop Generative AI solutions with Azure
-                OpenAI Service
-              </li>
-              <li>Google Cloud Certified: Professional Data Engineer</li>
-              <li>Professional Scrum Master™ I</li>
-              <li>Professional Scrum Product Owner™ I</li>
               <li>Databricks Lakehouse Fundamentals</li>
+              <li>Professional Scrum Product Owner™ (PSPO I)</li>
+              <li>Professional Scrum Master™ (PSM I)</li>
             </ul>
           </CardHeader>
         </Card>

@@ -128,9 +128,9 @@ const HomeHero = forwardRef<HTMLElement, object>(
 
     useEffect(() => {
       const titles = [
-        "Full Stack Data Scientist",
-        "Product Owner",
-        "Solution Architect",
+        "Applied AI Consultant",
+        "Solutions Architect",
+        "AI Product Leader",
       ];
       let index = 0;
       const changingText = document.getElementById("changing-text");
@@ -200,16 +200,23 @@ const HomeHero = forwardRef<HTMLElement, object>(
 
                 <div className="space-y-3 sm:space-y-4 md:space-y-4 xl:space-y-6 2xl:space-y-8">
                   <h1 className="font-heading text-4xl sm:text-5xl md:text-5xl lg:text-7xl xl:text-8xl 2xl:text-8xl min-[1800px]:text-9xl font-bold text-foreground tracking-tighter leading-[0.95]">
-                    Innovative <br />
-                    <span className="text-primary">strategic</span> <br />
-                    leader
+                    AI <br />
+                    <span className="text-primary">Consultant</span> <br />
+                    &amp; Architect
                   </h1>
                 </div>
 
                 <div className="max-w-md sm:max-w-lg md:max-w-lg xl:max-w-xl 2xl:max-w-2xl min-[1800px]:max-w-3xl space-y-5 md:space-y-6 xl:space-y-10 2xl:space-y-12">
                   <p className="text-base sm:text-lg md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl min-[1800px]:text-4xl text-muted-foreground font-light leading-snug md:leading-relaxed">
-                    Innovative strategic leader with a proven track record of
-                    leveraging AI to drive business growth.
+                    <span
+                      id="changing-text"
+                      style={{ transition: "opacity 0.5s ease" }}
+                      className="text-primary font-medium"
+                    >
+                      Applied AI Consultant
+                    </span>{" "}
+                    — bridging the gap between cutting-edge AI and real-world
+                    business impact, from PoC to production.
                   </p>
                   <div className="flex flex-col gap-3 md:gap-3.5 xl:gap-5 2xl:gap-6">
                     <a
@@ -264,7 +271,7 @@ const HomeHero = forwardRef<HTMLElement, object>(
                         src="/hero-photo.jpeg"
                         width={1280}
                         height={1107}
-                        alt="MCA Technology Consultant of the Year"
+                        alt="Highly Commended MCA Technology Consultant of the Year 2025"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 640px"
                         className="relative z-0 block h-auto w-auto max-w-full max-h-[min(360px,50dvh)] sm:max-h-[min(400px,48dvh)] md:max-h-[min(420px,50dvh)] lg:max-h-[560px] xl:max-h-[640px] 2xl:max-h-[min(840px,78vh)] min-[1800px]:max-h-[min(1020px,82vh)] min-[2200px]:max-h-[min(1180px,85vh)] rounded-md transition-transform duration-300 group-hover:scale-[1.03]"
                         priority
