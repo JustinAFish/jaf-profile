@@ -1,46 +1,59 @@
-import { NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from "next/server";
+import { updateSession } from "@/lib/supabase/middleware";
 
-// Routes that don't require authentication
 const publicRoutes = [
-  '/',
-  '/chat/sign-in',
-  '/chat/sign-up', 
-  '/chat/callback',  // Add callback route for OAuth
-  '/api/contact',
-  '/api/debug',
-]
+  "/",
+  "/chat/sign-in",
+  "/chat/sign-up",
+  "/chat/callback",
+  "/auth/callback",
+  "/api/contact",
+  "/api/debug",
+];
 
 function isPublicPath(pathname: string) {
-  return publicRoutes.some((p) => pathname === p || pathname.startsWith(p + '/'))
+  return publicRoutes.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
-export default async function middleware(req: Request) {
-  const url = new URL(req.url)
-  const pathname = url.pathname
+function mergeSetCookies(from: NextResponse, to: NextResponse) {
+  const headersWithGetSetCookie = from.headers as Headers & {
+    getSetCookie?: () => string[];
+  };
+  const cookies = headersWithGetSetCookie.getSetCookie?.() ?? [];
+  for (const cookie of cookies) {
+    to.headers.append("set-cookie", cookie);
+  }
+}
 
-  // Allow public routes
+export default async function middleware(request: NextRequest) {
+  const response = await updateSession(request);
+  const url = new URL(request.url);
+  const pathname = url.pathname;
+
   if (isPublicPath(pathname)) {
-    return NextResponse.next()
+    return response;
   }
 
-  // Check Authorization header for a Bearer token (for API calls)
-  const authHeader = req.headers.get('authorization') || ''
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
+  const authHeader = request.headers.get("authorization") || "";
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
-  // If this is an API call without a token, block it
-  if (pathname.startsWith('/api/') && !token) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (pathname.startsWith("/api/") && !token) {
+    const unauthorized = NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 401 },
+    );
+    mergeSetCookies(response, unauthorized);
+    return unauthorized;
   }
 
-  // For /chat route, allow it through - authentication is handled client-side by Amplify
-  // The client-side code will redirect to sign-in if needed
-  if (pathname.startsWith('/chat')) {
-    return NextResponse.next()
+  // Authentication for /chat is enforced on the client; middleware still refreshes the session cookie above.
+  if (pathname.startsWith("/chat")) {
+    return response;
   }
 
-  return NextResponse.next()
+  return response;
 }
 
 export const config = {
-  matcher: ['/((?!_next|.*\\..*).*)'],
-}
+  matcher: ["/((?!_next|.*\\..*).*)"],
+};

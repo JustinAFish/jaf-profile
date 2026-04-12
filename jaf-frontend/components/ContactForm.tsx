@@ -77,7 +77,9 @@ export function ContactForm({ compact, onSuccess }: ContactFormProps) {
 
   return (
     <form className={gap} onSubmit={handleSubmit}>
-      <div className={`grid gap-4 ${compact ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-2"}`}>
+      <div
+        className={`grid gap-4 ${compact ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1 sm:grid-cols-2"}`}
+      >
         <div>
           <label
             htmlFor={nameId}

@@ -6,8 +6,9 @@ import { ChatMessages } from "@/components/ChatMessages";
 import { ChatInput } from "@/components/ChatInput";
 import { selectCurrentChat, useChatStore } from "@/store/chatStore";
 import Image from "next/image";
-import { getCurrentUser } from "aws-amplify/auth";
+import { createClient } from "@/lib/supabase/client";
 import { appUrl } from "@/lib/appOrigin";
+import { backendApiUrl } from "@/lib/backendApiUrl";
 
 const debugAuth =
   process.env.NODE_ENV === "development" &&
@@ -34,9 +35,16 @@ export default function ChatPage() {
       try {
         await new Promise((resolve) => setTimeout(resolve, 200));
 
-        const user = await getCurrentUser();
+        const supabase = createClient();
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser();
+        if (error || !user) {
+          throw error ?? new Error("Not authenticated");
+        }
         if (debugAuth) {
-          console.log("Chat page: User authenticated:", user.username);
+          console.log("Chat page: User authenticated:", user.email ?? user.id);
         }
         if (mounted) {
           setIsAuthLoading(false);
@@ -130,7 +138,7 @@ export default function ChatPage() {
         throw new Error("Backend URL not configured");
       }
 
-      const response = await fetch(`${backendUrl}/api/chat/message`, {
+      const response = await fetch(backendApiUrl("/api/chat/message"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

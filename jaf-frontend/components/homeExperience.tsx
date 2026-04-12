@@ -48,7 +48,7 @@ export default function HomeExperience() {
                   </h3>
                 </div>
               </div>
-              <span className="shrink-0 text-lg whitespace-nowrap text-paragraph">
+              <span className="text-lg text-paragraph whitespace-normal sm:shrink-0 sm:whitespace-nowrap">
                 2021 - Present
               </span>
             </div>
@@ -321,7 +321,7 @@ export default function HomeExperience() {
                   </h3>
                 </div>
               </div>
-              <span className="shrink-0 text-lg whitespace-nowrap text-paragraph">
+              <span className="text-lg text-paragraph whitespace-normal sm:shrink-0 sm:whitespace-nowrap">
                 2019 - 2021
               </span>
             </div>
@@ -418,7 +418,7 @@ export default function HomeExperience() {
                   </h3>
                 </div>
               </div>
-              <span className="shrink-0 text-lg whitespace-nowrap text-paragraph">
+              <span className="text-lg text-paragraph whitespace-normal sm:shrink-0 sm:whitespace-nowrap">
                 2017 - 2019
               </span>
             </div>

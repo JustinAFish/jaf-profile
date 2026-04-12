@@ -10,30 +10,21 @@ and result scoring.
 
 import logging
 import os
-import sys
 from typing import List, Optional
 from functools import lru_cache
 
-# Handle deprecated pinecone plugin import issues
+# pinecone-plugin-inference (and related plugins) are deprecated; if installed,
+# pinecone's import raises. Clearing sys.modules does not fix it — uninstall the plugin.
 try:
     from pinecone import Pinecone
 except Exception as e:
-    if "pinecone-plugin-inference" in str(e) and "deprecated" in str(e).lower():
-        logging.getLogger(__name__).warning(
-            "Deprecated Pinecone plugin detected, attempting workaround: %s", e
-        )
-        
-        # Remove pinecone modules from cache and try again
-        modules_to_remove = [key for key in sys.modules.keys() if 'pinecone' in key.lower()]
-        for module in modules_to_remove:
-            if module in sys.modules:
-                logging.getLogger(__name__).debug("Removing module: %s", module)
-                del sys.modules[module]
-        
-        # Import again
-        from pinecone import Pinecone
-    else:
-        raise
+    msg = str(e).lower()
+    if "pinecone-plugin-inference" in msg or type(e).__name__ == "DeprecatedPluginError":
+        raise RuntimeError(
+            "Uninstall pinecone-plugin-inference (deprecated; bundled in pinecone 7.x): "
+            "pip uninstall pinecone-plugin-inference -y"
+        ) from e
+    raise
 
 from langchain_pinecone import PineconeVectorStore
 from langchain_core.documents import Document

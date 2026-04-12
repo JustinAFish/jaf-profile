@@ -10,6 +10,13 @@ Globals:
       Variables:
         ENVIRONMENT: production
         PYTHONPATH: /var/task
+  Api:
+    # So browser clients (e.g. localhost, Amplify) get CORS headers even when
+    # API Gateway returns 4xx before Lambda runs. FastAPI also sets CORS.
+    Cors:
+      AllowMethods: "'GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
 
 Parameters:
   OpenAIApiKey:

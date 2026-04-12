@@ -1,6 +1,6 @@
 /**
  * Canonical site origin for OAuth redirects and absolute links.
- * Set NEXT_PUBLIC_APP_ORIGIN in production (e.g. https://main.xxx.amplifyapp.com).
+ * Set NEXT_PUBLIC_APP_ORIGIN in production to your canonical site URL (e.g. https://your-domain.com).
  * In the browser, falls back to window.location.origin when unset.
  */
 export function getAppOrigin(): string {

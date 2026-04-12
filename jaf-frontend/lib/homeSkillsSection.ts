@@ -1,3 +1,6 @@
+/** Minimum viewport width (px) for the scroll-driven Skills fan-out; below this, grid layout is used. */
+export const SKILLS_SCENE_MIN_WIDTH_PX = 1024;
+
 /**
  * Scroll distance (vh) over which the pinned #skills scene animates 0→1.
  * Higher = more wheel/trackpad travel before the fan-out finishes (avoids rushing past the sprout).

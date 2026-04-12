@@ -11,13 +11,12 @@ export async function GET() {
 
   const envVars = {
     NODE_ENV: process.env.NODE_ENV,
-    AWS_COGNITO_USER_POOL_ID_EXISTS: !!process.env.NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID,
-    AWS_COGNITO_APP_CLIENT_ID_EXISTS: !!process.env.NEXT_PUBLIC_AWS_COGNITO_APP_CLIENT_ID,
-    AWS_COGNITO_DOMAIN_EXISTS: !!process.env.NEXT_PUBLIC_AWS_COGNITO_DOMAIN,
+    NEXT_PUBLIC_SUPABASE_URL_EXISTS: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY_EXISTS: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     EMAIL_USER_EXISTS: !!process.env.EMAIL_USER,
     EMAIL_PASSWORD_EXISTS: !!process.env.EMAIL_PASSWORD,
-    ALL_COGNITO_VARS: Object.keys(process.env).filter((key) =>
-      key.includes("COGNITO"),
+    ALL_SUPABASE_VARS: Object.keys(process.env).filter((key) =>
+      key.includes("SUPABASE"),
     ),
     ALL_EMAIL_VARS: Object.keys(process.env).filter((key) =>
       key.includes("EMAIL"),

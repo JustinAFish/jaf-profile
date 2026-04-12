@@ -24,7 +24,7 @@ function itemBody(item: ExecutiveSummaryItem, compact: boolean) {
     ? "text-base leading-snug text-white/90 sm:text-lg md:text-sm md:leading-snug lg:text-base lg:leading-snug xl:text-lg xl:leading-snug 2xl:text-xl 2xl:leading-relaxed"
     : "text-base md:text-lg text-white/90 leading-relaxed";
   const ul = compact
-    ? "mt-3 list-[circle] space-y-2.5 pl-4 text-sm text-white/80 sm:text-base md:text-xs lg:text-sm xl:text-base"
+    ? "mt-3 list-[circle] space-y-2.5 pl-4 text-sm text-white/80 sm:text-base md:text-base lg:text-sm xl:text-base"
     : "mt-3 list-[circle] space-y-2 pl-5 text-sm md:text-base text-white/80";
 
   return (

@@ -21,7 +21,7 @@ export default function HomeContact() {
             opportunities
           </p>
         </CardHeader>
-        <CardContent className="px-8 relative z-10">
+        <CardContent className="relative z-10 px-4 sm:px-6 md:px-8">
           <ContactForm />
         </CardContent>
       </Card>

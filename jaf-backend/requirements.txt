@@ -1,3 +1,6 @@
+# Block deprecated Pinecone plugins that break `import pinecone` (see constraints.txt)
+-c constraints.txt
+
 # Lambda-optimized requirements - reduced package size
 mangum==0.17.0
 

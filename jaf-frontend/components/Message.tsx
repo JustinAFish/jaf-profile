@@ -1,6 +1,7 @@
 // Message.tsx — user and assistant chat bubbles
 import React from "react";
-import { User, BookOpen, Bot } from "lucide-react";
+import Image from "next/image";
+import { User, BookOpen } from "lucide-react";
 import { SourceDocumentCard } from "./SourceDocumentCard";
 import type { Source } from "../types/chat";
 import ReactMarkdown from "react-markdown";
@@ -41,8 +42,14 @@ export function Message({
     <div className="w-full my-4 animate-fadeIn">
       <div className="card hover-lift bg-surface-container-high/95 p-6 rounded-md ai-glow backdrop-blur-sm">
         <div className="flex items-start gap-4">
-          <div className="w-8 h-8 rounded-md ai-gradient flex items-center justify-center">
-            <Bot className="w-5 h-5 text-on-background drop-shadow-sm" />
+          <div className="relative w-8 h-8 rounded-full border border-outline/30 overflow-hidden shrink-0">
+            <Image
+              src="/JAF_Photo.jpg"
+              alt="Justin Fish"
+              fill
+              className="object-cover"
+              sizes="32px"
+            />
           </div>
 
           <div className="flex-1">

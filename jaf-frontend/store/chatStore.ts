@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { backendApiUrl } from "@/lib/backendApiUrl";
 import type { Chat, Message, Source } from "@/types/chat";
 
 const STORAGE_NAME = "jaf-chat-storage";
@@ -211,7 +212,7 @@ export const useChatStore = create<ChatStore>()(
         const timeoutId = setTimeout(() => controller.abort(), 5000);
 
         try {
-          const response = await fetch(`${backendUrl}/api/chat/user/chats`, {
+          const response = await fetch(backendApiUrl("/api/chat/user/chats"), {
             method: "GET",
             signal: controller.signal,
           });

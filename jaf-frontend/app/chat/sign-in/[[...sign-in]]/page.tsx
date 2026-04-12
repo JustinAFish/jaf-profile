@@ -1,7 +1,8 @@
 "use client";
+
 import { useEffect, useState, Suspense } from "react";
-import { signInWithRedirect, getCurrentUser } from "aws-amplify/auth";
 import { useSearchParams } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { appUrl, resolveAuthRedirect } from "@/lib/appOrigin";
 
 const debugAuth = process.env.NEXT_PUBLIC_DEBUG_AUTH === "true";
@@ -11,7 +12,11 @@ const spinner = (
 );
 
 function SignInContent() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect_url");
 
@@ -20,62 +25,64 @@ function SignInContent() {
 
     const checkAuthAndRedirect = async () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
-
       if (!mounted) return;
 
       try {
-        const user = await getCurrentUser();
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          if (debugAuth) {
+            console.log("Sign-in page: User already authenticated:", user.email);
+          }
+          const destination = redirectUrl || "/chat";
+          const referrer = document.referrer;
+          if (
+            referrer.includes("/chat") ||
+            referrer.includes("/auth/callback")
+          ) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+          if (!mounted) return;
+          window.location.href = resolveAuthRedirect(destination);
+          return;
+        }
+      } catch (e) {
         if (debugAuth) {
-          console.log("Sign-in page: User already authenticated:", user.username);
-        }
-
-        const destination = redirectUrl || "/chat";
-
-        const referrer = document.referrer;
-        if (
-          referrer.includes("/chat") ||
-          referrer.includes("/chat/callback")
-        ) {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        }
-
-        if (!mounted) return;
-
-        window.location.href = resolveAuthRedirect(destination);
-        return;
-      } catch {
-        if (debugAuth) {
-          console.log("Sign-in page: User not authenticated, showing sign in");
+          console.log("Sign-in page: Session check failed", e);
         }
       }
 
-      if (!mounted) return;
-
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has("code")) {
-        window.location.href = `${appUrl("/chat/callback")}${window.location.search}`;
-        return;
-      }
-
-      if (mounted) {
-        setIsLoading(false);
-      }
+      if (mounted) setIsLoading(false);
     };
 
     void checkAuthAndRedirect();
-
     return () => {
       mounted = false;
     };
   }, [redirectUrl]);
 
-  const handleSignIn = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsSubmitting(true);
     try {
-      setIsLoading(true);
-      await signInWithRedirect();
+      const supabase = createClient();
+      const { error: signError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      if (signError) {
+        setError(signError.message);
+        setIsSubmitting(false);
+        return;
+      }
+      const destination = redirectUrl || "/chat";
+      window.location.href = resolveAuthRedirect(destination);
     } catch {
-      console.error("Error signing in");
-      setIsLoading(false);
+      setError("Something went wrong. Please try again.");
+      setIsSubmitting(false);
     }
   };
 
@@ -97,13 +104,59 @@ function SignInContent() {
         <p className="text-paragraph mb-6 text-center">
           Sign in to access the chat interface
         </p>
-        <button
-          type="button"
-          onClick={() => void handleSignIn()}
-          className="w-full bg-primary text-on-primary font-medium py-3 px-4 rounded-md transition duration-200 primary-glow hover:bg-primary/90"
-        >
-          Sign In with AWS Cognito
-        </button>
+        <form onSubmit={(ev) => void handleSubmit(ev)} className="space-y-4">
+          <div>
+            <label htmlFor="sign-in-email" className="sr-only">
+              Email
+            </label>
+            <input
+              id="sign-in-email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(ev) => setEmail(ev.target.value)}
+              placeholder="Email"
+              className="w-full rounded-md border border-border bg-background/60 px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+          <div>
+            <label htmlFor="sign-in-password" className="sr-only">
+              Password
+            </label>
+            <input
+              id="sign-in-password"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(ev) => setPassword(ev.target.value)}
+              placeholder="Password"
+              className="w-full rounded-md border border-border bg-background/60 px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+          {error ? (
+            <p className="text-sm text-destructive" role="alert">
+              {error}
+            </p>
+          ) : null}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-primary text-on-primary font-medium py-3 px-4 rounded-md transition duration-200 primary-glow hover:bg-primary/90 disabled:opacity-60"
+          >
+            {isSubmitting ? "Signing in…" : "Sign in"}
+          </button>
+        </form>
+        <p className="text-muted-foreground text-center mt-6 text-sm">
+          No account?{" "}
+          <a
+            href={appUrl("/chat/sign-up")}
+            className="text-primary-dim hover:text-primary underline-offset-4 hover:underline"
+          >
+            Sign up
+          </a>
+        </p>
       </div>
     </div>
   );

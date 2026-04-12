@@ -1,7 +1,7 @@
 /**
  * ChatMessages component - Core chat interface for message display.
  */
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { Message } from "./Message";
 import { selectCurrentChat, useChatStore } from "@/store/chatStore";
 import { Modal } from "./Modal";
@@ -20,12 +20,33 @@ export function ChatMessages({
   const currentChat = useChatStore(selectCurrentChat);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  /** Prevents reopening welcome when `currentChat` is replaced (same id, still empty) after fetch/hydration. */
+  const welcomeDismissedForChatIdRef = useRef<string | null>(null);
+
+  const dismissWelcome = useCallback(() => {
+    if (currentChat?.id) {
+      welcomeDismissedForChatIdRef.current = currentChat.id;
+    }
+    setShowWelcomeModal(false);
+  }, [currentChat?.id]);
+
+  const welcomeChatId = currentChat?.id;
+  const welcomeMessageCount = currentChat?.messages.length ?? 0;
 
   useEffect(() => {
-    if (!currentChat || currentChat.messages.length === 0) {
+    if (welcomeChatId === undefined) {
       setShowWelcomeModal(true);
+      return;
     }
-  }, [currentChat]);
+    if (welcomeMessageCount > 0) {
+      setShowWelcomeModal(false);
+      welcomeDismissedForChatIdRef.current = null;
+      return;
+    }
+    const shouldShow =
+      welcomeDismissedForChatIdRef.current !== welcomeChatId;
+    setShowWelcomeModal(shouldShow);
+  }, [welcomeChatId, welcomeMessageCount]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -73,7 +94,7 @@ export function ChatMessages({
       <button
         type="button"
         onClick={() => {
-          setShowWelcomeModal(false);
+          dismissWelcome();
           setTimeout(() => {
             useChatStore.getState().setIsExamplesOpen(true);
           }, 100);
@@ -88,10 +109,7 @@ export function ChatMessages({
   if (!currentChat) {
     return (
       <>
-        <Modal
-          isOpen={showWelcomeModal}
-          onClose={() => setShowWelcomeModal(false)}
-        >
+        <Modal isOpen={showWelcomeModal} onClose={dismissWelcome}>
           <WelcomeContent />
         </Modal>
         <div className="flex-1 fixed top-1/4 inset-0 -z-10 p-4 bg-transparent" />
@@ -123,10 +141,7 @@ export function ChatMessages({
 
   return (
     <div className="flex-1 mt-6 overflow-y-auto p-4 bg-transparent relative z-[1]">
-      <Modal
-        isOpen={showWelcomeModal}
-        onClose={() => setShowWelcomeModal(false)}
-      >
+      <Modal isOpen={showWelcomeModal} onClose={dismissWelcome}>
         <WelcomeContent />
       </Modal>
       <div className="max-w-3xl mx-auto space-y-6">

@@ -10,10 +10,8 @@ frontend:
         - echo "EMAIL_USER is set:" $(if [ -n "$EMAIL_USER" ]; then echo "YES"; else echo "NO"; fi)
         - echo "EMAIL_PASSWORD is set:" $(if [ -n "$EMAIL_PASSWORD" ]; then echo "YES"; else echo "NO"; fi)
         - echo "NEXT_PUBLIC_BACKEND_URL is set:" $(if [ -n "$NEXT_PUBLIC_BACKEND_URL" ]; then echo "YES"; else echo "NO"; fi)
-        - echo "NEXT_PUBLIC_AWS_REGION is set:" $(if [ -n "$NEXT_PUBLIC_AWS_REGION" ]; then echo "YES"; else echo "NO"; fi)
-        - echo "NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID is set:" $(if [ -n "$NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID" ]; then echo "YES"; else echo "NO"; fi)
-        - echo "NEXT_PUBLIC_AWS_COGNITO_APP_CLIENT_ID is set:" $(if [ -n "$NEXT_PUBLIC_AWS_COGNITO_APP_CLIENT_ID" ]; then echo "YES"; else echo "NO"; fi)
-        - echo "NEXT_PUBLIC_AWS_COGNITO_DOMAIN is set:" $(if [ -n "$NEXT_PUBLIC_AWS_COGNITO_DOMAIN" ]; then echo "YES"; else echo "NO"; fi)
+        - echo "NEXT_PUBLIC_SUPABASE_URL is set:" $(if [ -n "$NEXT_PUBLIC_SUPABASE_URL" ]; then echo "YES"; else echo "NO"; fi)
+        - echo "NEXT_PUBLIC_SUPABASE_ANON_KEY is set:" $(if [ -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then echo "YES"; else echo "NO"; fi)
         - npm ci
     build:
       commands:
@@ -27,9 +25,9 @@ frontend:
         - echo "Environment variables for build:"
         - echo "EMAIL_USER is set:" $(if [ -n "$EMAIL_USER" ]; then echo "YES"; else echo "NO"; fi)
         - echo "EMAIL_PASSWORD is set:" $(if [ -n "$EMAIL_PASSWORD" ]; then echo "YES"; else echo "NO"; fi)
-        - echo "AWS Cognito variables:"
-        - echo "NEXT_PUBLIC_AWS_REGION is set:" $(if [ -n "$NEXT_PUBLIC_AWS_REGION" ]; then echo "YES"; else echo "NO"; fi)
-        - echo "NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID is set:" $(if [ -n "$NEXT_PUBLIC_AWS_COGNITO_USER_POOL_ID" ]; then echo "YES"; else echo "NO"; fi)
+        - echo "Supabase variables:"
+        - echo "NEXT_PUBLIC_SUPABASE_URL is set:" $(if [ -n "$NEXT_PUBLIC_SUPABASE_URL" ]; then echo "YES"; else echo "NO"; fi)
+        - echo "NEXT_PUBLIC_SUPABASE_ANON_KEY is set:" $(if [ -n "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then echo "YES"; else echo "NO"; fi)
         - npm run build
         - echo "Build completed successfully"
   artifacts:

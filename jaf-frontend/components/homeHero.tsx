@@ -316,7 +316,7 @@ const HomeHero = forwardRef<HTMLElement, object>(function HomeHero(_props, forwa
                   rel="noopener noreferrer"
                   className="block relative group"
                 >
-                  <Card className="relative w-full aspect-[4/5] max-h-[min(340px,40dvh)] sm:max-h-[min(380px,42dvh)] md:max-h-[min(400px,44dvh)] lg:max-h-[560px] xl:max-h-[640px] 2xl:max-h-[min(840px,78vh)] min-[1800px]:max-h-[min(1020px,82vh)] min-[2200px]:max-h-[min(1180px,85vh)] bg-surface-container rounded-md overflow-hidden transform transition-all duration-300 hover:scale-[1.01] border-0 shadow-none hover:shadow-[0_40px_60px_rgba(129,236,255,0.12)] 2xl:hover:shadow-[0_52px_80px_rgba(129,236,255,0.14)]">
+                  <Card className="relative w-full aspect-[4/5] max-h-[min(360px,50dvh)] sm:max-h-[min(400px,48dvh)] md:max-h-[min(420px,50dvh)] lg:max-h-[560px] xl:max-h-[640px] 2xl:max-h-[min(840px,78vh)] min-[1800px]:max-h-[min(1020px,82vh)] min-[2200px]:max-h-[min(1180px,85vh)] bg-surface-container rounded-md overflow-hidden transform transition-all duration-300 hover:scale-[1.01] border-0 shadow-none hover:shadow-[0_40px_60px_rgba(129,236,255,0.12)] 2xl:hover:shadow-[0_52px_80px_rgba(129,236,255,0.14)]">
                     <ShineBorder
                       shineColor={["#81ecff", "#a68cff", "#7e51ff"]}
                       borderWidth={1}

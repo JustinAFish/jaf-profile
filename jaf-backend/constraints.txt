@@ -1,4 +1,3 @@
-# Constraints file to prevent installation of deprecated pinecone plugins
+# Block deprecated inference plugin only; Pinecone 7.x still needs
+# pinecone-plugin-interface / pinecone-plugin-assistant as normal deps.
 pinecone-plugin-inference==99999
-pinecone-plugin-assistant==99999
-pinecone-plugin-interface==99999 

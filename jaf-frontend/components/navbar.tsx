@@ -176,14 +176,14 @@ export function Navbar() {
   const chatActive = pathname === "/chat" || pathname.startsWith("/chat");
 
   const leftCluster = (
-    <div className="flex items-center gap-3 sm:gap-5 min-w-0">
+    <div className="flex items-center gap-4 sm:gap-6 min-w-0">
       <NextLink
         href="/"
         className="text-base sm:text-xl font-heading font-bold tracking-tighter text-primary shrink-0"
       >
         JUSTIN FISH
       </NextLink>
-      <ul className="flex gap-3 sm:gap-6 items-center">
+      <ul className="flex gap-4 sm:gap-7 items-center">
         <NavbarItem className="data-[active=true]:opacity-100">
           <NextLink
             className={linkStyles({ color: "foreground" })}
@@ -249,7 +249,7 @@ export function Navbar() {
   );
 
   const rightCluster = (
-    <div className="flex items-center gap-0.5 sm:gap-2 shrink-0">
+    <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
       <button
         type="button"
         onClick={() => setConnectOpen(true)}
@@ -270,7 +270,7 @@ export function Navbar() {
         >
           <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
         </svg>
-        <span className="text-label-md uppercase tracking-wide hidden lg:inline">
+        <span className="text-label-md uppercase tracking-wide hidden xl:inline">
           Download CV
         </span>
       </a>
@@ -286,7 +286,7 @@ export function Navbar() {
         >
           <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
         </svg>
-        <span className="text-label-md uppercase tracking-wide hidden lg:inline">
+        <span className="text-label-md uppercase tracking-wide hidden xl:inline">
           Contact Me
         </span>
       </a>
@@ -314,8 +314,8 @@ export function Navbar() {
         className="fixed glass-surface top-0 left-0 right-0 z-50 border-b-0 shadow-[0_0_20px_rgba(129,236,255,0.08)]"
       >
         <NavbarContent className="flex flex-col gap-2 w-full max-w-full py-2 px-3 sm:px-6">
-          {/* Large screens: one row, three columns */}
-          <div className="hidden lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-4 xl:gap-8 w-full">
+          {/* xl and up: full desktop row; below xl: hamburger */}
+          <div className="hidden xl:grid xl:grid-cols-[auto_minmax(0,1fr)_auto] xl:items-center xl:gap-4 2xl:gap-8 w-full">
             {leftCluster}
             {isHome ? (
               <nav
@@ -330,8 +330,8 @@ export function Navbar() {
             {rightCluster}
           </div>
 
-          {/* Small / medium: brand + menu */}
-          <div className="lg:hidden flex items-center justify-between gap-3 w-full min-w-0">
+          {/* Below xl: brand + hamburger */}
+          <div className="xl:hidden flex items-center justify-between gap-3 w-full min-w-0">
             <NextLink
               href="/"
               className="text-base sm:text-lg font-heading font-bold tracking-tighter text-primary shrink-0 min-w-0 truncate"
@@ -357,9 +357,9 @@ export function Navbar() {
         </NavbarContent>
       </NextUINavbar>
 
-      {/* Slide-over menu: small & medium viewports */}
+      {/* Slide-over: below xl viewports */}
       <div
-        className={`lg:hidden fixed inset-0 z-[70] ${
+        className={`xl:hidden fixed inset-0 z-[70] ${
           mobileNavOpen ? "pointer-events-auto" : "pointer-events-none"
         }`}
         aria-hidden={!mobileNavOpen}
@@ -400,7 +400,7 @@ export function Navbar() {
             </nav>
           )}
 
-          <div className="flex flex-col gap-1 border-b border-outline/20 pb-4 mb-4">
+          <div className="flex flex-col gap-2 border-b border-outline/20 pb-4 mb-4">
             <NextLink
               href="/"
               className={`flex items-center gap-3 py-3 px-1 rounded-md text-label-md uppercase tracking-wider transition-colors ${
@@ -451,7 +451,7 @@ export function Navbar() {
             </NextLink>
           </div>
 
-          <div className="flex flex-col gap-3 mt-auto">
+          <div className="flex flex-col gap-4 mt-auto">
             <button
               type="button"
               onClick={() => {
@@ -541,20 +541,13 @@ function AuthStatus() {
     let mounted = true;
     (async () => {
       try {
-        const { getCurrentUser } = await import("aws-amplify/auth");
-        const user = await getCurrentUser();
+        const { createClient } = await import("@/lib/supabase/client");
+        const supabase = createClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (mounted) {
-          const userObj = user as {
-            signInDetails?: { loginId?: string };
-            username?: string;
-            attributes?: { email?: string };
-          };
-          const userAttributes =
-            userObj?.signInDetails?.loginId ||
-            userObj?.username ||
-            userObj?.attributes?.email ||
-            "User";
-          setUsername(userAttributes);
+          setUsername(user?.email ?? user?.id ?? null);
         }
       } catch {
         if (mounted) setUsername(null);
@@ -572,8 +565,8 @@ function AuthStatus() {
         className="text-label-md uppercase tracking-wide text-foreground/90 hover:text-primary-dim px-1"
         onClick={async () => {
           try {
-            const { signOut } = await import("aws-amplify/auth");
-            await signOut();
+            const { createClient } = await import("@/lib/supabase/client");
+            await createClient().auth.signOut();
           } catch {
             /* ignore */
           }

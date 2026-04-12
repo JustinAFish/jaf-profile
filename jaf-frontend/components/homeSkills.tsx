@@ -1,7 +1,9 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useMinWidth } from "@/hooks/useMinWidth";
 import {
+  SKILLS_SCENE_MIN_WIDTH_PX,
   SKILLS_SCROLL_SCENE_ANIM_RATIO,
   SKILLS_SCROLL_SCENE_HEIGHT_VH,
 } from "@/lib/homeSkillsSection";
@@ -293,7 +295,12 @@ function HomeSkillsStatic() {
 
 export default function HomeSkills() {
   const prefersReducedMotion = useReducedMotion();
+  const wideForScene = useMinWidth(SKILLS_SCENE_MIN_WIDTH_PX);
+
   if (prefersReducedMotion === true) {
+    return <HomeSkillsStatic />;
+  }
+  if (wideForScene !== true) {
     return <HomeSkillsStatic />;
   }
   return <HomeSkillsScrollScene />;
