@@ -7,6 +7,7 @@ function resetStore() {
     chats: [],
     currentChatId: null,
     isExamplesOpen: false,
+    welcomeModalOpen: false,
   });
 }
 

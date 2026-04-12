@@ -52,6 +52,15 @@ export function ChatMessages({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentChat?.messages, isLoading]);
 
+  useEffect(() => {
+    const { setWelcomeModalOpen, setIsExamplesOpen } = useChatStore.getState();
+    setWelcomeModalOpen(showWelcomeModal);
+    if (showWelcomeModal) {
+      setIsExamplesOpen(false);
+    }
+    return () => setWelcomeModalOpen(false);
+  }, [showWelcomeModal]);
+
   const WelcomeContent = () => (
     <div className="text-center space-y-4">
       <h2 className="text-2xl font-heading font-semibold text-primary mb-2">
@@ -140,42 +149,46 @@ export function ChatMessages({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 pb-4 pt-[calc(var(--site-header-height)+0.5rem)] bg-transparent relative z-[1]">
+    <>
       <Modal isOpen={showWelcomeModal} onClose={dismissWelcome}>
         <WelcomeContent />
       </Modal>
-      <div className="max-w-3xl mx-auto space-y-6">
-        {currentChat.messages.length === 0 && !isLoading && (
-          <Message
-            type="assistant"
-            content="Please ask me anything about me and my work. I'm here to help!"
-            showExpandedSources={showExpandedSources}
-          />
-        )}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-4 pt-[calc(var(--site-header-height)+0.5rem)] bg-transparent relative">
+        <div className="max-w-3xl mx-auto space-y-6">
+          {currentChat.messages.length === 0 &&
+            !isLoading &&
+            !showWelcomeModal && (
+              <Message
+                type="assistant"
+                content="Please ask me anything about me and my work. I'm here to help!"
+                showExpandedSources={showExpandedSources}
+              />
+            )}
 
-        {currentChat.messages.map((message) => (
-          <div key={message.id}>
+          {currentChat.messages.map((message) => (
+            <div key={message.id}>
+              <Message
+                type={message.role}
+                content={message.content}
+                sources={message.sources}
+                showExpandedSources={showExpandedSources}
+              />
+            </div>
+          ))}
+
+          {isLoading && (
             <Message
-              type={message.role}
-              content={message.content}
-              sources={message.sources}
+              key="loading-message"
+              type="assistant"
+              content=""
+              isLoading={true}
               showExpandedSources={showExpandedSources}
             />
-          </div>
-        ))}
+          )}
 
-        {isLoading && (
-          <Message
-            key="loading-message"
-            type="assistant"
-            content=""
-            isLoading={true}
-            showExpandedSources={showExpandedSources}
-          />
-        )}
-
-        <div ref={messagesEndRef} />
+          <div ref={messagesEndRef} />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

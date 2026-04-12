@@ -20,6 +20,7 @@ export default function ChatPage() {
   const [showExpandedSources] = useState(false);
   const { addMessage, ensureActiveChat, fetchUserChats } = useChatStore();
   const currentChat = useChatStore(selectCurrentChat);
+  const welcomeModalOpen = useChatStore((s) => s.welcomeModalOpen);
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_E2E === "true") {
@@ -189,7 +190,7 @@ export default function ChatPage() {
             isLoading={isLoading}
             showExpandedSources={showExpandedSources}
           />
-          {currentChat && (
+          {currentChat && !welcomeModalOpen && (
             <ChatInput
               onSendMessage={handleMessageSent}
               disabled={isLoading}

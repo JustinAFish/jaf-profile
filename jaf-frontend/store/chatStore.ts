@@ -58,6 +58,8 @@ interface ChatStore {
   chats: Chat[];
   currentChatId: string | null;
   isExamplesOpen: boolean;
+  /** True while the welcome / "Speak to AI Justin" modal blocks the composer (not persisted). */
+  welcomeModalOpen: boolean;
 
   createChat: () => string;
   deleteChat: (id: string) => void;
@@ -73,6 +75,7 @@ interface ChatStore {
   setChats: (chats: Chat[]) => void;
   fetchUserChats: () => Promise<void>;
   setIsExamplesOpen: (isOpen: boolean) => void;
+  setWelcomeModalOpen: (open: boolean) => void;
 }
 
 export const selectCurrentChat = (state: ChatStore): Chat | undefined =>
@@ -88,6 +91,7 @@ export const useChatStore = create<ChatStore>()(
       chats: [],
       currentChatId: null,
       isExamplesOpen: false,
+      welcomeModalOpen: false,
 
       createChat: () => {
         const newChat: Chat = {
@@ -279,6 +283,10 @@ export const useChatStore = create<ChatStore>()(
 
       setIsExamplesOpen: (isOpen: boolean) => {
         set({ isExamplesOpen: isOpen });
+      },
+
+      setWelcomeModalOpen: (open: boolean) => {
+        set({ welcomeModalOpen: open });
       },
     }),
     {
