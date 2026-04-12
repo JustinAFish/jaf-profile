@@ -23,13 +23,16 @@ def main():
         # Load settings
         settings = get_settings()
         
-        # Validate critical environment variables in production
+        # In production, warn if secrets are missing but still bind the server so
+        # platform health checks (e.g. GET /) can succeed. Use GET /health for readiness.
         if settings.ENVIRONMENT == "production":
             missing_vars = settings.validate_for_production()
             if missing_vars:
-                print(f"ERROR: Missing required environment variables: {', '.join(missing_vars)}")
-                print("Please set these variables in your deployment environment.")
-                sys.exit(1)
+                print(
+                    "WARNING: Missing environment variables for full operation: "
+                    f"{', '.join(missing_vars)}. Set them in your host (e.g. Railway Variables). "
+                    "GET /health will report unhealthy until they are set."
+                )
         
         # Get port from environment or default to 8000
         port = int(os.getenv("PORT", 8000))
