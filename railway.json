@@ -1,0 +1,14 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "buildCommand": "cd jaf-frontend && npm ci && npm run build",
+    "watchPatterns": ["jaf-frontend/**"]
+  },
+  "deploy": {
+    "startCommand": "cd jaf-frontend && npm start",
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 300,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}

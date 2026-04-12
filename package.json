@@ -1,0 +1,13 @@
+{
+  "name": "jaf-profile-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Root shim so Railway Railpack detects Node when the service root is the repo (not jaf-frontend). Prefer setting Root Directory to jaf-frontend or jaf-backend per service.",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "cd jaf-frontend && npm ci && npm run build",
+    "start": "cd jaf-frontend && npm start"
+  }
+}
