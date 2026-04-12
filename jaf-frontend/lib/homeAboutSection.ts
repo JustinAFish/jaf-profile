@@ -14,9 +14,12 @@ export const SCROLL_SCENE_ANIM_RATIO =
 
 export const ABOUT_OVERLAP_VH = 180;
 
+/** Minimum viewport width (px) for the pinned Executive Summary scroll-scene; matches Tailwind `md`. */
+export const ABOUT_SCENE_MIN_WIDTH_PX = 768;
+
 /**
  * Scroll so the Executive Summary scroll-scene shows all cards (animation complete).
- * For the reduced-motion static block, scrolls to the section start only.
+ * For static or flow layouts, scrolls to the section start only.
  */
 export function scrollToAboutSectionComplete(opts?: {
   behavior?: ScrollBehavior;
@@ -31,7 +34,7 @@ export function scrollToAboutSectionComplete(opts?: {
   const yAlignStart = absTop - scrollMarginTop;
 
   const variant = el.getAttribute("data-about-variant");
-  if (variant === "static") {
+  if (variant === "static" || variant === "flow") {
     window.scrollTo({ top: Math.max(0, yAlignStart), behavior });
     return true;
   }

@@ -5,10 +5,20 @@
  */
 
 import React, { useState, useRef, useEffect } from "react";
-import { Plus, Search, Star, Trash2, X } from "lucide-react";
+import { Menu, Plus, Search, Star, Trash2, X } from "lucide-react";
 import { useChatStore } from "../store/chatStore";
 
-export function Sidebar() {
+type SidebarPanelProps = {
+  onSelectChat?: () => void;
+  showCloseButton?: boolean;
+  onClose?: () => void;
+};
+
+function SidebarPanel({
+  onSelectChat,
+  showCloseButton,
+  onClose,
+}: SidebarPanelProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [chatToDelete, setChatToDelete] = useState<string | null>(null);
   const [editingChatId, setEditingChatId] = useState<string | null>(null);
@@ -35,6 +45,12 @@ export function Sidebar() {
     } else {
       createChat();
     }
+    onSelectChat?.();
+  };
+
+  const pickChat = (chatId: string) => {
+    setCurrentChat(chatId);
+    onSelectChat?.();
   };
 
   useEffect(() => {
@@ -103,9 +119,20 @@ export function Sidebar() {
     "w-full bg-surface-container-lowest text-foreground pl-9 pr-4 py-2 rounded-md placeholder:text-muted-foreground ghost-border input-focus-glow transition-all duration-200";
 
   return (
-    <div className="flex">
-      <div className="w-36 md:w-64 bg-surface-container/95 backdrop-blur-lg flex flex-col min-h-screen pt-[var(--site-header-height)]">
-        <div className="p-4">
+    <div className="flex h-full min-h-0 w-full flex-col bg-surface-container/95 pt-[var(--site-header-height)] backdrop-blur-lg md:w-64">
+      {showCloseButton && onClose ? (
+        <div className="flex items-center justify-end px-3 pb-1 md:hidden shrink-0">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close chat list"
+            className="rounded-md p-2 text-muted-foreground hover:bg-surface-container-high hover:text-foreground transition-colors duration-200"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+      ) : null}
+      <div className="p-4">
           <button
             type="button"
             onClick={handleNewChatClick}
@@ -143,10 +170,10 @@ export function Sidebar() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  setCurrentChat(chat.id);
+                  pickChat(chat.id);
                 }
               }}
-              onClick={() => setCurrentChat(chat.id)}
+              onClick={() => pickChat(chat.id)}
               className={`
                 group mx-2 rounded-md cursor-pointer mb-1 transition-all duration-200
                 ${
@@ -209,14 +236,14 @@ export function Sidebar() {
                     </div>
                   </div>
 
-                  <div className="md:flex items-center gap-1 hidden">
+                  <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100">
                     <button
                       type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleStarChat(chat.id);
                       }}
-                      className="p-1 opacity-0 group-hover:opacity-100 hover:bg-surface-container rounded-md transition-all duration-200"
+                      className="p-1 hover:bg-surface-container rounded-md transition-all duration-200"
                     >
                       <Star
                         className={`w-4 h-4 text-foreground ${chat.starred ? "fill-primary text-primary" : ""}`}
@@ -225,7 +252,7 @@ export function Sidebar() {
                     <button
                       type="button"
                       onClick={(e) => handleDeleteClick(chat.id, e)}
-                      className="p-1 opacity-0 group-hover:opacity-100 hover:bg-surface-container rounded-md transition-all duration-200"
+                      className="p-1 hover:bg-surface-container rounded-md transition-all duration-200"
                     >
                       <Trash2 className="w-4 h-4 text-foreground hover:text-destructive" />
                     </button>
@@ -237,7 +264,7 @@ export function Sidebar() {
         </div>
 
         {chatToDelete && (
-          <div className="fixed inset-0 bg-surface/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-surface/70 backdrop-blur-sm flex items-center justify-center z-[100]">
             <div className="bg-surface-container-high rounded-md p-6 max-w-md w-full mx-4 ambient-float">
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-lg font-heading font-semibold text-foreground">
@@ -276,7 +303,69 @@ export function Sidebar() {
             </div>
           </div>
         )}
+    </div>
+  );
+}
+
+export function Sidebar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [mobileOpen]);
+
+  return (
+    <div className="relative shrink-0 h-full min-h-0">
+      <div className="hidden md:flex h-full min-h-0">
+        <SidebarPanel />
       </div>
+
+      <button
+        type="button"
+        aria-label="Open chat list"
+        aria-expanded={mobileOpen}
+        onClick={() => setMobileOpen(true)}
+        className="md:hidden fixed z-30 rounded-md border border-border/50 bg-surface-container/95 p-2.5 text-foreground shadow-md backdrop-blur-lg left-3 top-[calc(var(--site-header-height)+0.75rem)] hover:bg-surface-container-high transition-colors duration-200"
+      >
+        <Menu className="h-5 w-5" aria-hidden />
+      </button>
+
+      {mobileOpen ? (
+        <>
+          <button
+            type="button"
+            aria-label="Dismiss chat list"
+            className="md:hidden fixed inset-0 z-[80] bg-surface/60 backdrop-blur-sm"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div
+            className="md:hidden fixed left-0 top-0 bottom-0 z-[90] w-[min(18rem,88vw)] flex flex-col border-r border-border/40 bg-surface-container/95 shadow-xl backdrop-blur-lg"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Chats"
+          >
+            <SidebarPanel
+              showCloseButton
+              onClose={() => setMobileOpen(false)}
+              onSelectChat={() => setMobileOpen(false)}
+            />
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }

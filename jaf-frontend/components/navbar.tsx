@@ -7,11 +7,11 @@ import {
   link as linkStyles,
 } from "@nextui-org/react";
 import NextLink from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { scrollToAboutSectionComplete } from "@/lib/homeAboutSection";
+import { scrollToSkillsSectionComplete } from "@/lib/homeSkillsSection";
 import { appUrl } from "@/lib/appOrigin";
 import { Modal } from "@/components/Modal";
 import { ContactForm } from "@/components/ContactForm";
@@ -20,7 +20,7 @@ const SECTION_NAV = [
   { href: "#home", label: "Home" },
   { href: "#about", label: "About" },
   { href: "#skills", label: "Skills" },
-  { href: "#resume", label: "Resume" },
+  { href: "#experience", label: "Experience" },
   { href: "#contact", label: "Contact" },
 ] as const;
 
@@ -153,6 +153,14 @@ export function Navbar() {
                 window.history.pushState(null, "", "#about");
                 setActiveSection("#about");
                 scrollToAboutSectionComplete({ behavior: "smooth" });
+                onAfterNavigate?.();
+                return;
+              }
+              if (isHome && href === "#skills") {
+                e.preventDefault();
+                window.history.pushState(null, "", "#skills");
+                setActiveSection("#skills");
+                scrollToSkillsSectionComplete({ behavior: "smooth" });
                 onAfterNavigate?.();
                 return;
               }
@@ -292,15 +300,6 @@ export function Navbar() {
       </a>
       <div className="flex items-center pl-0.5 sm:pl-1">
         <AuthStatus />
-      </div>
-      <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-outline/30 overflow-hidden shrink-0 hidden sm:block">
-        <Image
-          src="/JAF_Photo.jpg"
-          alt="Justin Fish"
-          fill
-          className="object-cover"
-          sizes="40px"
-        />
       </div>
     </div>
   );
@@ -500,15 +499,6 @@ export function Navbar() {
               onClick={() => setMobileNavOpen(false)}
             >
               <AuthStatus />
-              <div className="relative w-10 h-10 rounded-full border border-outline/30 overflow-hidden shrink-0">
-                <Image
-                  src="/JAF_Photo.jpg"
-                  alt="Justin Fish"
-                  fill
-                  className="object-cover"
-                  sizes="40px"
-                />
-              </div>
             </div>
           </div>
         </aside>

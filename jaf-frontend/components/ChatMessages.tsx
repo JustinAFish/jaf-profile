@@ -140,7 +140,7 @@ export function ChatMessages({
   }
 
   return (
-    <div className="flex-1 mt-6 overflow-y-auto p-4 bg-transparent relative z-[1]">
+    <div className="flex-1 overflow-y-auto px-4 pb-4 pt-[calc(var(--site-header-height)+0.5rem)] bg-transparent relative z-[1]">
       <Modal isOpen={showWelcomeModal} onClose={dismissWelcome}>
         <WelcomeContent />
       </Modal>

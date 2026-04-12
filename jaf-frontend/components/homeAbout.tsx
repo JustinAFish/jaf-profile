@@ -1,10 +1,17 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
+import { useMinWidth } from "@/hooks/useMinWidth";
 import {
   executiveSummaryItems,
   type ExecutiveSummaryItem,
 } from "@/lib/executiveSummaryItems";
+import {
+  ABOUT_OVERLAP_VH,
+  ABOUT_SCENE_MIN_WIDTH_PX,
+  SCROLL_SCENE_ANIM_RATIO,
+  SCROLL_SCENE_HEIGHT_VH,
+} from "@/lib/homeAboutSection";
 import {
   motion,
   useReducedMotion,
@@ -13,11 +20,6 @@ import {
   type MotionValue,
 } from "motion/react";
 import { useRef, type RefObject } from "react";
-import {
-  ABOUT_OVERLAP_VH,
-  SCROLL_SCENE_ANIM_RATIO,
-  SCROLL_SCENE_HEIGHT_VH,
-} from "@/lib/homeAboutSection";
 
 function itemBody(item: ExecutiveSummaryItem, compact: boolean) {
   const p = compact
@@ -38,6 +40,34 @@ function itemBody(item: ExecutiveSummaryItem, compact: boolean) {
         </ul>
       ) : null}
     </>
+  );
+}
+
+const executiveSummaryFlowCardClass =
+  "glass-surface flex min-h-0 flex-col border border-white/10 bg-surface-container-high/85 p-5 shadow-none sm:p-6 md:justify-center md:p-5 lg:p-7";
+
+/** Document scroll + one card per item (narrow viewports; same idea as HomeSkillsStatic). */
+function HomeAboutFlow() {
+  return (
+    <section
+      id="about"
+      data-about-variant="flow"
+      className="scroll-mt-[var(--site-header-height)] bg-black px-5 py-20 text-foreground sm:px-10 md:px-14 lg:px-20"
+    >
+      <h2 className="mb-10 text-center font-heading text-3xl font-bold text-white sm:text-4xl md:text-4xl lg:text-5xl">
+        Executive Summary
+      </h2>
+      <div className="mx-auto grid w-full max-w-[min(88vw,1520px)] grid-cols-1 gap-8">
+        {executiveSummaryItems.map((item) => (
+          <Card
+            key={item.id}
+            className={`${executiveSummaryFlowCardClass} select-text`}
+          >
+            {itemBody(item, true)}
+          </Card>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -73,7 +103,7 @@ function FlyingCard({
           rotateX,
         }}
       >
-        <Card className="glass-surface flex h-full min-h-0 w-full flex-col overflow-visible border border-white/10 bg-surface-container-high/90 p-5 shadow-none sm:p-6 md:p-5 lg:p-7">
+        <Card className="glass-surface flex h-full min-h-0 w-full flex-col justify-center overflow-visible border border-white/10 bg-surface-container-high/90 p-5 shadow-none sm:p-6 md:p-5 lg:p-7">
           {itemBody(item, true)}
         </Card>
       </motion.article>
@@ -131,8 +161,8 @@ function HomeAboutScrollScene({
         height: `${SCROLL_SCENE_HEIGHT_VH}vh`,
       }}
     >
-      {/* No nested overflow-y-auto on cards: it captures wheel/touch and fights document scroll. */}
-      <div className="sticky top-[var(--site-header-height)] h-[calc(100dvh-var(--site-header-height))] overflow-x-clip overflow-y-visible bg-transparent [overscroll-behavior-y:none] touch-pan-y">
+      {/* No nested overflow-y on flying cards: it captures wheel/touch and fights document scroll. */}
+      <div className="sticky top-[var(--site-header-height)] h-[calc(100dvh-var(--site-header-height))] overflow-visible bg-transparent [overscroll-behavior-y:none] touch-pan-y min-[1216px]:overflow-x-clip min-[1216px]:overflow-y-visible">
         <motion.div
           className="pointer-events-none absolute inset-0 z-[1] bg-black"
           style={{ opacity: scrollUnderlayOpacity }}
@@ -152,9 +182,10 @@ function HomeAboutScrollScene({
           </motion.h2>
 
           {/* Clear space below absolute heading (title ~11% + line height); extra gap before cards */}
-          <div className="flex min-h-0 flex-1 flex-col justify-start px-4 pt-[clamp(11.5rem,26vh,15.5rem)] pb-10 sm:px-6 sm:pt-[clamp(12rem,24vh,15rem)] sm:pb-12 md:px-8 md:pt-[clamp(12.5rem,23vh,15.5rem)] md:pb-14 lg:px-10 lg:pb-16">
+          <div className="flex min-h-0 flex-1 flex-col justify-start px-4 pt-[clamp(11.5rem,26vh,15.5rem)] pb-10 sm:px-6 sm:pt-[clamp(12rem,24vh,15rem)] sm:pb-12 md:px-8 md:pt-[clamp(12.5rem,23vh,15.5rem)] md:pb-14 lg:px-10 lg:pb-16 [@media(min-width:768px)_and_(max-width:1215px)]:!pt-[clamp(10.5rem,18vh,13.5rem)] [@media(min-width:768px)_and_(max-width:1215px)]:!pb-[clamp(4rem,11vh,7rem)] [@media(min-width:1216px)_and_(max-height:920px)]:!pb-[clamp(3.5rem,10vh,6rem)]">
             <div className="mx-auto w-full max-w-[min(88vw,1520px)] [perspective:900px]">
-              <div className="grid grid-cols-2 items-stretch gap-5 sm:gap-6 md:grid-cols-4 md:gap-7 lg:gap-9 [transform-style:preserve-3d]">
+              {/* Below 1216px, 4 columns are too narrow and rows exceed the sticky viewport; 2×4 matches readable width. */}
+              <div className="grid grid-cols-2 items-stretch gap-6 [transform-style:preserve-3d] min-[1216px]:grid-cols-4 min-[1216px]:gap-7 xl:gap-9">
                 {executiveSummaryItems.map((item, index) => (
                   <FlyingCard
                     key={item.id}
@@ -183,11 +214,11 @@ function HomeAboutStatic() {
       <h2 className="mb-10 text-center font-heading text-3xl font-bold text-white sm:text-4xl md:text-4xl lg:text-5xl">
         Executive Summary
       </h2>
-      <div className="mx-auto grid w-full max-w-[min(88vw,1520px)] grid-cols-2 gap-6 sm:grid-cols-2 sm:gap-7 md:grid-cols-4 md:gap-8 lg:gap-9">
+      <div className="mx-auto grid w-full max-w-[min(88vw,1520px)] grid-cols-1 gap-8 md:grid-cols-4 md:gap-8 lg:gap-9">
         {executiveSummaryItems.map((item) => (
           <Card
             key={item.id}
-            className="glass-surface flex h-full min-h-0 flex-col overflow-y-auto border border-white/10 bg-surface-container-high/85 p-5 shadow-none sm:p-6 md:p-5 lg:p-7"
+            className={`${executiveSummaryFlowCardClass} select-text`}
           >
             {itemBody(item, true)}
           </Card>
@@ -203,8 +234,13 @@ export default function HomeAbout({
   homeSectionRef: RefObject<HTMLElement | null>;
 }) {
   const prefersReducedMotion = useReducedMotion();
+  const wideForAboutScene = useMinWidth(ABOUT_SCENE_MIN_WIDTH_PX);
+
   if (prefersReducedMotion === true) {
     return <HomeAboutStatic />;
+  }
+  if (wideForAboutScene !== true) {
+    return <HomeAboutFlow />;
   }
   return <HomeAboutScrollScene homeSectionRef={homeSectionRef} />;
 }

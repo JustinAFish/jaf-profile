@@ -3,7 +3,7 @@
 export default function HomeExperience() {
   return (
     <section
-      id="resume"
+      id="experience"
       className="scroll-mt-[var(--site-header-height)] py-20 px-4 sm:px-8 md:px-12 lg:px-16 bg-surface-container-low"
     >
       <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-center text-header">

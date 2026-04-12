@@ -17,3 +17,31 @@ export const SKILLS_SCROLL_SCENE_HEIGHT_VH =
 /** Matches `sceneProgress` clamp in `homeSkills.tsx`: full fan when raw section progress ≥ this. */
 export const SKILLS_SCROLL_SCENE_ANIM_RATIO =
   SKILLS_SCROLL_SCENE_ANIM_HEIGHT_VH / SKILLS_SCROLL_SCENE_HEIGHT_VH;
+
+/**
+ * Scroll so the pinned Skills scene shows all cards spread (animation at full progress).
+ * For the static grid layout, scrolls to the section start only.
+ */
+export function scrollToSkillsSectionComplete(opts?: {
+  behavior?: ScrollBehavior;
+}): boolean {
+  if (typeof document === "undefined") return false;
+  const el = document.getElementById("skills");
+  if (!el) return false;
+
+  const behavior = opts?.behavior ?? "smooth";
+  const scrollMarginTop = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+  const absTop = el.getBoundingClientRect().top + window.scrollY;
+  const yAlignStart = absTop - scrollMarginTop;
+
+  const variant = el.getAttribute("data-skills-variant");
+  if (variant !== "scene") {
+    window.scrollTo({ top: Math.max(0, yAlignStart), behavior });
+    return true;
+  }
+
+  const height = el.offsetHeight;
+  const targetY = yAlignStart + SKILLS_SCROLL_SCENE_ANIM_RATIO * height;
+  window.scrollTo({ top: Math.max(0, targetY), behavior });
+  return true;
+}

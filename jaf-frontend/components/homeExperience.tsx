@@ -1,6 +1,7 @@
 "use client";
 
 import { Building2 } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 
 const listClass =
   "mt-4 list-none space-y-4 text-base leading-relaxed text-muted-foreground md:text-lg [counter-reset:exp]";
@@ -9,24 +10,68 @@ const listItemClass =
   "flex gap-4 before:mt-1 before:shrink-0 before:font-heading before:tabular-nums before:text-primary before:[counter-increment:exp] before:[content:counter(exp,decimal-leading-zero)]";
 
 export default function HomeExperience() {
+  const prefersReducedMotion = useReducedMotion();
+  const reduceMotion = prefersReducedMotion === true;
+
+  const blockTransition = {
+    duration: reduceMotion ? 0 : 0.45,
+    ease: "easeOut" as const,
+  };
+
+  const blockReveal = {
+    initial: { opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 20 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-48px 0px" },
+    transition: blockTransition,
+  };
+
+  const timelineListVariants = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: reduceMotion ? 0 : 0.08 },
+    },
+  };
+
+  const timelineItemVariants = {
+    hidden: { opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 16 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: reduceMotion ? 0 : 0.4,
+        ease: "easeOut" as const,
+      },
+    },
+  };
+
+  const timelineColumnProps = {
+    initial: "hidden" as const,
+    whileInView: "visible" as const,
+    viewport: { once: true, margin: "-10% 0px" },
+    variants: timelineListVariants,
+  };
+
   return (
     <section
-      id="resume"
+      id="experience"
       className="scroll-mt-[var(--site-header-height)] bg-background px-4 py-20 [background-image:radial-gradient(circle_at_2px_2px,rgba(129,236,255,0.05)_1px,transparent_0)] [background-size:40px_40px] sm:px-8 md:px-12 lg:px-16"
     >
       <div className="mx-auto max-w-7xl">
-        <header className="mb-16 text-center md:mb-20 md:text-left">
+        <motion.header
+          className="mb-16 text-center md:mb-20 md:text-left"
+          {...blockReveal}
+        >
           <h2 className="font-heading text-4xl font-bold tracking-tighter text-header md:text-5xl lg:text-6xl">
             <span>Work </span>
             <span className="text-primary-dim [text-shadow:0_0_12px_rgba(0,212,236,0.45)]">
               Experience
             </span>
           </h2>
-        </header>
+        </motion.header>
 
         <div className="space-y-24">
           {/* Capgemini */}
-          <div>
+          <motion.div {...blockReveal}>
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex min-w-0 flex-1 items-start gap-4">
                 <div className="shrink-0 rounded-lg border border-primary/20 bg-surface-container-lowest p-4">
@@ -55,13 +100,19 @@ export default function HomeExperience() {
 
             <div className="grid grid-cols-1 gap-0 md:grid-cols-[100px_1fr] md:gap-12">
               <div className="hidden md:block" aria-hidden />
-              <div className="relative pl-12 md:pl-0">
+              <motion.div
+                className="relative pl-12 md:pl-0"
+                {...timelineColumnProps}
+              >
                 <div
                   className="pointer-events-none absolute top-0 bottom-0 left-3 w-0.5 bg-[linear-gradient(to_bottom,transparent,_#81ecff_15%,_#81ecff_85%,_transparent)] opacity-30 md:left-[-51px]"
                   aria-hidden
                 />
 
-                <div className="relative mb-16 group last:mb-0">
+                <motion.div
+                  variants={timelineItemVariants}
+                  className="relative mb-16 group last:mb-0"
+                >
                   <div
                     className="absolute top-2 left-[-36px] z-10 size-6 rounded-full border-2 border-primary bg-background shadow-[0_0_15px_#81ecff] md:left-[-63px]"
                     aria-hidden
@@ -133,9 +184,12 @@ export default function HomeExperience() {
                       </li>
                     </ul>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="relative mb-16 group last:mb-0">
+                <motion.div
+                  variants={timelineItemVariants}
+                  className="relative mb-16 group last:mb-0"
+                >
                   <div
                     className="absolute top-2 left-[-32px] z-10 size-4 rounded-full border-2 border-primary/40 bg-surface-container-high transition-colors group-hover:border-primary md:left-[-59px]"
                     aria-hidden
@@ -186,9 +240,12 @@ export default function HomeExperience() {
                       </li>
                     </ul>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="relative mb-16 group last:mb-0">
+                <motion.div
+                  variants={timelineItemVariants}
+                  className="relative mb-16 group last:mb-0"
+                >
                   <div
                     className="absolute top-2 left-[-32px] z-10 size-4 rounded-full border-2 border-primary/40 bg-surface-container-high transition-colors group-hover:border-primary md:left-[-59px]"
                     aria-hidden
@@ -238,9 +295,9 @@ export default function HomeExperience() {
                       </li>
                     </ul>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="relative group">
+                <motion.div variants={timelineItemVariants} className="relative group">
                   <div
                     className="absolute top-2 left-[-32px] z-10 size-4 rounded-full border-2 border-primary/40 bg-surface-container-high transition-colors group-hover:border-primary md:left-[-59px]"
                     aria-hidden
@@ -293,13 +350,13 @@ export default function HomeExperience() {
                       </li>
                     </ul>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
 
           {/* PA Consulting */}
-          <div>
+          <motion.div {...blockReveal}>
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex min-w-0 flex-1 items-start gap-4">
                 <div className="shrink-0 rounded-lg border border-primary/20 bg-surface-container-lowest p-4">
@@ -328,13 +385,19 @@ export default function HomeExperience() {
 
             <div className="grid grid-cols-1 gap-0 md:grid-cols-[100px_1fr] md:gap-12">
               <div className="hidden md:block" aria-hidden />
-              <div className="relative pl-12 md:pl-0">
+              <motion.div
+                className="relative pl-12 md:pl-0"
+                {...timelineColumnProps}
+              >
                 <div
                   className="pointer-events-none absolute top-0 bottom-0 left-3 w-0.5 bg-[linear-gradient(to_bottom,transparent,_#81ecff_15%,_#81ecff_85%,_transparent)] opacity-30 md:left-[-51px]"
                   aria-hidden
                 />
 
-                <div className="relative group 2xl:max-w-[83.333333%]">
+                <motion.div
+                  variants={timelineItemVariants}
+                  className="relative group 2xl:max-w-[83.333333%]"
+                >
                   <div
                     className="absolute top-2 left-[-36px] z-10 size-6 rounded-full border-2 border-primary bg-background shadow-[0_0_15px_#81ecff] md:left-[-63px]"
                     aria-hidden
@@ -390,13 +453,13 @@ export default function HomeExperience() {
                       </li>
                     </ul>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
 
           {/* SAV */}
-          <div>
+          <motion.div {...blockReveal}>
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex min-w-0 flex-1 items-start gap-4">
                 <div className="shrink-0 rounded-lg border border-primary/20 bg-surface-container-lowest p-4">
@@ -425,13 +488,16 @@ export default function HomeExperience() {
 
             <div className="grid grid-cols-1 gap-0 md:grid-cols-[100px_1fr] md:gap-12">
               <div className="hidden md:block" aria-hidden />
-              <div className="relative pl-12 md:pl-0">
+              <motion.div
+                className="relative pl-12 md:pl-0"
+                {...timelineColumnProps}
+              >
                 <div
                   className="pointer-events-none absolute top-0 bottom-0 left-3 w-0.5 bg-[linear-gradient(to_bottom,transparent,_#81ecff_15%,_#81ecff_85%,_transparent)] opacity-30 md:left-[-51px]"
                   aria-hidden
                 />
 
-                <div className="relative group">
+                <motion.div variants={timelineItemVariants} className="relative group">
                   <div
                     className="absolute top-2 left-[-36px] z-10 size-6 rounded-full border-2 border-primary bg-background shadow-[0_0_15px_#81ecff] md:left-[-63px]"
                     aria-hidden
@@ -462,10 +528,10 @@ export default function HomeExperience() {
                       </li>
                     </ul>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -58,7 +58,7 @@ export function ChatInput({
   };
 
   return (
-    <div className="sticky bottom-0 pb-2">
+    <div className="sticky bottom-0 z-[2] pb-2">
       <form onSubmit={handleSubmit} className="max-w-4xl mx-auto w-full">
         <div className="card hover-lift flex items-center gap-2 p-2 glass-surface rounded-md ghost-border">
           <div className="relative">

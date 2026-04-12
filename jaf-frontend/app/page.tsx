@@ -6,16 +6,21 @@ import HomeExperience from "@/components/homeExperience";
 import HomeContact from "@/components/homeContact";
 import HomeAwardsEdu from "@/components/homeAwardsEdu";
 import { scrollToAboutSectionComplete } from "@/lib/homeAboutSection";
+import { scrollToSkillsSectionComplete } from "@/lib/homeSkillsSection";
 import { useEffect, useRef } from "react";
 
 export default function Home() {
   const homeSectionRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
-    if (typeof window === "undefined" || window.location.hash !== "#about") {
-      return;
-    }
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash;
+    if (hash !== "#about" && hash !== "#skills") return;
     const t = window.setTimeout(() => {
-      scrollToAboutSectionComplete({ behavior: "auto" });
+      if (hash === "#about") {
+        scrollToAboutSectionComplete({ behavior: "auto" });
+      } else {
+        scrollToSkillsSectionComplete({ behavior: "auto" });
+      }
     }, 100);
     return () => window.clearTimeout(t);
   }, []);
