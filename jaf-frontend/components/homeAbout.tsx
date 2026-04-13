@@ -19,18 +19,28 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
-import { useRef, type RefObject } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 
 function itemBody(item: ExecutiveSummaryItem, compact: boolean) {
+  const titleClass = compact
+    ? "mb-2 font-heading text-sm font-semibold tracking-tight text-primary sm:text-base md:mb-1.5 md:text-xs lg:text-sm xl:text-base 2xl:text-lg"
+    : "mb-3 font-heading text-lg font-semibold tracking-tight text-primary md:text-xl";
   const p = compact
-    ? "text-base leading-snug text-white/90 sm:text-lg md:text-sm md:leading-snug lg:text-base lg:leading-snug xl:text-lg xl:leading-snug 2xl:text-xl 2xl:leading-relaxed"
-    : "text-base md:text-lg text-white/90 leading-relaxed";
+    ? "whitespace-pre-line text-base leading-snug text-white/90 sm:text-lg md:text-sm md:leading-snug lg:text-base lg:leading-snug xl:text-lg xl:leading-snug 2xl:text-xl 2xl:leading-relaxed"
+    : "whitespace-pre-line text-base md:text-lg text-white/90 leading-relaxed";
   const ul = compact
     ? "mt-3 list-[circle] space-y-2.5 pl-4 text-sm text-white/80 sm:text-base md:text-base lg:text-sm xl:text-base"
     : "mt-3 list-[circle] space-y-2 pl-5 text-sm md:text-base text-white/80";
 
   return (
     <>
+      <h3 className={titleClass}>{item.title}</h3>
       <p className={p}>{item.text}</p>
       {item.subpoints && item.subpoints.length > 0 ? (
         <ul className={ul}>
@@ -117,6 +127,32 @@ function HomeAboutScrollScene({
   homeSectionRef: RefObject<HTMLElement | null>;
 }) {
   const sectionRef = useRef<HTMLElement>(null);
+  const stickyRootRef = useRef<HTMLDivElement>(null);
+  const [sectionMinHeightPx, setSectionMinHeightPx] = useState<number | null>(
+    null,
+  );
+
+  const updateSectionMinHeight = useCallback(() => {
+    const sticky = stickyRootRef.current;
+    if (!sticky) return;
+    const vh = window.innerHeight;
+    const baselinePx = (SCROLL_SCENE_HEIGHT_VH / 100) * vh;
+    const stickyH = Math.ceil(sticky.getBoundingClientRect().height);
+    setSectionMinHeightPx(Math.max(baselinePx, stickyH));
+  }, []);
+
+  useLayoutEffect(() => {
+    updateSectionMinHeight();
+    const sticky = stickyRootRef.current;
+    if (!sticky) return;
+    const ro = new ResizeObserver(() => updateSectionMinHeight());
+    ro.observe(sticky);
+    window.addEventListener("resize", updateSectionMinHeight);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", updateSectionMinHeight);
+    };
+  }, [updateSectionMinHeight]);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -158,17 +194,23 @@ function HomeAboutScrollScene({
       className="relative bg-transparent text-foreground scroll-mt-[var(--site-header-height)]"
       style={{
         marginTop: `-${ABOUT_OVERLAP_VH}vh`,
-        height: `${SCROLL_SCENE_HEIGHT_VH}vh`,
+        minHeight:
+          sectionMinHeightPx !== null
+            ? `${sectionMinHeightPx}px`
+            : `${SCROLL_SCENE_HEIGHT_VH}vh`,
       }}
     >
       {/* No nested overflow-y on flying cards: it captures wheel/touch and fights document scroll. */}
-      <div className="sticky top-[var(--site-header-height)] h-[calc(100dvh-var(--site-header-height))] overflow-visible bg-transparent [overscroll-behavior-y:none] touch-pan-y min-[1216px]:overflow-x-clip min-[1216px]:overflow-y-visible">
+      <div
+        ref={stickyRootRef}
+        className="sticky top-[var(--site-header-height)] min-h-[calc(100dvh-var(--site-header-height))] h-auto overflow-visible bg-transparent [overscroll-behavior-y:none] touch-pan-y min-[1216px]:overflow-x-clip min-[1216px]:overflow-y-visible"
+      >
         <motion.div
           className="pointer-events-none absolute inset-0 z-[1] bg-black"
           style={{ opacity: scrollUnderlayOpacity }}
           aria-hidden
         />
-        <div className="relative z-[2] flex h-full flex-col pointer-events-none">
+        <div className="relative z-[2] flex flex-col pointer-events-none">
           <motion.h2
             className="absolute z-20 w-full max-w-5xl px-4 text-center font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-4xl lg:text-5xl left-1/2 pointer-events-auto select-text drop-shadow-[0_2px_24px_rgba(0,0,0,0.85)]"
             style={{
@@ -182,10 +224,10 @@ function HomeAboutScrollScene({
           </motion.h2>
 
           {/* Clear space below absolute heading (title ~11% + line height); extra gap before cards */}
-          <div className="flex min-h-0 flex-1 flex-col justify-start px-4 pt-[clamp(11.5rem,26vh,15.5rem)] pb-10 sm:px-6 sm:pt-[clamp(12rem,24vh,15rem)] sm:pb-12 md:px-8 md:pt-[clamp(12.5rem,23vh,15.5rem)] md:pb-14 lg:px-10 lg:pb-16 [@media(min-width:768px)_and_(max-width:1215px)]:!pt-[clamp(10.5rem,18vh,13.5rem)] [@media(min-width:768px)_and_(max-width:1215px)]:!pb-[clamp(4rem,11vh,7rem)] [@media(min-width:1216px)_and_(max-height:920px)]:!pb-[clamp(3.5rem,10vh,6rem)]">
+          <div className="flex flex-col justify-start px-4 pt-[clamp(11.5rem,26vh,15.5rem)] pb-10 sm:px-6 sm:pt-[clamp(12rem,24vh,15rem)] sm:pb-12 md:px-8 md:pt-[clamp(12.5rem,23vh,15.5rem)] md:pb-14 lg:px-10 lg:pb-16 [@media(min-width:768px)_and_(max-width:1215px)]:!pt-[clamp(10.5rem,18vh,13.5rem)] [@media(min-width:768px)_and_(max-width:1215px)]:!pb-[clamp(4rem,11vh,7rem)] [@media(min-width:1216px)_and_(max-height:920px)]:!pb-[clamp(3.5rem,10vh,6rem)]">
             <div className="mx-auto w-full max-w-[min(88vw,1520px)] [perspective:900px]">
               {/* Below 1216px, 4 columns are too narrow and rows exceed the sticky viewport; 2×4 matches readable width. */}
-              <div className="grid grid-cols-2 items-stretch gap-6 [transform-style:preserve-3d] min-[1216px]:grid-cols-4 min-[1216px]:gap-7 xl:gap-9">
+              <div className="grid grid-cols-2 items-stretch gap-6 [transform-style:preserve-3d] min-[1216px]:grid-cols-3 min-[1216px]:gap-7 xl:gap-9">
                 {executiveSummaryItems.map((item, index) => (
                   <FlyingCard
                     key={item.id}

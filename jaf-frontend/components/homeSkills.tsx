@@ -241,10 +241,10 @@ function HomeSkillsScrollScene() {
             style={{ opacity: titleOpacity }}
           >
             <h2 className="text-4xl font-heading font-bold text-header md:text-5xl">
-              Skills
+            Broad range of skills with deep expertise
             </h2>
-            <p className="text-label-md mt-2 uppercase tracking-widest text-tertiary">
-              Capabilities
+            <p className="text-md mt-4 uppercase tracking-widest text-tertiary">
+            Through continous upskilling to deliver results
             </p>
           </motion.div>
 

@@ -158,7 +158,7 @@ const HomeHero = forwardRef<HTMLElement, object>(
         id="home"
         className="relative -mt-[var(--site-header-height)] h-[280vh] scroll-mt-[var(--site-header-height)]"
       >
-        <div className="sticky top-0 h-[100dvh] min-h-[100dvh] overflow-hidden flex items-start lg:items-center pt-[var(--site-header-height)] pb-8 sm:pb-12 md:pb-10 lg:pb-16 xl:pb-20 2xl:pb-28 min-[1800px]:pb-32">
+        <div className="sticky top-0 h-[100dvh] min-h-[100dvh] overflow-hidden flex items-start lg:items-center pt-[var(--site-header-height)] pb-8 sm:pb-12 sm:max-lg:pb-6 md:max-lg:pb-7 md:pb-10 lg:pb-16 xl:pb-20 2xl:pb-28 min-[1800px]:pb-32">
           <motion.div
             className="absolute inset-0 z-0"
             style={{ opacity: bgOpacity, scale: bgScale }}
@@ -181,11 +181,11 @@ const HomeHero = forwardRef<HTMLElement, object>(
 
           <motion.div className="relative z-10 w-full max-w-7xl xl:max-w-[84rem] 2xl:max-w-[min(112rem,92vw)] min-[1800px]:max-w-[min(132rem,94vw)] min-[2200px]:max-w-[min(152rem,96vw)] mx-auto px-5 sm:px-8 md:px-8 lg:px-16 xl:px-20 2xl:px-16 min-[1800px]:px-20 min-[2200px]:px-24 [perspective:min(900px,100vw)] [perspective-origin:50%_45%]">
             <div
-              className="grid lg:grid-cols-2 gap-8 md:gap-9 lg:gap-16 xl:gap-20 2xl:gap-32 min-[1800px]:gap-44 min-[2200px]:gap-56 2xl:grid-cols-[minmax(0,1fr)_minmax(0,1.22fr)] min-[1800px]:grid-cols-[minmax(0,1fr)_minmax(0,1.28fr)] items-start lg:items-center"
+              className="grid lg:grid-cols-2 gap-8 sm:max-lg:gap-5 md:max-lg:gap-6 md:gap-9 lg:gap-16 xl:gap-20 2xl:gap-32 min-[1800px]:gap-44 min-[2200px]:gap-56 2xl:grid-cols-[minmax(0,1fr)_minmax(0,1.22fr)] min-[1800px]:grid-cols-[minmax(0,1fr)_minmax(0,1.28fr)] items-start lg:items-center"
               style={{ transformStyle: "preserve-3d" }}
             >
               <motion.div
-                className="space-y-6 md:space-y-7 lg:space-y-12 xl:space-y-14 2xl:space-y-16 pt-2 sm:pt-3 md:pt-3 lg:pt-8 xl:pt-10 w-full 2xl:justify-self-start origin-left will-change-transform [transform-style:preserve-3d]"
+                className="space-y-6 sm:max-lg:space-y-4 md:max-lg:space-y-5 md:space-y-7 lg:space-y-12 xl:space-y-14 2xl:space-y-16 pt-2 sm:pt-3 md:pt-3 lg:pt-8 xl:pt-10 w-full max-lg:mx-auto max-lg:max-w-[min(36rem,100%)] lg:max-w-none 2xl:justify-self-start origin-left will-change-transform [transform-style:preserve-3d]"
                 style={{
                   scale: leftScale,
                   rotateX: leftRotateX,
@@ -196,18 +196,18 @@ const HomeHero = forwardRef<HTMLElement, object>(
                   opacity: leftOpacity,
                 }}
               >
-                <div className="pt-5 sm:pt-6 md:pt-6 xl:pt-10 2xl:pt-12 grid grid-cols-2 gap-4 sm:gap-5 md:gap-6 xl:gap-10 2xl:gap-12 border-t border-outline/20 max-w-sm sm:max-w-md md:max-w-md xl:max-w-lg 2xl:max-w-xl min-[1800px]:max-w-2xl"></div>
+                <div className="pt-5 sm:pt-6 sm:max-lg:pt-3 md:max-lg:pt-4 md:pt-6 xl:pt-10 2xl:pt-12 grid grid-cols-2 gap-4 sm:gap-5 sm:max-lg:gap-3 md:max-lg:gap-3.5 md:gap-6 xl:gap-10 2xl:gap-12 border-t border-outline/20 max-w-sm sm:max-w-md md:max-w-md xl:max-w-lg 2xl:max-w-xl min-[1800px]:max-w-2xl"></div>
 
-                <div className="space-y-3 sm:space-y-4 md:space-y-4 xl:space-y-6 2xl:space-y-8">
-                  <h1 className="font-heading text-4xl sm:text-5xl md:text-5xl lg:text-7xl xl:text-8xl 2xl:text-8xl min-[1800px]:text-9xl font-bold text-foreground tracking-tighter leading-[0.95]">
-                    AI <br />
-                    <span className="text-primary">Consultant</span> <br />
+                <div className="space-y-3 sm:space-y-4 sm:max-lg:space-y-2.5 md:max-lg:space-y-3 md:space-y-4 xl:space-y-6 2xl:space-y-8">
+                  <h1 className="font-heading text-4xl sm:text-5xl sm:max-lg:text-[2.15rem] md:max-lg:text-[2.35rem] md:text-5xl lg:text-7xl xl:text-8xl 2xl:text-8xl min-[1800px]:text-9xl font-bold text-foreground tracking-tighter leading-[0.95]">
+                    <span className="text-primary">AI</span> <br />
+                    <span>Consultant</span> <br />
                     &amp; Architect
                   </h1>
                 </div>
 
-                <div className="max-w-md sm:max-w-lg md:max-w-lg xl:max-w-xl 2xl:max-w-2xl min-[1800px]:max-w-3xl space-y-5 md:space-y-6 xl:space-y-10 2xl:space-y-12">
-                  <p className="text-base sm:text-lg md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl min-[1800px]:text-4xl text-muted-foreground font-light leading-snug md:leading-relaxed">
+                <div className="max-w-md sm:max-w-lg sm:max-lg:max-w-md md:max-lg:max-w-lg md:max-w-lg xl:max-w-xl 2xl:max-w-2xl min-[1800px]:max-w-3xl space-y-5 sm:max-lg:space-y-3.5 md:max-lg:space-y-4 md:space-y-6 xl:space-y-10 2xl:space-y-12">
+                  <p className="text-base sm:text-lg sm:max-lg:text-[0.9375rem] md:max-lg:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl min-[1800px]:text-4xl text-muted-foreground font-light leading-snug md:leading-relaxed sm:max-lg:leading-snug">
                     <span
                       id="changing-text"
                       style={{ transition: "opacity 0.5s ease" }}
@@ -215,7 +215,7 @@ const HomeHero = forwardRef<HTMLElement, object>(
                     >
                       Applied AI Consultant
                     </span>{" "}
-                    — bridging the gap between cutting-edge AI and real-world
+                    bridging the gap between cutting-edge AI and real-world
                     business impact, from PoC to production.
                   </p>
                   <div className="flex flex-col gap-3 md:gap-3.5 xl:gap-5 2xl:gap-6">
@@ -241,11 +241,11 @@ const HomeHero = forwardRef<HTMLElement, object>(
                   </div>
                 </div>
 
-                <div className="pt-5 sm:pt-6 md:pt-6 xl:pt-10 2xl:pt-12 grid grid-cols-2 gap-4 sm:gap-5 md:gap-6 xl:gap-10 2xl:gap-12 border-t border-outline/20 max-w-sm sm:max-w-md md:max-w-md xl:max-w-lg 2xl:max-w-xl min-[1800px]:max-w-2xl"></div>
+                <div className="pt-5 sm:pt-6 sm:max-lg:pt-3 md:max-lg:pt-4 md:pt-6 xl:pt-10 2xl:pt-12 grid grid-cols-2 gap-4 sm:gap-5 sm:max-lg:gap-3 md:max-lg:gap-3.5 md:gap-6 xl:gap-10 2xl:gap-12 border-t border-outline/20 max-w-sm sm:max-w-md md:max-w-md xl:max-w-lg 2xl:max-w-xl min-[1800px]:max-w-2xl"></div>
               </motion.div>
 
               <motion.div
-                className="relative w-full flex justify-center lg:justify-end 2xl:w-full origin-right will-change-transform [transform-style:preserve-3d]"
+                className="relative w-full max-lg:mx-auto max-lg:max-w-[min(25rem,100%)] sm:max-lg:max-w-[min(26rem,100%)] md:max-lg:max-w-[min(28rem,100%)] flex justify-center lg:max-w-none lg:justify-end 2xl:w-full origin-right will-change-transform [transform-style:preserve-3d]"
                 style={{
                   scale: rightScale,
                   rotateX: rightRotateX,
@@ -256,7 +256,7 @@ const HomeHero = forwardRef<HTMLElement, object>(
                   opacity: rightOpacity,
                 }}
               >
-                <div className="relative w-full max-w-[min(100%,420px)] sm:max-w-[480px] md:max-w-[min(100%,480px)] lg:max-w-[560px] xl:max-w-[640px] 2xl:max-w-[min(840px,100%)] min-[1800px]:max-w-[min(1020px,100%)] min-[2200px]:max-w-[min(1180px,100%)] mx-auto lg:mx-0 2xl:justify-self-end">
+                <div className="relative w-full max-w-[min(100%,420px)] sm:max-w-[480px] sm:max-lg:max-w-[min(100%,380px)] md:max-w-[min(100%,480px)] md:max-lg:max-w-[min(100%,400px)] lg:max-w-[560px] xl:max-w-[640px] 2xl:max-w-[min(840px,100%)] min-[1800px]:max-w-[min(1020px,100%)] min-[2200px]:max-w-[min(1180px,100%)] mx-auto lg:mx-0 2xl:justify-self-end">
                   <div className="absolute -top-4 -left-4 w-16 h-16 sm:w-20 sm:h-20 md:w-20 md:h-20 xl:-top-6 xl:-left-6 xl:w-28 xl:h-28 2xl:-top-7 2xl:-left-7 2xl:w-32 2xl:h-32 min-[1800px]:-top-8 min-[1800px]:-left-8 min-[1800px]:w-36 min-[1800px]:h-36 border-t-2 border-l-2 border-primary/40 z-20 pointer-events-none" />
                   <div className="absolute -bottom-4 -right-4 w-16 h-16 sm:w-20 sm:h-20 md:w-20 md:h-20 xl:-bottom-6 xl:-right-6 xl:w-28 xl:h-28 2xl:-bottom-7 2xl:-right-7 2xl:w-32 2xl:h-32 min-[1800px]:-bottom-8 min-[1800px]:-right-8 min-[1800px]:w-36 min-[1800px]:h-36 border-b-2 border-r-2 border-primary/40 z-20 pointer-events-none" />
 
@@ -273,7 +273,7 @@ const HomeHero = forwardRef<HTMLElement, object>(
                         height={1107}
                         alt="Highly Commended MCA Technology Consultant of the Year 2025"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 640px"
-                        className="relative z-0 block h-auto w-auto max-w-full max-h-[min(360px,50dvh)] sm:max-h-[min(400px,48dvh)] md:max-h-[min(420px,50dvh)] lg:max-h-[560px] xl:max-h-[640px] 2xl:max-h-[min(840px,78vh)] min-[1800px]:max-h-[min(1020px,82vh)] min-[2200px]:max-h-[min(1180px,85vh)] rounded-md transition-transform duration-300 group-hover:scale-[1.03]"
+                        className="relative z-0 block h-auto w-auto max-w-full max-h-[min(360px,50dvh)] sm:max-h-[min(400px,48dvh)] sm:max-lg:max-h-[min(270px,36dvh)] md:max-h-[min(420px,50dvh)] md:max-lg:max-h-[min(300px,38dvh)] lg:max-h-[560px] xl:max-h-[640px] 2xl:max-h-[min(840px,78vh)] min-[1800px]:max-h-[min(1020px,82vh)] min-[2200px]:max-h-[min(1180px,85vh)] rounded-md transition-transform duration-300 group-hover:scale-[1.03]"
                         priority
                       />
                       <ShineBorder

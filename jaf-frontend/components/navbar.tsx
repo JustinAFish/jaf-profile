@@ -258,13 +258,6 @@ export function Navbar() {
 
   const rightCluster = (
     <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-      <button
-        type="button"
-        onClick={() => setConnectOpen(true)}
-        className="px-2.5 sm:px-5 py-2 rounded-md bg-primary text-on-primary font-heading font-bold text-xs sm:text-sm uppercase tracking-wide hover:shadow-[0_0_15px_rgba(129,236,255,0.35)] transition-all active:scale-95"
-      >
-        Connect
-      </button>
       <a
         href="/data/Justin_Fish_CV_2025.pdf"
         download="Justin_Fish_CV_2025.pdf"
@@ -282,22 +275,13 @@ export function Navbar() {
           Download CV
         </span>
       </a>
-      <a
-        href={pathname === "/chat" ? "/#contact" : "#contact"}
-        className="p-2 rounded-full text-foreground/90 hover:text-primary hover:bg-surface-container-high/60 transition-colors duration-200 flex items-center gap-1 sm:gap-2"
-        title="Contact Me"
+      <button
+        type="button"
+        onClick={() => setConnectOpen(true)}
+        className="px-2.5 sm:px-5 py-2 rounded-md bg-primary text-on-primary font-heading font-bold text-xs sm:text-sm uppercase tracking-wide hover:shadow-[0_0_15px_rgba(129,236,255,0.35)] transition-all active:scale-95"
       >
-        <svg
-          className="w-5 h-5 shrink-0"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
-        </svg>
-        <span className="text-label-md uppercase tracking-wide hidden xl:inline">
-          Contact Me
-        </span>
-      </a>
+        Connect
+      </button>
       <div className="flex items-center pl-0.5 sm:pl-1">
         <AuthStatus />
       </div>
