@@ -1,12 +1,17 @@
 /**
  * ExampleQuestions — floating panel of sample prompts (no hard dividers).
+ * Rendered via a portal so `position: fixed` is not affected by transforms /
+ * backdrop-filter on the chat input row (which caused blur flicker on hover).
  */
-import React from "react";
+import React, { useCallback, useLayoutEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface ExampleQuestionsProps {
   isOpen: boolean;
   onClose: () => void;
   onQuestionClick: (question: string) => void;
+  /** Anchor for desktop placement (panel sits above this element). */
+  anchorRef: React.RefObject<HTMLElement | null>;
 }
 
 interface QuestionCategory {
@@ -18,11 +23,53 @@ interface QuestionCategory {
   }[];
 }
 
+const MD_QUERY = "(min-width: 768px)";
+
 export function ExampleQuestions({
   isOpen,
   onClose,
   onQuestionClick,
+  anchorRef,
 }: ExampleQuestionsProps) {
+   const [desktopRect, setDesktopRect] = useState<{
+    bottom: number;
+    right: number;
+    width: number;
+  } | null>(null);
+
+  const updateDesktopPlacement = useCallback(() => {
+    if (typeof window === "undefined") return;
+    if (!isOpen || !anchorRef.current) {
+      setDesktopRect(null);
+      return;
+    }
+    if (!window.matchMedia(MD_QUERY).matches) {
+      setDesktopRect(null);
+      return;
+    }
+    const rect = anchorRef.current.getBoundingClientRect();
+    const margin = 8;
+    setDesktopRect({
+      bottom: window.innerHeight - rect.top + margin,
+      right: window.innerWidth - rect.right,
+      width: Math.min(384, window.innerWidth - 16),
+    });
+  }, [anchorRef, isOpen]);
+
+  useLayoutEffect(() => {
+    if (!isOpen) {
+      setDesktopRect(null);
+      return;
+    }
+    updateDesktopPlacement();
+    window.addEventListener("resize", updateDesktopPlacement);
+    window.addEventListener("scroll", updateDesktopPlacement, true);
+    return () => {
+      window.removeEventListener("resize", updateDesktopPlacement);
+      window.removeEventListener("scroll", updateDesktopPlacement, true);
+    };
+  }, [isOpen, updateDesktopPlacement]);
+
   const questionCategories: QuestionCategory[] = [
     {
       title: "Test the chat with common queries",
@@ -37,23 +84,36 @@ export function ExampleQuestions({
   ];
 
   if (!isOpen) return null;
+  if (typeof document === "undefined") return null;
 
-  return (
+  const isDesktopAnchored = desktopRect != null;
+  const panelClassName = isDesktopAnchored
+    ? "animate-fadeIn fixed z-[81] flex max-h-[min(75vh,32rem)] flex-col"
+    : `
+        animate-fadeIn fixed z-[81] flex max-h-[min(68dvh,calc(100dvh-6.5rem))] flex-col
+        left-3 right-3
+        bottom-[max(0.75rem,calc(0.75rem+env(safe-area-inset-bottom,0px)+4.25rem))]
+      `;
+  const panelStyle: React.CSSProperties | undefined = isDesktopAnchored
+    ? {
+        bottom: desktopRect.bottom,
+        right: desktopRect.right,
+        width: desktopRect.width,
+        left: "auto",
+      }
+    : undefined;
+
+  const ui = (
     <>
       <div
-        className="fixed inset-0 z-[40] bg-surface/30 backdrop-blur-[2px]"
+        className="fixed inset-0 z-[80] bg-surface/30 backdrop-blur-[2px]"
         onClick={onClose}
         aria-hidden
       />
 
       <div
-        className={`
-          animate-fadeIn z-[45] flex max-h-[min(68dvh,calc(100dvh-6.5rem))] flex-col
-          fixed left-3 right-3
-          bottom-[max(0.75rem,calc(0.75rem+env(safe-area-inset-bottom,0px)+4.25rem))]
-          md:absolute md:inset-x-auto md:left-auto md:right-0 md:bottom-full md:mb-2 md:max-h-[min(75vh,32rem)]
-          md:w-96 md:max-w-[min(24rem,calc(100vw-1rem))]
-        `}
+        className={panelClassName}
+        style={panelStyle}
         role="dialog"
         aria-modal="true"
         aria-labelledby="example-questions-title"
@@ -120,4 +180,6 @@ export function ExampleQuestions({
       </div>
     </>
   );
+
+  return createPortal(ui, document.body);
 }

@@ -119,7 +119,7 @@ function SidebarPanel({
     "w-full bg-surface-container-lowest text-foreground pl-9 pr-4 py-2 rounded-md placeholder:text-muted-foreground ghost-border input-focus-glow transition-all duration-200";
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col bg-surface-container/95 pt-[var(--site-header-height)] backdrop-blur-lg md:w-64">
+    <div className="flex h-full min-h-0 w-full flex-col bg-surface-container/50 pt-[var(--site-header-height)] backdrop-blur-lg md:w-64">
       {showCloseButton && onClose ? (
         <div className="flex items-center justify-end px-3 pb-1 md:hidden shrink-0">
           <button
@@ -339,7 +339,7 @@ export function Sidebar() {
         aria-label="Open chat list"
         aria-expanded={mobileOpen}
         onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed z-30 rounded-md border border-border/50 bg-surface-container/95 p-2.5 text-foreground shadow-md backdrop-blur-lg left-3 top-[calc(var(--site-header-height)+0.75rem)] hover:bg-surface-container-high transition-colors duration-200"
+        className="md:hidden fixed z-30 rounded-md border border-border/50 bg-surface-container/80 p-2.5 text-foreground shadow-md backdrop-blur-lg left-3 top-[calc(var(--site-header-height)+0.75rem)] hover:bg-surface-container-high transition-colors duration-200"
       >
         <Menu className="h-5 w-5" aria-hidden />
       </button>
@@ -353,7 +353,7 @@ export function Sidebar() {
             onClick={() => setMobileOpen(false)}
           />
           <div
-            className="md:hidden fixed left-0 top-0 bottom-0 z-[90] w-[min(18rem,88vw)] flex flex-col border-r border-border/40 bg-surface-container/95 shadow-xl backdrop-blur-lg"
+            className="md:hidden fixed left-0 top-0 bottom-0 z-[90] w-[min(18rem,88vw)] flex flex-col border-r border-border/40 bg-surface-container/80 shadow-xl backdrop-blur-lg"
             role="dialog"
             aria-modal="true"
             aria-label="Chats"

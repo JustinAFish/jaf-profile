@@ -24,7 +24,7 @@ export function Message({
   if (type === "user") {
     return (
       <div className="w-full my-4 animate-fadeIn">
-        <div className="card hover-lift bg-surface-container/90 p-6 rounded-md backdrop-blur-sm">
+        <div className="hover-lift bg-surface-container/50 p-6 rounded-xl border border-outline-variant/20 text-card-foreground backdrop-blur-xl backdrop-saturate-150">
           <div className="flex items-start gap-4">
             <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center primary-glow">
               <User className="w-5 h-5 text-on-primary" />
@@ -40,7 +40,7 @@ export function Message({
 
   return (
     <div className="w-full my-4 animate-fadeIn">
-      <div className="card hover-lift bg-surface-container-high/95 p-6 rounded-md ai-glow backdrop-blur-sm">
+      <div className="hover-lift bg-surface-container-high/50 p-6 rounded-xl ai-glow border border-outline-variant/20 text-card-foreground backdrop-blur-xl backdrop-saturate-150">
         <div className="flex items-start gap-4">
           <div className="relative w-8 h-8 rounded-full border border-outline/30 overflow-hidden shrink-0">
             <Image

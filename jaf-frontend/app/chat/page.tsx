@@ -94,7 +94,7 @@ export default function ChatPage() {
 
   if (isAuthLoading) {
     return (
-      <div className="flex h-[calc(100vh-2rem)] items-center justify-center relative">
+      <div className="flex h-[100dvh] items-center justify-center relative">
         <div className="absolute inset-0 -z-10">
           <Image
             src="/data-background.jpeg"
@@ -171,7 +171,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-2rem)]">
+    <div className="flex h-[100dvh]">
       <div className="flex flex-1">
         <Sidebar />
 

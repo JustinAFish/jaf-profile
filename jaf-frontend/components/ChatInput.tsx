@@ -1,7 +1,7 @@
 /**
  * ChatInput component - Handles user message input and submission.
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Send, Lightbulb } from "lucide-react";
 import { ExampleQuestions } from "./ExampleQuestions";
 import { useChatStore } from "@/store/chatStore";
@@ -22,6 +22,7 @@ export function ChatInput({
   const [message, setMessage] = useState("");
   const [showHint, setShowHint] = useState(false);
   const { isExamplesOpen, setIsExamplesOpen } = useChatStore();
+  const examplesAnchorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (messageCount === 0) {
@@ -61,7 +62,7 @@ export function ChatInput({
     <div className="sticky bottom-0 z-[2] pb-2">
       <form onSubmit={handleSubmit} className="max-w-4xl mx-auto w-full">
         <div className="card hover-lift flex items-center gap-2 p-2 glass-surface rounded-md ghost-border">
-          <div className="relative">
+          <div className="relative" ref={examplesAnchorRef}>
             <button
               type="button"
               onClick={handleExamplesButtonClick}
@@ -85,6 +86,7 @@ export function ChatInput({
               isOpen={isExamplesOpen}
               onClose={() => setIsExamplesOpen(false)}
               onQuestionClick={handleExampleClick}
+              anchorRef={examplesAnchorRef}
             />
           </div>
 
