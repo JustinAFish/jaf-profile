@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2 } from "lucide-react";
+import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 
 const listClass =
@@ -75,8 +75,12 @@ export default function HomeExperience() {
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex min-w-0 flex-1 items-start gap-4">
                 <div className="shrink-0 rounded-lg border border-primary/20 bg-surface-container-lowest p-4">
-                  <Building2
-                    className="size-8 text-primary md:size-9"
+                  <Image
+                    src="/CAP.svg"
+                    alt=""
+                    width={1571}
+                    height={1448}
+                    className="h-8 w-auto max-w-full object-contain md:h-9"
                     aria-hidden
                   />
                 </div>
@@ -276,8 +280,12 @@ export default function HomeExperience() {
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex min-w-0 flex-1 items-start gap-4">
                 <div className="shrink-0 rounded-lg border border-primary/20 bg-surface-container-lowest p-4">
-                  <Building2
-                    className="size-8 text-primary md:size-9"
+                  <Image
+                    src="/pa-logo.svg"
+                    alt=""
+                    width={546}
+                    height={312}
+                    className="h-8 w-auto max-w-full object-contain md:h-9"
                     aria-hidden
                   />
                 </div>
@@ -357,8 +365,12 @@ export default function HomeExperience() {
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="flex min-w-0 flex-1 items-start gap-4">
                 <div className="shrink-0 rounded-lg border border-primary/20 bg-surface-container-lowest p-4">
-                  <Building2
-                    className="size-8 text-primary md:size-9"
+                  <Image
+                    src="/sav-logo.png"
+                    alt=""
+                    width={512}
+                    height={512}
+                    className="h-8 w-auto max-w-full object-contain md:h-9"
                     aria-hidden
                   />
                 </div>
