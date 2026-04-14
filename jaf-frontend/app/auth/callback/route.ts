@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { resolveAuthCallbackOrigin } from "@/lib/authCallbackOrigin";
 import { createClient } from "@/lib/supabase/server";
 
 function safeNextPath(next: string | null): string {
@@ -9,7 +10,8 @@ function safeNextPath(next: string | null): string {
 }
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
+  const publicOrigin = resolveAuthCallbackOrigin(request);
   const code = searchParams.get("code");
   const next = safeNextPath(searchParams.get("next"));
 
@@ -17,17 +19,9 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      const forwardedHost = request.headers.get("x-forwarded-host");
-      const isLocalEnv = process.env.NODE_ENV === "development";
-      if (isLocalEnv) {
-        return NextResponse.redirect(`${origin}${next}`);
-      }
-      if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`);
-      }
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(`${publicOrigin}${next}`);
     }
   }
 
-  return NextResponse.redirect(`${origin}/chat/sign-in`);
+  return NextResponse.redirect(`${publicOrigin}/chat/sign-in`);
 }

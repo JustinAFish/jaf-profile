@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { appUrl, resolveAuthRedirect } from "@/lib/appOrigin";
+import { appUrl, getAppOrigin, resolveAuthRedirect } from "@/lib/appOrigin";
 
 const spinner = (
   <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto" />
@@ -43,8 +43,8 @@ export default function SignUp() {
     setError(null);
     setIsSubmitting(true);
     try {
-      const origin = window.location.origin;
-      const emailRedirectTo = `${origin}/auth/callback?next=${encodeURIComponent("/chat")}`;
+      const base = getAppOrigin();
+      const emailRedirectTo = `${base}/auth/callback?next=${encodeURIComponent("/chat")}`;
       const supabase = createClient();
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: email.trim(),
