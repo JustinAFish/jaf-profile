@@ -104,6 +104,9 @@ class Settings(BaseSettings):
     RAG_RELEVANCE_THRESHOLD: float = (
         0.5  # Minimum similarity score to consider a document relevant
     )
+    RAG_SOURCES_DISPLAY_MIN_RELEVANCE: float = (
+        0.75  # Citations omit chunks unless relevance is strictly greater than this (0–1)
+    )
     RAG_MAX_DOCUMENTS: int = 3  # Maximum number of documents to retrieve (k)
 
     # Debugging

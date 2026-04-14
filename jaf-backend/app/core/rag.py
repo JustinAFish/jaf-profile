@@ -161,7 +161,12 @@ class RAGPipeline:
             response = await self.llm_service.get_chat_response(prompt_content)
             logger.info("LLM response length: %s", len(response))
 
-            sources = [self.format_source(doc) for doc in relevant_docs]
+            display_min = self.settings.RAG_SOURCES_DISPLAY_MIN_RELEVANCE
+            sources = [
+                self.format_source(doc)
+                for doc in relevant_docs
+                if doc.metadata.get("relevance", 0) > display_min
+            ]
 
             return AssistantResponse(
                 answer=response,

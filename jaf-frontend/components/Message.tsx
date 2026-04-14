@@ -6,6 +6,9 @@ import { SourceDocumentCard } from "./SourceDocumentCard";
 import type { Source } from "../types/chat";
 import ReactMarkdown from "react-markdown";
 
+/** Only show source cards when similarity is strictly above this (0–1 scale). */
+const SOURCE_DISPLAY_MIN_RELEVANCE = 0.75;
+
 interface MessageProps {
   type: "user" | "assistant";
   content: string;
@@ -38,6 +41,13 @@ export function Message({
     );
   }
 
+  const displaySources = Array.isArray(sources)
+    ? sources.filter((s) => s.relevance > SOURCE_DISPLAY_MIN_RELEVANCE)
+    : [];
+  const showStringSources = typeof sources === "string" && sources.length > 0;
+  const showSourceDocuments =
+    showStringSources || displaySources.length > 0;
+
   return (
     <div className="w-full my-4 animate-fadeIn">
       <div className="hover-lift bg-surface-container-high/50 p-6 rounded-xl ai-glow border border-outline-variant/20 text-card-foreground backdrop-blur-xl backdrop-saturate-150">
@@ -65,18 +75,18 @@ export function Message({
                   <ReactMarkdown>{content}</ReactMarkdown>
                 </div>
 
-                {sources && (
+                {showSourceDocuments && (
                   <div className="mt-6 animate-fadeIn">
                     <div className="flex items-center gap-2 text-base font-medium text-muted-foreground mb-4 text-label-md uppercase tracking-wide">
                       <BookOpen className="w-4 h-4" />
                       <span>Source Documents</span>
                     </div>
 
-                    {typeof sources === "string" ? (
+                    {showStringSources ? (
                       <p className="text-sm text-muted-foreground">{sources}</p>
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-auto">
-                        {sources.map((source, index) => (
+                        {displaySources.map((source, index) => (
                           <div
                             className="h-fit transition-all"
                             key={`${source.document_path}-${index}`}
