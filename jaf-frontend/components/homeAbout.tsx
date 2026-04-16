@@ -65,7 +65,7 @@ function HomeAboutFlow() {
       className="scroll-mt-[var(--site-header-height)] bg-black px-5 py-20 text-foreground sm:px-10 md:px-14 lg:px-20"
     >
       <h2 className="mb-10 text-center font-heading text-3xl font-bold text-white sm:text-4xl md:text-4xl lg:text-5xl">
-        About Me
+        Executive Overview
       </h2>
       <div className="mx-auto grid w-full max-w-[min(88vw,1520px)] grid-cols-1 gap-8">
         {executiveSummaryItems.map((item) => (
@@ -220,7 +220,7 @@ function HomeAboutScrollScene({
               x: "-50%",
             }}
           >
-            About Me
+            Executive Overview
           </motion.h2>
 
           {/* Clear space below absolute heading (title ~11% + line height); extra gap before cards */}
