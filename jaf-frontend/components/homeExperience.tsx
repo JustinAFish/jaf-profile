@@ -98,7 +98,7 @@ export default function HomeExperience() {
                 </div>
               </div>
               <span className="text-lg text-paragraph whitespace-normal sm:shrink-0 sm:whitespace-nowrap">
-                2021 - Present
+                Aug 2021 – Present
               </span>
             </div>
 
@@ -113,6 +113,7 @@ export default function HomeExperience() {
                   aria-hidden
                 />
 
+                {/* Innovation Lab */}
                 <motion.div
                   variants={timelineItemVariants}
                   className="relative mb-16 group last:mb-0"
@@ -125,46 +126,37 @@ export default function HomeExperience() {
                   </div>
                   <div className="rounded border-l-4 border-primary bg-surface-container p-6 transition-colors duration-300 hover:bg-surface-container-high md:p-8">
                     <h4 className="font-heading text-2xl font-bold text-primary-dim">
-                      UK Government — Innovation Lab
+                      Public Sector Innovation Lab — GenAI Centre of Excellence &amp; Production Applications
                     </h4>
                     <h5 className="mt-1 text-xs tracking-tighter text-muted-foreground md:text-sm">
-                      £350m Cost Efficiency • 14 Solutions Designed &amp; Deployed • 50+ Reusable Assets • 4 Solutions Operationalised • 30+ Technologies Explored
+                      14 PoCs Delivered • 4 Solutions Operationalised • 20+ Vendor Partners • Secretary of State &amp; PM-Level Recognition
                     </h5>
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Led client engagement and a multidisciplinary team of 15 in developing user-centric AI solutions for UK Government, delivering state-of-the-art PoCs using Generative AI and advanced analytics that proved production viability
+                          Led a team of 15 spanning researchers, service designers, data scientists, and engineers to deliver 14 PoCs and operationalise 4 production solutions; established the lab&apos;s operating model, KPIs, agile delivery framework, and vendor partnership strategy (20+ partners). Work recognised directly at Secretary of State and Prime Minister level, requiring regular high-stakes briefings to ministerial stakeholders.
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Architected and led development of a Generative AI-powered app enabling real-time document analysis, vulnerability detection, and RAG-based Q&amp;A from policy documents — improving both user and customer outcomes
+                          Designed and shipped the first GenAI application in UK Gov that transformed customer service operations: an LLM pipeline combining multi-step document retrieval, automated vulnerability detection, and real-time Q&amp;A against complex policy documents, engineered with carefully structured prompts, guardrails, and output validation to meet strict public sector safety and compliance requirements.
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Established and scaled a Generative AI Centre of Excellence (CoE), running knowledge-sharing sessions, capturing department-wide use cases, and building reusable GenAI assets adopted across multiple teams
+                          Drove organisation-wide GenAI adoption by deploying sandbox environments across leading platforms (GCP, Azure, AWS), running 10+ technical Show and Tell sessions, and systematically cataloguing department-wide use cases — enabling the lab to prioritise high-impact initiatives and build a library of reusable AI assets and integration patterns deployed across multiple teams.
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Collaborated with AWS, Azure, and GCP to integrate cloud AI offerings into PoCs, accelerating multi-cloud development and briefing senior stakeholders up to C-suite level
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Managed full project lifecycle for multiple concurrent prototypes — timelines, budgets, risk mitigation — regularly building trust with executive sponsors to secure continued investment
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Developed and implemented the operating model for repeatedly identifying business opportunities, delivering MVPs, and scaling solutions cross-functionally from concept to production
+                          Partnered with Google Cloud, AWS, and Azure account teams to integrate their platform offerings into PoC workstreams; managed technical partner relationships, co-developed integration architectures, and served as the primary technical contact bridging cloud vendor capabilities with client requirements.
                         </p>
                       </li>
                     </ul>
                   </div>
                 </motion.div>
 
+                {/* Police Force */}
                 <motion.div
                   variants={timelineItemVariants}
                   className="relative mb-16 group last:mb-0"
@@ -175,31 +167,27 @@ export default function HomeExperience() {
                   />
                   <div className="rounded border-l-4 border-outline-variant/30 bg-surface-container p-6 transition-all duration-300 hover:border-primary hover:bg-surface-container-high md:p-8">
                     <h4 className="font-heading text-2xl font-bold text-header">
-                      UK Government — AI Safety Institute
+                      Large UK Police Force — Production RAG Deployment &amp; AI Operating Model
                     </h4>
                     <h5 className="mt-1 text-xs tracking-tighter text-muted-foreground md:text-sm">
-                      Technology Strategy • Enterprise Governance • Data-Driven Insights
+                      50% Processing Time Reduction • £250K Annual Cost Savings • Production RAG Deployment
                     </h5>
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Led a strategic engagement defining the technology strategy and operating model for a national AI Safety Institute, establishing enterprise governance frameworks to improve cross-departmental alignment
+                          Owned end-to-end technical delivery of a production GenAI FOI Assistant, cutting average case-handling time by 50% and delivering up to £250K in annual cost savings; personally architected the full solution stack (Azure OpenAI with semantic chunking and hybrid retrieval via Azure AI Search, Cosmos DB for session state, and containerised React/FastAPI microservices). Presented to the Architecture Authority Board to get approval to integrate it within the client&apos;s existing Azure estate.
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Architected a data strategy delivering financial and talent management insights through advanced analytics, enabling data-driven decision-making at scale
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Designed testing protocols and evaluation frameworks for assessing the societal impacts of advanced AI systems across diverse demographics
+                          Designed and implemented an end-to-end AI product operating model for the force, defining governance structures, acceptance criteria, and repeatable delivery standards from initial concept through scaled production; this model became a reusable playbook for subsequent AI deployments across the organisation.
                         </p>
                       </li>
                     </ul>
                   </div>
                 </motion.div>
 
+                {/* Regulatory Body */}
                 <motion.div
                   variants={timelineItemVariants}
                   className="relative mb-16 group last:mb-0"
@@ -210,31 +198,58 @@ export default function HomeExperience() {
                   />
                   <div className="rounded border-l-4 border-outline-variant/30 bg-surface-container p-6 transition-all duration-300 hover:border-primary hover:bg-surface-container-high md:p-8">
                     <h4 className="font-heading text-2xl font-bold text-header">
-                      UK Police Forces
+                      UK Public Sector Regulatory Body — Technical Discovery to Board-Approved Prototype
                     </h4>
                     <h5 className="mt-1 text-xs tracking-tighter text-muted-foreground md:text-sm">
-                      50% Processing Time Reduction • £250K Annual Cost Savings • Production AI Deployment
+                      20 User Research Sessions • 4 Regulators • Board-Approved Prototype
                     </h5>
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Led design and delivery of an AI-enabled FOI response accelerator, reducing processing time by 50% and delivering up to £250K in annual cost savings, mitigating statutory non-compliance risk amid rising request volumes
+                          Led the full discovery-to-prototype for an AI-powered Digital Regulatory Library aggregating compliance guidance from four UK regulators; conducted 20 moderated user research sessions and stakeholder co-design workshops to define requirements, then scoped and architected the technical solution before leading iterative prototyping through to a coded, board-approved prototype, demonstrating the complete pre-sales and technical advisory motion that defines Solutions Architect and FDE roles.
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Developed strategy to deliver multiple AI products enhancing operational decision-making, improving efficiency and resilience across policing
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Led end-to-end product development of an AI solution with geofencing, providing frontline officers with real-time patrol intelligence
+                          Navigated a complex multi-stakeholder environment (four regulators, procurement, legal, and technical teams) to build consensus around the architecture and gain executive sign-off, while proactively identifying and mitigating AI adoption risk and safety concerns at each stage of delivery.
                         </p>
                       </li>
                     </ul>
                   </div>
                 </motion.div>
 
+                {/* AI Safety Institute */}
+                <motion.div
+                  variants={timelineItemVariants}
+                  className="relative mb-16 group last:mb-0"
+                >
+                  <div
+                    className="absolute top-2 left-[-32px] z-10 size-4 rounded-full border-2 border-primary/40 bg-surface-container-high transition-colors group-hover:border-primary md:left-[-59px]"
+                    aria-hidden
+                  />
+                  <div className="rounded border-l-4 border-outline-variant/30 bg-surface-container p-6 transition-all duration-300 hover:border-primary hover:bg-surface-container-high md:p-8">
+                    <h4 className="font-heading text-2xl font-bold text-header">
+                      AI Safety Institute — Responsible AI Strategy &amp; Governance
+                    </h4>
+                    <h5 className="mt-1 text-xs tracking-tighter text-muted-foreground md:text-sm">
+                      Technology Strategy • Enterprise Governance • AI Safety Research
+                    </h5>
+                    <ul className={listClass}>
+                      <li className={listItemClass}>
+                        <p>
+                          Led technology strategy and operations for the UK Government&apos;s AI Safety Institute, the body established to evaluate frontier AI models, measure societal impacts, and set standards for responsible deployment; defined the organisation&apos;s technology roadmap and instilled enterprise governance structures that improved cross-functional alignment on AI safety research priorities.
+                        </p>
+                      </li>
+                      <li className={listItemClass}>
+                        <p>
+                          Developed a data strategy enabling data-driven decision-making across finance and talent functions, and advised on responsible AI frameworks for evaluating model safety.
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                </motion.div>
+
+                {/* AI Innovation Product Lead */}
                 <motion.div variants={timelineItemVariants} className="relative group">
                   <div
                     className="absolute top-2 left-[-32px] z-10 size-4 rounded-full border-2 border-primary/40 bg-surface-container-high transition-colors group-hover:border-primary md:left-[-59px]"
@@ -242,30 +257,25 @@ export default function HomeExperience() {
                   />
                   <div className="rounded border-l-4 border-outline-variant/30 bg-surface-container p-6 transition-all duration-300 hover:border-primary hover:bg-surface-container-high md:p-8">
                     <h4 className="font-heading text-2xl font-bold text-header">
-                      AI Innovation Product Lead &amp; GenAI GTM
+                      AI Innovation Product Lead — GTM, Patterns &amp; Capability Building
                     </h4>
                     <h5 className="mt-1 text-xs tracking-tighter text-muted-foreground md:text-sm">
-                      12 PoCs Developed • 10 Clients Engaged (Public &amp; Private) • £5M+ Investment Secured
+                      20+ PoCs Delivered • 25+ Clients Engaged (Public &amp; Private) • Pre-Sales to Delivery Motion
                     </h5>
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Founded and led GenAI capability, establishing the delivery model across three workstreams: knowledge dissemination, L&amp;D, and client-specific product development to support go-to-market growth
+                          Led Capgemini Invent&apos;s GenAI go-to-market capability, delivering 20+ PoCs across 25+ public and private sector clients; ran technical discovery workshops to identify high-value AI opportunities, shaped solution architectures, and led deals from initial technical qualification through to client sign-off, building the full pre-sales to delivery motion that underpins enterprise AI adoption roles.
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Oversaw end-to-end product lifecycle management with 100% on-time delivery of major features, translating AI capabilities into business value propositions for C-suite stakeholders
+                          Codified repeatable deployment patterns and reusable technical assets across three GenAI workstreams (knowledge sharing, L&amp;D, and product delivery); these assets reduced time-to-prototype for new client engagements and were adopted by teams across the practice.
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Secured £5M+ in AI initiative funding by articulating LLM solutions as strategic business value to executive sponsors
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Implemented CI/CD pipelines, opportunity tracking, and reusable asset management to support simultaneous multi-client development at scale
+                          Developed reusable design patterns and integration guidance for Government AI use cases, advising on enterprise architecture, data residency, security controls, and LLM deployment best practices, including context engineering, prompt design, and output validation strategies suited to regulated public sector environments.
                         </p>
                       </li>
                     </ul>
@@ -303,7 +313,7 @@ export default function HomeExperience() {
                 </div>
               </div>
               <span className="text-lg text-paragraph whitespace-normal sm:shrink-0 sm:whitespace-nowrap">
-                2019 - 2021
+                Apr 2019 – Aug 2021
               </span>
             </div>
 
@@ -335,22 +345,32 @@ export default function HomeExperience() {
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Led a team of 5 data scientists to develop a machine learning model predicting elderly patient fall risk, deployed as a web application enabling easy access to predictive insights for healthcare end-users
+                          Led a team of 5 data scientists to design, build, and deploy a production ML model predicting patient fall risk for a major healthcare client; architected the end-to-end solution including model training (ensemble classifiers, feature engineering on clinical data) and a Python web application enabling nursing staff to access real-time predictive insights, translating a complex data science output into a tool clinical users could trust and act on.
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Improved hospital theatre scheduling through data-driven patient workflow analysis and forecasting, increasing utilisation, reducing wait times, and optimising resource allocation
+                          Designed and delivered a cloud-based document intelligence pipeline on AWS (S3, Textract, Lambda) to digitise thousands of unstructured government PDF documents; applied NLP techniques including automated text classification, named entity recognition, and extractive summarisation to create a fully searchable structured knowledge base, an early-stage RAG precursor pattern now central to modern enterprise GenAI deployments.
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Designed a cloud-based text analytics pipeline using AWS and NLP (text classification, summarisation) to digitise unstructured government documents into a searchable knowledge base
+                          Applied advanced ML methods (Random Forest, LSTM neural networks) in the energy sector to model telemetry alarm occurrences at critical distribution sites and predict wind turbine equipment failures; enabled preventative maintenance scheduling that reduced operational downtime and identified significant cost savings through optimised field workflows.
                         </p>
                       </li>
                       <li className={listItemClass}>
                         <p>
-                          Applied advanced ML methods (Random Forests, LSTM neural networks) to optimise energy sector operations — predicting equipment failures and enabling preventative maintenance to reduce downtime and costs
+                          Designed and deployed a user-centric supply chain resilience tool (Agile delivery, multi-sprint) combining automated ML text classification, NLP extraction and summarisation, and geospatial visualisations, embedded directly within the client&apos;s data science team and shipped on cloud infrastructure, demonstrating the forward-deployed, co-build model that defines modern enterprise AI engagements.
+                        </p>
+                      </li>
+                      <li className={listItemClass}>
+                        <p>
+                          Ran a comprehensive NLP-driven customer insight programme for a consumer client, applying topic modelling, sentiment analysis, and scatter text visualisation to large-scale survey data; translated findings into clear executive narratives that shaped product and marketing strategy, building the executive communication and insight-to-action skills central to customer-facing technical roles.
+                        </p>
+                      </li>
+                      <li className={listItemClass}>
+                        <p>
+                          Improved hospital theatre scheduling by modelling patient flow and applying data-driven forecasting to resource allocation; increased utilisation and reduced patient wait times, an early example of applying AI to complex operational workflows with measurable, human-centred outcomes.
                         </p>
                       </li>
                     </ul>
@@ -377,18 +397,18 @@ export default function HomeExperience() {
                 <div className="min-w-0 flex-1">
                   <h3 className="font-heading font-bold text-header">
                     <span className="block text-3xl">
-                      <span className="mr-2">SAV</span>
+                      <span className="mr-2">SAV Systems</span>
                     </span>
                     <span className="mt-1 block text-sm uppercase tracking-widest text-secondary">
                       <span className="text-paragraph">
-                        | Technical Manager and R&D
+                        | Technical Manager &amp; R&amp;D
                       </span>
                     </span>
                   </h3>
                 </div>
               </div>
               <span className="text-lg text-paragraph whitespace-normal sm:shrink-0 sm:whitespace-nowrap">
-                2017 - 2019
+                Feb 2017 – Apr 2019
               </span>
             </div>
 
@@ -414,12 +434,7 @@ export default function HomeExperience() {
                     <ul className={listClass}>
                       <li className={listItemClass}>
                         <p>
-                          Developed a software application for a thermal disconnect billing system, enabling a new service offering and facilitating a joint venture partnership
-                        </p>
-                      </li>
-                      <li className={listItemClass}>
-                        <p>
-                          Managed R&amp;D projects and daily operations, coordinating engineering teams and stakeholders to deliver innovative energy-efficiency solutions on schedule
+                          Developed billing software for a thermal disconnect system, enabling a new service offering and leading to a joint venture partnership; managed R&amp;D projects coordinating engineering teams and stakeholders.
                         </p>
                       </li>
                     </ul>
