@@ -53,3 +53,41 @@ function escapeHtml(text: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
+
+export type SendContactFormEmailParams = {
+  submitterName: string;
+  submitterEmail: string;
+  message: string;
+  to: string;
+};
+
+export async function sendContactFormEmail({
+  submitterName,
+  submitterEmail,
+  message,
+  to,
+}: SendContactFormEmailParams) {
+  const client = getResend();
+  const from = getFromAddress();
+  const name = submitterName.trim();
+  const addr = submitterEmail.trim();
+  const body = message;
+
+  const { data, error } = await client.emails.send({
+    from,
+    to,
+    subject: `New Contact Form Submission from ${name}`,
+    text: `Name: ${name}\nEmail: ${addr}\n\nMessage:\n${body}`,
+    html: `<h3>New Contact Form Submission</h3>
+<p><strong>Name:</strong> ${escapeHtml(name)}</p>
+<p><strong>Email:</strong> ${escapeHtml(addr)}</p>
+<p><strong>Message:</strong></p>
+<p>${escapeHtml(body).replace(/\n/g, "<br>")}</p>`,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}

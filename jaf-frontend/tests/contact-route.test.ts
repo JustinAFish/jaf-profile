@@ -1,30 +1,33 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const sendMail = vi.fn().mockResolvedValue({ messageId: "test-id" });
-const createTransport = vi.fn().mockReturnValue({ sendMail });
+const emailsSend = vi
+  .fn()
+  .mockResolvedValue({ data: { id: "test-email-id" }, error: null });
 
-vi.mock("nodemailer", () => ({
-  default: {
-    createTransport,
-  },
+vi.mock("resend", () => ({
+  Resend: vi.fn().mockImplementation(() => ({
+    emails: { send: emailsSend },
+  })),
 }));
 
 describe("POST /api/contact", () => {
-  const originalUser = process.env.EMAIL_USER;
-  const originalPass = process.env.EMAIL_PASSWORD;
+  const originalKey = process.env.RESEND_API_KEY;
+  const originalFrom = process.env.RESEND_FROM_EMAIL;
+  const originalTo = process.env.CONTACT_TO_EMAIL;
 
   beforeEach(() => {
     vi.resetModules();
-    process.env.EMAIL_USER = "test@example.com";
-    process.env.EMAIL_PASSWORD = "secret";
-    sendMail.mockClear();
-    createTransport.mockClear();
-    createTransport.mockReturnValue({ sendMail });
+    process.env.RESEND_API_KEY = "re_test_key";
+    process.env.RESEND_FROM_EMAIL = "Site <onboarding@resend.dev>";
+    delete process.env.CONTACT_TO_EMAIL;
+    emailsSend.mockClear();
+    emailsSend.mockResolvedValue({ data: { id: "test-email-id" }, error: null });
   });
 
   afterEach(() => {
-    process.env.EMAIL_USER = originalUser;
-    process.env.EMAIL_PASSWORD = originalPass;
+    process.env.RESEND_API_KEY = originalKey;
+    process.env.RESEND_FROM_EMAIL = originalFrom;
+    process.env.CONTACT_TO_EMAIL = originalTo;
   });
 
   it("returns 400 when required fields are missing", async () => {
@@ -39,8 +42,8 @@ describe("POST /api/contact", () => {
   });
 
   it("returns 500 when email env is not configured", async () => {
-    delete process.env.EMAIL_USER;
-    delete process.env.EMAIL_PASSWORD;
+    delete process.env.RESEND_API_KEY;
+    delete process.env.RESEND_FROM_EMAIL;
     const { POST } = await import("@/app/api/contact/route");
     const req = new Request("http://localhost/api/contact", {
       method: "POST",
@@ -68,9 +71,11 @@ describe("POST /api/contact", () => {
     });
     const res = await POST(req);
     expect(res.status).toBe(200);
-    expect(createTransport).toHaveBeenCalled();
-    expect(sendMail).toHaveBeenCalledTimes(1);
-    const payload = sendMail.mock.calls[0][0] as { to?: string; subject?: string };
+    expect(emailsSend).toHaveBeenCalledTimes(1);
+    const payload = emailsSend.mock.calls[0][0] as {
+      to?: string;
+      subject?: string;
+    };
     expect(payload.to).toBe("JustinAnthonyFish@gmail.com");
     expect(payload.subject).toContain("Test User");
   });
