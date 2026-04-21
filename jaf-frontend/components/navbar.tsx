@@ -259,8 +259,8 @@ export function Navbar() {
   const rightCluster = (
     <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
       <a
-        href="/data/Justin_Fish_CV_2025.pdf"
-        download="Justin_Fish_CV_2025.pdf"
+        href="/data/Justin_Fish_CV_2026.pdf"
+        download="Justin_Fish_CV_2026.pdf"
         className="p-2 rounded-full text-foreground/90 hover:text-primary hover:bg-surface-container-high/60 transition-colors duration-200 flex items-center gap-1 sm:gap-2"
         title="Download CV"
       >
@@ -446,8 +446,8 @@ export function Navbar() {
               Connect
             </button>
             <a
-              href="/data/Justin_Fish_CV_2025.pdf"
-              download="Justin_Fish_CV_2025.pdf"
+              href="/data/Justin_Fish_CV_2026.pdf"
+              download="Justin_Fish_CV_2026.pdf"
               className="flex items-center gap-3 py-2 px-1 rounded-md text-foreground/90 hover:text-primary hover:bg-surface-container-high/40 transition-colors"
               onClick={() => setMobileNavOpen(false)}
             >

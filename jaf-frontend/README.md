@@ -58,17 +58,48 @@ You can deploy this app as **two** Railway services from the same repo. Set **Ro
 | Variable | Notes |
 |----------|--------|
 | `NEXT_PUBLIC_BACKEND_URL` | Full URL of the Railway backend (set **before** `npm run build`) |
-| `NEXT_PUBLIC_APP_ORIGIN` | Canonical frontend URL (same as the site users open) |
+| `NEXT_PUBLIC_APP_ORIGIN` | Canonical frontend URL (same as the site users open); must match **Supabase Site URL** in production |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | From Supabase project settings |
-| `EMAIL_USER`, `EMAIL_PASSWORD` | SMTP for the contact API route |
+| `RESEND_API_KEY` | Resend API key (used by `/api/contact` and the post-auth welcome email in `app/auth/callback`) |
+| `RESEND_FROM_EMAIL` | Verified Resend sender, e.g. `Name <hello@yourdomain.com>` |
 | `CONTACT_TO_EMAIL` | Optional override for the contact form recipient |
 
-**Supabase (dashboard — required for auth in production)**
+**Supabase Auth email (signup / password reset)**
 
-In the Supabase project: **Authentication → URL configuration**, set **Site URL** to your Railway frontend URL and add **Redirect URLs** for each path users return to after sign-in (replace the host with your Railway frontend URL), for example:
+Sign-up calls Supabase’s hosted `POST /auth/v1/signup`. The **contact form does not send those messages**—it uses the Next.js `/api/contact` route and Resend. Auth confirmation and magic links are sent by **Supabase’s Auth mailer** (built-in or custom SMTP in the Supabase dashboard).
 
-- `https://<your-frontend-host>/auth/callback`
+If signup returns **500** with a body like `Error sending confirmation email`, the fix is in the Supabase project, not in the contact route:
 
-Without this, OAuth and magic-link redirects will not return users to the Railway deployment.
+1. **Confirm the error** — Supabase **Logs** (Auth / API) around the request, or reproduce with a direct signup request and read the JSON `msg` field.
+2. **Custom SMTP (recommended if you already use Resend)** — In Supabase: **Project Settings → Authentication** (or **Authentication → Emails → SMTP Settings**, depending on dashboard layout). Use Resend’s SMTP ([Resend × Supabase](https://resend.com/docs/send-with-supabase-smtp), [Supabase SMTP guide](https://supabase.com/docs/guides/auth/auth-smtp)):
+   - **Host:** `smtp.resend.com`
+   - **Port:** `465` (TLS)
+   - **Username:** `resend`
+   - **Password:** your Resend API key (create a dedicated key for production if you prefer)
+   - **Sender email / name:** must use a domain verified in Resend (same domain as `RESEND_FROM_EMAIL` is a good default).
+3. **Remove or fix broken SMTP** — If custom SMTP was enabled with wrong credentials, either correct them or temporarily clear custom SMTP to use Supabase’s default mailer (subject to provider limits), then re-enable Resend SMTP for production.
+
+**Supabase URL configuration (redirects after email links)**
+
+In the Supabase project: **Authentication → URL configuration**:
+
+- **Site URL:** your canonical public frontend origin (e.g. `https://jaf.averonai.org` or your Railway URL). This should match `NEXT_PUBLIC_APP_ORIGIN` in that environment.
+- **Redirect URLs:** include the auth callback route, e.g. `https://jaf.averonai.org/auth/callback` (add `http://localhost:3000/auth/callback` for local dev if needed).
+
+Without this, email confirmation and OAuth redirects may not return users to your deployment.
+
+**Verify signup after SMTP and URLs are set**
+
+From a shell with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` set, a successful signup should return **HTTP 200** (and a JSON body with `user`, often without `session` until email is confirmed):
+
+```bash
+curl -sS -w "\n%{http_code}\n" -X POST "${NEXT_PUBLIC_SUPABASE_URL}/auth/v1/signup" \
+  -H "apikey: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}" \
+  -H "Authorization: Bearer ${NEXT_PUBLIC_SUPABASE_ANON_KEY}" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"your-test@example.com","password":"YourLongPassword1","options":{"email_redirect_to":"https://YOUR_ORIGIN/auth/callback?next=%2Fchat"}}'
+```
+
+Then confirm the confirmation email arrives and that opening the link lands on `/auth/callback` and redirects into the app.
 
 **CLI:** from a linked service directory, `npx @railway/cli@latest up` (after `railway login`).

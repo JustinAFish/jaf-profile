@@ -220,8 +220,8 @@ const HomeHero = forwardRef<HTMLElement, object>(
                   </p>
                   <div className="flex flex-col gap-3 md:gap-3.5 xl:gap-5 2xl:gap-6">
                     <a
-                      href="/data/Justin_Fish_CV_2025.pdf"
-                      download="Justin_Fish_CV_2025.pdf"
+                      href="/data/Justin_Fish_CV_2026.pdf"
+                      download="Justin_Fish_CV_2026.pdf"
                       className="flex items-center gap-3 md:gap-3.5 xl:gap-5 2xl:gap-6 group cursor-pointer"
                     >
                       <div className="w-10 sm:w-11 md:w-11 xl:w-14 2xl:w-16 min-[1800px]:w-20 h-px bg-primary group-hover:w-16 sm:group-hover:w-[4.5rem] md:group-hover:w-[4.5rem] xl:group-hover:w-24 2xl:group-hover:w-28 min-[1800px]:group-hover:w-32 transition-all duration-500" />
