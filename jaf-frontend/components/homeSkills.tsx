@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMinWidth } from "@/hooks/useMinWidth";
+import { cn } from "@/lib/utils";
 import {
   SKILLS_SCENE_MIN_WIDTH_PX,
   SKILLS_SCROLL_SCENE_ANIM_RATIO,
@@ -104,45 +105,108 @@ const ROW_ROTATE_DEG = [-14, -5, 5, 14] as const;
 const cardClassName =
   "group relative rounded-md bg-surface-container-high/90 backdrop-blur-md border-0 shadow-none transform transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_40px_60px_rgba(129,236,255,0.08)]";
 
+/** Minimum viewport width (logical px) at which the scene cards scale up for large displays. */
+const SKILLS_ULTRAWIDE_MIN_WIDTH_PX = 1800;
+
+/** Scroll-scene card classes — two sets, switched via JS (useMinWidth) to avoid CSS cascade issues. */
+const SCENE_CARD_HEADER_CLASS = "p-4 sm:p-5";
+const SCENE_CARD_HEADER_XL_CLASS = "p-6";
+const SCENE_CARD_CONTENT_CLASS = "p-4 pt-0 sm:p-5 sm:pt-0";
+const SCENE_CARD_CONTENT_XL_CLASS = "p-6 pt-0";
+const SCENE_CARD_TITLE_CLASS = "text-lg font-heading text-primary sm:text-xl";
+const SCENE_CARD_TITLE_XL_CLASS = "text-3xl font-heading text-primary leading-tight";
+const SCENE_SKILL_LIST_CLASS = "space-y-2 sm:space-y-2.5";
+const SCENE_SKILL_LIST_XL_CLASS = "space-y-3";
+const SCENE_SKILL_CHIP_CLASS =
+  "rounded-md bg-surface-container-lowest/80 p-2 ghost-border transform transition-all duration-200 hover:bg-surface-container/90 group/skill sm:p-2.5";
+const SCENE_SKILL_CHIP_XL_CLASS =
+  "rounded-md bg-surface-container-lowest/80 p-3.5 ghost-border transform transition-all duration-200 hover:bg-surface-container/90 group/skill";
+const SCENE_SKILL_TEXT_CLASS =
+  "text-paragraph text-xs font-medium group-hover/skill:text-foreground transition-colors sm:text-sm";
+const SCENE_SKILL_TEXT_XL_CLASS =
+  "text-paragraph text-lg font-medium group-hover/skill:text-foreground transition-colors leading-snug";
+/** Card wrapper width — set via JS not CSS so there's no cascade conflict with lg: breakpoint rules. */
+const SCENE_ROW_CARD_CLASS =
+  "pointer-events-auto absolute top-14 z-10 w-[min(24vw,18rem)] overflow-visible sm:top-16 md:top-20 md:w-[min(24.5vw,19rem)] lg:top-20 lg:w-[min(25vw,20rem)]";
+const SCENE_ROW_CARD_XL_CLASS =
+  "pointer-events-auto absolute top-28 z-10 overflow-visible";
+const SCENE_ROW_CARD_PRIMARY_CLASS =
+  "pointer-events-auto absolute top-14 z-30 w-[min(24vw,18rem)] overflow-visible sm:top-16 md:top-20 md:w-[min(24.5vw,19rem)] lg:top-20 lg:w-[min(25vw,20rem)]";
+const SCENE_ROW_CARD_PRIMARY_XL_CLASS =
+  "pointer-events-auto absolute top-28 z-30 overflow-visible";
+
 function SkillCategoryCard({
   category,
   variant = "default",
+  ultrawide = false,
 }: {
   category: SkillCategory;
   variant?: "default" | "scene";
+  /** Scene variant only: use larger type/spacing on wide displays (driven by useMinWidth, not CSS). */
+  ultrawide?: boolean;
 }) {
   const compact = variant === "scene";
   return (
-    <Card className={cardClassName}>
+    <Card className={cn(cardClassName, compact && "w-full")}>
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent rounded-md" />
       </div>
-      <CardHeader className={compact ? "p-4 sm:p-5" : undefined}>
+      <CardHeader
+        className={
+          compact
+            ? ultrawide
+              ? SCENE_CARD_HEADER_XL_CLASS
+              : SCENE_CARD_HEADER_CLASS
+            : undefined
+        }
+      >
         <CardTitle
           className={
             compact
-              ? "text-lg font-heading text-primary sm:text-xl"
+              ? ultrawide
+                ? SCENE_CARD_TITLE_XL_CLASS
+                : SCENE_CARD_TITLE_CLASS
               : "text-2xl font-heading text-primary"
           }
         >
           {category.title}
         </CardTitle>
       </CardHeader>
-      <CardContent className={compact ? "p-4 pt-0 sm:p-5 sm:pt-0" : undefined}>
-        <div className={compact ? "space-y-2 sm:space-y-2.5" : "space-y-3"}>
+      <CardContent
+        className={
+          compact
+            ? ultrawide
+              ? SCENE_CARD_CONTENT_XL_CLASS
+              : SCENE_CARD_CONTENT_CLASS
+            : undefined
+        }
+      >
+        <div
+          className={
+            compact
+              ? ultrawide
+                ? SCENE_SKILL_LIST_XL_CLASS
+                : SCENE_SKILL_LIST_CLASS
+              : "space-y-3"
+          }
+        >
           {category.skills.map((skill, skillIndex) => (
             <div
               key={skillIndex}
               className={
                 compact
-                  ? "rounded-md bg-surface-container-lowest/80 p-2 ghost-border transform transition-all duration-200 hover:bg-surface-container/90 group/skill sm:p-2.5"
+                  ? ultrawide
+                    ? SCENE_SKILL_CHIP_XL_CLASS
+                    : SCENE_SKILL_CHIP_CLASS
                   : "p-3 rounded-md bg-surface-container-lowest/80 ghost-border transform transition-all duration-200 hover:bg-surface-container/90 group/skill"
               }
             >
               <p
                 className={
                   compact
-                    ? "text-paragraph text-xs font-medium group-hover/skill:text-foreground transition-colors sm:text-sm"
+                    ? ultrawide
+                      ? SCENE_SKILL_TEXT_XL_CLASS
+                      : SCENE_SKILL_TEXT_CLASS
                     : "text-paragraph font-medium group-hover/skill:text-foreground transition-colors"
                 }
               >
@@ -159,9 +223,11 @@ function SkillCategoryCard({
 function SceneRowCard({
   category,
   sceneProgress,
+  ultrawide,
 }: {
   category: SkillCategory;
   sceneProgress: MotionValue<number>;
+  ultrawide: boolean;
 }) {
   const targetLeft = ROW_LEFT_PCT[category.rowIndex];
   /** Spread uses most of 0→1 so the fan-out isn’t “done” in the first few scroll ticks. */
@@ -187,13 +253,17 @@ function SceneRowCard({
   );
   const scale = category.isPrimary ? scalePrimary : scaleSecondary;
 
+  const wrapperClass = ultrawide
+    ? category.isPrimary
+      ? SCENE_ROW_CARD_PRIMARY_XL_CLASS
+      : SCENE_ROW_CARD_XL_CLASS
+    : category.isPrimary
+      ? SCENE_ROW_CARD_PRIMARY_CLASS
+      : SCENE_ROW_CARD_CLASS;
+
   return (
     <motion.div
-      className={
-        category.isPrimary
-          ? "pointer-events-auto absolute top-14 z-30 w-[min(24vw,18rem)] overflow-visible sm:top-16 md:top-20 md:w-[min(24.5vw,19rem)] lg:top-20 lg:w-[min(25vw,20rem)]"
-          : "pointer-events-auto absolute top-14 z-10 w-[min(24vw,18rem)] overflow-visible sm:top-16 md:top-20 md:w-[min(24.5vw,19rem)] lg:top-20 lg:w-[min(25vw,20rem)]"
-      }
+      className={wrapperClass}
       style={{
         left,
         x: "-50%",
@@ -201,15 +271,17 @@ function SceneRowCard({
         opacity,
         scale,
         transformOrigin: "50% 50%",
+        ...(ultrawide ? { width: "23vw" } : {}),
       }}
     >
-      <SkillCategoryCard category={category} variant="scene" />
+      <SkillCategoryCard category={category} variant="scene" ultrawide={ultrawide} />
     </motion.div>
   );
 }
 
 function HomeSkillsScrollScene() {
   const sectionRef = useRef<HTMLElement>(null);
+  const isUltrawide = useMinWidth(SKILLS_ULTRAWIDE_MIN_WIDTH_PX) === true;
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -240,11 +312,23 @@ function HomeSkillsScrollScene() {
             className="relative z-20 text-center"
             style={{ opacity: titleOpacity }}
           >
-            <h2 className="text-4xl font-heading font-bold text-header md:text-5xl">
-            Broad range of skills with deep expertise
+            <h2
+              className={
+                isUltrawide
+                  ? "text-6xl font-heading font-bold text-header leading-tight"
+                  : "text-4xl font-heading font-bold text-header md:text-5xl"
+              }
+            >
+              Broad range of skills with deep expertise
             </h2>
-            <p className="text-md mt-4 uppercase tracking-widest text-tertiary">
-            Through continous upskilling to deliver results
+            <p
+              className={
+                isUltrawide
+                  ? "mt-6 text-xl uppercase tracking-[0.2em] text-tertiary"
+                  : "text-md mt-4 uppercase tracking-widest text-tertiary"
+              }
+            >
+              Through continous upskilling to deliver results
             </p>
           </motion.div>
 
@@ -255,6 +339,7 @@ function HomeSkillsScrollScene() {
                 key={cat.id}
                 category={cat}
                 sceneProgress={sceneProgress}
+                ultrawide={isUltrawide}
               />
             ))}
           </div>

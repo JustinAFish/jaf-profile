@@ -1,3 +1,10 @@
+/**
+ * Home page "About" / Executive Overview section: renders executive summary cards in one of three layouts:
+ *   • Scroll scene (wide viewports): sticky scroll-driven animation — title scales in, cards "fly" in with scale/opacity/rotateX transforms tied to scroll progress
+ *   • Flow (narrow): simple stacked cards (no scroll animation)
+ *   • Static (reduced motion): 4-column grid, no animation
+ * Black underlay fades in sync with hero scroll (not #about scroll) to avoid a visible seam over the hero image
+ */
 "use client";
 
 import { Card } from "@/components/ui/card";
@@ -27,15 +34,28 @@ import {
   type RefObject,
 } from "react";
 
-function itemBody(item: ExecutiveSummaryItem, compact: boolean) {
+/** Renders one executive summary item (title, body, optional bullet list) with compact or spacious typography. */
+function itemBody(
+  item: ExecutiveSummaryItem,
+  compact: boolean,
+  /** Scroll-scene flying cards only: scale type on 2200px+ viewports. */
+  ultrawide?: boolean,
+) {
+  // Tailwind class sets differ by layout: compact cards use smaller type and tighter spacing.
   const titleClass = compact
-    ? "mb-2 font-heading text-sm font-semibold tracking-tight text-primary sm:text-base md:mb-1.5 md:text-xs lg:text-sm xl:text-base 2xl:text-lg"
+    ? ultrawide
+      ? "mb-2 font-heading text-sm font-semibold tracking-tight text-primary sm:text-base md:mb-1.5 md:text-xs lg:text-sm xl:text-base 2xl:text-lg min-[2200px]:mb-3 min-[2200px]:text-6xl"
+      : "mb-2 font-heading text-sm font-semibold tracking-tight text-primary sm:text-base md:mb-1.5 md:text-xs lg:text-sm xl:text-base 2xl:text-lg"
     : "mb-3 font-heading text-lg font-semibold tracking-tight text-primary md:text-xl";
   const p = compact
-    ? "whitespace-pre-line text-base leading-snug text-white/90 sm:text-lg md:text-sm md:leading-snug lg:text-base lg:leading-snug xl:text-lg xl:leading-snug 2xl:text-xl 2xl:leading-relaxed"
+    ? ultrawide
+      ? "whitespace-pre-line text-base leading-snug text-white/90 sm:text-lg md:text-sm md:leading-snug lg:text-base lg:leading-snug xl:text-lg xl:leading-snug 2xl:text-xl 2xl:leading-relaxed min-[2200px]:text-4xl min-[2200px]:leading-relaxed"
+      : "whitespace-pre-line text-base leading-snug text-white/90 sm:text-lg md:text-sm md:leading-snug lg:text-base lg:leading-snug xl:text-lg xl:leading-snug 2xl:text-xl 2xl:leading-relaxed"
     : "whitespace-pre-line text-base md:text-lg text-white/90 leading-relaxed";
   const ul = compact
-    ? "mt-3 list-[circle] space-y-2.5 pl-4 text-sm text-white/80 sm:text-base md:text-base lg:text-sm xl:text-base"
+    ? ultrawide
+      ? "mt-3 list-[circle] space-y-2.5 pl-4 text-sm text-white/80 sm:text-base md:text-base lg:text-sm xl:text-base min-[2200px]:mt-5 min-[2200px]:space-y-3.5 min-[2200px]:pl-6 min-[2200px]:text-2xl"
+      : "mt-3 list-[circle] space-y-2.5 pl-4 text-sm text-white/80 sm:text-base md:text-base lg:text-sm xl:text-base"
     : "mt-3 list-[circle] space-y-2 pl-5 text-sm md:text-base text-white/80";
 
   return (
@@ -58,6 +78,7 @@ const executiveSummaryFlowCardClass =
 
 /** Document scroll + one card per item (narrow viewports; same idea as HomeSkillsStatic). */
 function HomeAboutFlow() {
+  // Single-column stack — no sticky/scroll math on small screens.
   return (
     <section
       id="about"
@@ -93,12 +114,14 @@ function FlyingCard({
   total: number;
   scrollYProgress: MotionValue<number>;
 }) {
+  // Map scroll progress 0→1 onto a middle band (phaseStart→phaseEnd); divide that band evenly per card.
   const phaseStart = 0.26;
   const phaseEnd = 0.86;
   const slot = (phaseEnd - phaseStart) / total;
   const start = phaseStart + index * slot;
   const end = Math.min(start + slot * 0.92, phaseEnd);
 
+  // Each card stays tiny until its slot, then scales, fades, and tilts into place.
   const scale = useTransform(scrollYProgress, [0, start, end], [0.14, 0.14, 1]);
   const opacity = useTransform(scrollYProgress, [0, start, start + slot * 0.06, end], [0, 0, 1, 1]);
   const rotateX = useTransform(scrollYProgress, [0, start, end], [0, 10, 0]);
@@ -113,14 +136,15 @@ function FlyingCard({
           rotateX,
         }}
       >
-        <Card className="glass-surface flex h-full min-h-0 w-full flex-col justify-center overflow-visible border border-white/10 bg-surface-container-high/90 p-5 shadow-none sm:p-6 md:p-5 lg:p-7">
-          {itemBody(item, true)}
+        <Card className="glass-surface flex h-full min-h-0 w-full flex-col justify-center overflow-visible border border-white/10 bg-surface-container-high/90 p-5 shadow-none sm:p-6 md:p-5 lg:p-7 min-[2200px]:p-9">
+          {itemBody(item, true, true)}
         </Card>
       </motion.article>
     </div>
   );
 }
 
+/** Wide-viewport sticky scroll scene: title animates in, then cards fly in sequentially. */
 function HomeAboutScrollScene({
   homeSectionRef,
 }: {
@@ -132,6 +156,7 @@ function HomeAboutScrollScene({
     null,
   );
 
+  // Section must be tall enough for scroll distance *and* sticky content; ResizeObserver keeps this in sync when cards reflow.
   const updateSectionMinHeight = useCallback(() => {
     const sticky = stickyRootRef.current;
     if (!sticky) return;
@@ -154,21 +179,24 @@ function HomeAboutScrollScene({
     };
   }, [updateSectionMinHeight]);
 
+  // Progress while #about travels from top of viewport to top leaving viewport (drives sticky scene).
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
   });
 
+  // Separate tracker on hero — used only for black underlay so fade matches hero unpinned, not about section timing.
   const { scrollYProgress: heroScrollProgress } = useScroll({
     target: homeSectionRef,
     offset: ["start start", "end start"],
   });
 
-  /** 0→1 over the first `SCROLL_SCENE_ANIM_RATIO` of section scroll; then stays at 1 for `SCROLL_SCENE_HOLD_VH`. */
+  /** 0→1 over the first `SCROLL_SCENE_ANIM_RATIO` of section scroll; then stays at 1 for the hold segment. */
   const sceneProgress = useTransform(scrollYProgress, (v) =>
     Math.min(v / SCROLL_SCENE_ANIM_RATIO, 1),
   );
 
+  // Title entrance: grow from center, fade in, then move up to make room for the card grid.
   const titleScale = useTransform(sceneProgress, [0, 0.2], [0.06, 1]);
   const titleOpacity = useTransform(sceneProgress, [0, 0.05, 0.17], [0, 0.5, 1]);
   const titleTop = useTransform(sceneProgress, [0, 0.14, 0.36], ["44%", "44%", "11%"]);
@@ -193,6 +221,7 @@ function HomeAboutScrollScene({
       data-about-variant="scene"
       className="relative bg-transparent text-foreground scroll-mt-[var(--site-header-height)]"
       style={{
+        // Pull section up under hero so scroll scene begins while hero is still visible.
         marginTop: `-${ABOUT_OVERLAP_VH}vh`,
         minHeight:
           sectionMinHeightPx !== null
@@ -225,9 +254,9 @@ function HomeAboutScrollScene({
 
           {/* Clear space below absolute heading (title ~11% + line height); extra gap before cards */}
           <div className="flex flex-col justify-start px-4 pt-[clamp(11.5rem,26vh,15.5rem)] pb-10 sm:px-6 sm:pt-[clamp(12rem,24vh,15rem)] sm:pb-12 md:px-8 md:pt-[clamp(12.5rem,23vh,15.5rem)] md:pb-14 lg:px-10 lg:pb-16 [@media(min-width:768px)_and_(max-width:1215px)]:!pt-[clamp(10.5rem,18vh,13.5rem)] [@media(min-width:768px)_and_(max-width:1215px)]:!pb-[clamp(4rem,11vh,7rem)] [@media(min-width:1216px)_and_(max-height:920px)]:!pb-[clamp(3.5rem,10vh,6rem)]">
-            <div className="mx-auto w-full max-w-[min(88vw,1520px)] [perspective:900px]">
+            <div className="mx-auto w-full max-w-[min(88vw,1520px)] min-[2200px]:max-w-[min(88vw,2100px)] min-[2200px]:[perspective:1200px] [perspective:900px]">
               {/* Below 1216px, 4 columns are too narrow and rows exceed the sticky viewport; 2×4 matches readable width. */}
-              <div className="grid grid-cols-2 items-stretch gap-6 [transform-style:preserve-3d] min-[1216px]:grid-cols-3 min-[1216px]:gap-7 xl:gap-9">
+              <div className="grid grid-cols-2 items-stretch gap-6 [transform-style:preserve-3d] min-[1216px]:grid-cols-3 min-[1216px]:gap-7 xl:gap-9 min-[2200px]:gap-11">
                 {executiveSummaryItems.map((item, index) => (
                   <FlyingCard
                     key={item.id}
@@ -246,6 +275,7 @@ function HomeAboutScrollScene({
   );
 }
 
+/** Reduced-motion fallback: static 4-column grid, no scroll-linked transforms. */
 function HomeAboutStatic() {
   return (
     <section
@@ -270,6 +300,7 @@ function HomeAboutStatic() {
   );
 }
 
+/** Picks layout by motion preference and viewport width; scroll scene needs hero ref for underlay sync. */
 export default function HomeAbout({
   homeSectionRef,
 }: {
