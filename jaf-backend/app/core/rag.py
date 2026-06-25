@@ -15,6 +15,7 @@ from app.config import get_settings
 from app.core.models import AssistantResponse, MessageHistory, Source
 from app.services.llm import LLMService
 from app.services.pinecone_service import PineconeService
+from app.services.reranker import CohereReranker
 
 logger = logging.getLogger(__name__)
 
@@ -52,11 +53,18 @@ def get_llm_service():
     return LLMService()
 
 
+@lru_cache(maxsize=1)
+def get_reranker():
+    logger.info("Initializing Cohere reranker")
+    return CohereReranker()
+
+
 class RAGPipeline:
     def __init__(self):
         try:
             self.pinecone_service = get_pinecone_service()
             self.llm_service = get_llm_service()
+            self.reranker = get_reranker()
             self.settings = get_settings()
             self.prompt = PromptTemplate.from_template(self.settings.SYSTEM_PROMPT)
             self.retriever = ScoredRetriever.from_service(self.pinecone_service)
@@ -106,7 +114,14 @@ class RAGPipeline:
 
             logger.info("Processing question (len=%s)", len(question))
             docs = await self.retriever.ainvoke(question)
-            logger.info("Retrieved %s documents", len(docs))
+            logger.info("Retrieved %s candidate documents from Pinecone", len(docs))
+
+            docs = await self.reranker.rerank(question, docs)
+            logger.info(
+                "After reranking: %d documents. Scores: %s",
+                len(docs),
+                [round(doc.metadata.get("relevance", 0), 3) for doc in docs],
+            )
 
             for doc in docs:
                 logger.debug(

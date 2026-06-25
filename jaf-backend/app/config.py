@@ -33,7 +33,11 @@ class Settings(BaseSettings):
     OPENAI_MODEL_NAME: str = "gpt-4o-mini"
     OPENAI_TEMPERATURE: float = 0.0    # default temperature for deterministic outputs
     OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
-    
+
+    # Cohere Configuration (for reranking)
+    COHERE_API_KEY: Optional[str] = None
+    COHERE_RERANK_MODEL: str = "rerank-v4.0-pro"
+
     # Pinecone Configuration (for vector database)
     # Use Pydantic's automatic environment variable loading instead of direct os.environ calls
     PINECONE_API_KEY: Optional[str] = None
@@ -102,12 +106,14 @@ class Settings(BaseSettings):
 
     # RAG Configuration
     RAG_RELEVANCE_THRESHOLD: float = (
-        0.5  # Minimum similarity score to consider a document relevant
+        0.5  # Minimum relevance score to include a document in LLM context
     )
     RAG_SOURCES_DISPLAY_MIN_RELEVANCE: float = (
         0.75  # Citations omit chunks unless relevance is strictly greater than this (0–1)
     )
-    RAG_MAX_DOCUMENTS: int = 3  # Maximum number of documents to retrieve (k)
+    RAG_MAX_DOCUMENTS: int = 3  # Maximum number of documents to retrieve (k) — kept for legacy use
+    RAG_CANDIDATES_K: int = 10  # Number of candidates to retrieve from Pinecone before reranking
+    RAG_RERANK_TOP_N: int = 3   # Number of results to keep after Cohere reranking
 
     # Debugging
     RAG_PREVIEW_LENGTH: int = 200  # Length of document preview in logs

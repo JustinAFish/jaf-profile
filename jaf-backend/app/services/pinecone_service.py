@@ -43,7 +43,7 @@ class PineconeService:
        
         # Get settings from the config class
         settings = get_settings()
-        self.max_docs = settings.RAG_MAX_DOCUMENTS
+        self.max_docs = settings.RAG_CANDIDATES_K
        
         # Create the embeddings manager
         self.embeddings_manager = EmbeddingsManager()

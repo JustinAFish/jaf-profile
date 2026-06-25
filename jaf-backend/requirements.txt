@@ -26,6 +26,9 @@ openai==1.104.2
 # Vector database (asyncio extra required by langchain-pinecone)
 pinecone[asyncio]==7.3.0
 
+# Cohere (reranking via Rerank v2 API)
+cohere>=5.0.0
+
 # Essential dependencies only
 requests==2.32.5
 

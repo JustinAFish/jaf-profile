@@ -20,7 +20,7 @@ class EmbeddingsManager:
 
         self.embeddings_client = OpenAIEmbeddings(
             openai_api_key=settings.OPENAI_API_KEY,
-            model="text-embedding-ada-002"  # This is the standard embeddings model
+            model=settings.OPENAI_EMBEDDING_MODEL,
         )
         
     def generate_embeddings(self, texts: List[str]) -> List[List[float]]:
