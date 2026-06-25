@@ -86,6 +86,7 @@ export function ChatMessages({
           <Icons.openai />
           <Icons.langchain />
           <Icons.pinecone />
+          <Icons.cohere />
           <Icons.fastapi />
           <Icons.aws />
           <Icons.jwt />

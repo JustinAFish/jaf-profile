@@ -38,9 +38,10 @@ class CohereReranker:
                     self.settings.COHERE_RERANK_MODEL,
                 )
             except ImportError:
-                logger.warning(
-                    "cohere package not installed; reranking disabled. "
-                    "Install with: pip install cohere"
+                logger.error(
+                    "COHERE_API_KEY is set but cohere is not installed; "
+                    "reranking disabled — relevance scores will be inaccurate "
+                    "cosine similarity. Install with: .venv/bin/pip install cohere"
                 )
         else:
             logger.warning(

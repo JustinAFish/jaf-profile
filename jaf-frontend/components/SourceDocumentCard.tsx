@@ -1,5 +1,5 @@
 /**
- * SourceDocumentCard component - Displays a card for a source document, including its title, file path, relevance score, and content.
+ * SourceDocumentCard component - Displays a card for a source document, including its title, relevance score, and content.
  * Features:
  * - Expandable/collapsible content section to show more details
  * - Formatting for relevance score as a percentage
@@ -111,18 +111,11 @@ export function SourceDocumentCard({ source, forceExpanded }: SourceDocumentCard
         </div>
 
         <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out ${
-            isExpanded ? "max-h-96" : "max-h-0"
+          className={`transition-all duration-300 ease-in-out ${
+            isExpanded ? "max-h-96 overflow-y-auto overscroll-contain" : "max-h-0 overflow-hidden"
           }`}
         >
           <div className="p-4 bg-surface-container-lowest/90 mt-1 rounded-b-md">
-            <div className="mb-3 flex items-center">
-              <span className="text-xs text-muted-foreground">Path:</span>
-              <code className="ml-2 text-xs px-1.5 py-0.5 rounded-md bg-surface-container text-foreground font-mono">
-                {source.document_path}
-              </code>
-            </div>
-
             {typeof source.relevance === "number" && (
               <div className="mb-3 flex items-center">
                 <span className="text-xs text-muted-foreground">Relevance:</span>
