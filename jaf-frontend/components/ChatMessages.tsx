@@ -71,8 +71,8 @@ export function ChatMessages({
         better)
       </p>
 
-      <p className="text-paragraph text-lg mt-2">
-        This simple RAG solution is purely an indicatice demonstration of my capbility to develop full stack AI product. This
+      <p className="text-paragraph text-md mt-2 text-left">
+        This simple RAG solution is purely an indicatice demonstration of my capbility to develop full stack AI products. This
         solution will have limitations regarding performance as it has been
         optimised for cost efficiency.
       </p>
