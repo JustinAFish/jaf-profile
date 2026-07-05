@@ -1,6 +1,6 @@
 """
 /backend/app/config.py
-Configuration management for the Honda FutureSales Support Assistant.
+Configuration management for the RAG chat assistant backend.
 Handles all environment variables and application settings using Pydantic.
 Provides type-safe configuration with automatic environment variable loading
 and validation. Uses LRU caching to prevent repeated environment variable reads.
@@ -44,16 +44,7 @@ class Settings(BaseSettings):
     PINECONE_ENVIRONMENT: Optional[str] = None
     PINECONE_INDEX_NAME: Optional[str] = None
     PINECONE_NAMESPACE: Optional[str] = None
-    
-    # Legacy ChromaDB Configuration (kept for reference during migration)
-    # CHROMA_USE_CLOUD: bool = os.environ.get("CHROMA_USE_CLOUD", "true").lower() == "true"
-    # CHROMA_DB_PATH: str = "./chroma_db"  # Local path for ChromaDB persistence (fallback)
-    # CHROMA_COLLECTION_NAME: str = "documents"  # Collection name for vector storage
-    # CHROMA_API_KEY: Optional[str] = os.environ.get("CHROMA_API_KEY")
-    # CHROMA_TENANT: str = os.environ.get("CHROMA_TENANT")
-    # CHROMA_DATABASE: str = os.environ.get("CHROMA_DATABASE")
-    
-    
+
     # LangSmith Configuration
     LANGSMITH_TRACING: str = "false"
     LANGSMITH_ENDPOINT: str = "https://api.smith.langchain.com"
@@ -63,20 +54,27 @@ class Settings(BaseSettings):
     # APP Configuration
     APP_TITLE: str = "JAF"
     APP_DESCRIPTION: str = (
-        "GenAI-powered assistant for consulatants to improve their quality of work and efficiencies."
+        "GenAI-powered assistant for consultants to improve their quality of work and efficiencies."
     )
     APP_VERSION: str = "1.0.0"
     
     # Environment
     ENVIRONMENT: str = "development"
 
-    # CORS: comma-separated origins; empty = allow all (credentials disabled)
+    # CORS: comma-separated origins; empty = allow all in dev, known frontend in production
     CORS_ORIGINS: Optional[str] = None
+
+    # Fallback CORS origins used in production when CORS_ORIGINS is unset (comma-separated).
+    # Set CORS_ORIGINS explicitly in the deploy env; this is only a safety net.
+    CORS_PRODUCTION_FALLBACK: str = "https://jaf.averonai.org"
+
+    # Per-IP rate limit applied to POST /api/chat/message (slowapi syntax, e.g. "10/minute")
+    CHAT_RATE_LIMIT: str = "10/minute"
     
     # System Prompt Configuration
     SYSTEM_PROMPT: str = """
     You are an expert technical consultant at a leading technology consulting firm in a job interview.
-    Your role is to provide precise, well-structured repsonses to the interviewer's questions emphasising your business acumen, technical skills and product expertise.
+    Your role is to provide precise, well-structured responses to the interviewer's questions emphasising your business acumen, technical skills and product expertise.
 
     {conversation_context}
 
@@ -96,13 +94,9 @@ class Settings(BaseSettings):
     Do not assume or infer information beyond the provided context. If uncertain, indicate so.
     If a requester submits an inquiry in a language other than English, translate it first, retrieve the appropriate response, and then translate it back into the original language.
     Maintain consistency with prior responses to ensure uniformity across replies.
-    Never say anything that will put you a risk of not being hired.
+    Never say anything that will put you at risk of not being hired.
 
     Answer:"""
-
-    SYSTEM_PROMPT_CLASSIFICATION: str = """
-        
-        Answer:"""
 
     # RAG Configuration
     RAG_RELEVANCE_THRESHOLD: float = (

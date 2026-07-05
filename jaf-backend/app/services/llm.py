@@ -8,11 +8,8 @@ configuration and error handling across the application.
 
 import logging
 import os
-from typing import Any, Dict
-from openai import OpenAI
+from openai import AsyncOpenAI
 from langchain_openai.chat_models import ChatOpenAI
-from langchain_core.messages import HumanMessage
-from functools import lru_cache
 from app.config import get_settings
 
 logger = logging.getLogger(__name__)
@@ -28,13 +25,13 @@ except ImportError:
     LANGSMITH_AVAILABLE = False
 
 class LLMService:
-    """Service for interating with OpenAI"""
-    
-    @lru_cache(maxsize=1)
+    """Service for interacting with OpenAI. Instantiate once via get_llm_service() in core/rag.py."""
+
     def __init__(self):
         """Initialize OpenAI client with settings from config"""
         settings = get_settings()
-        
+        self.model_name = settings.OPENAI_MODEL_NAME
+
         # Set up LangSmith environment variables if available
         if LANGSMITH_AVAILABLE and settings.LANGSMITH_TRACING.lower() == "true":
             os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -47,35 +44,27 @@ class LLMService:
                 settings.LANGSMITH_PROJECT,
             )
         
-        self.client = OpenAI(
+        self.client = AsyncOpenAI(
             api_key=settings.OPENAI_API_KEY
         )
-        
+
         # Initialize LangChain model for compatibility with existing code
         # LangSmith will automatically trace these calls if enabled
         self.model = ChatOpenAI(
             openai_api_key=settings.OPENAI_API_KEY,
-            model="gpt-4o-mini",
+            model=self.model_name,
             temperature=settings.OPENAI_TEMPERATURE
         )
-    
+
     async def get_chat_response(self, prompt: str) -> str:
         """Get a chat completion for the given prompt"""
         try:
-            # Use direct OpenAI client for better control
-            completion = self.client.chat.completions.create(
-                model="gpt-4o-mini",
-                store=True,
+            completion = await self.client.chat.completions.create(
+                model=self.model_name,
                 messages=[
                     {"role": "user", "content": prompt}
                 ]
             )
-            return completion.choices[0].message.content
+            return completion.choices[0].message.content or ""
         except Exception as e:
             raise Exception(f"Error getting chat response: {str(e)}")
-    
-    def get_model(self) -> ChatOpenAI:
-        """Return the underlying ChatOpenAI model for direct use."""
-        return self.model
-    
-        

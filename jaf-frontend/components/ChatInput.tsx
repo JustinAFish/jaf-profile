@@ -21,7 +21,8 @@ export function ChatInput({
 }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const [showHint, setShowHint] = useState(false);
-  const { isExamplesOpen, setIsExamplesOpen } = useChatStore();
+  const isExamplesOpen = useChatStore((s) => s.isExamplesOpen);
+  const setIsExamplesOpen = useChatStore((s) => s.setIsExamplesOpen);
   const examplesAnchorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

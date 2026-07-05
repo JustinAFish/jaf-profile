@@ -6,18 +6,17 @@ import { SourceDocumentCard } from "./SourceDocumentCard";
 import type { Source } from "../types/chat";
 import ReactMarkdown from "react-markdown";
 
-/** Only show source cards when similarity is strictly above this (0–1 scale). */
-const SOURCE_DISPLAY_MIN_RELEVANCE = 0.75;
-
 interface MessageProps {
   type: "user" | "assistant";
   content: string;
-  sources?: Source[] | string;
+  // The backend already filters sources by RAG_SOURCES_DISPLAY_MIN_RELEVANCE,
+  // so everything here is display-worthy — no client-side re-filtering.
+  sources?: Source[];
   isLoading?: boolean;
   showExpandedSources?: boolean;
 }
 
-export function Message({
+function MessageComponent({
   type,
   content,
   sources,
@@ -41,12 +40,8 @@ export function Message({
     );
   }
 
-  const displaySources = Array.isArray(sources)
-    ? sources.filter((s) => s.relevance > SOURCE_DISPLAY_MIN_RELEVANCE)
-    : [];
-  const showStringSources = typeof sources === "string" && sources.length > 0;
-  const showSourceDocuments =
-    showStringSources || displaySources.length > 0;
+  const displaySources = sources ?? [];
+  const showSourceDocuments = displaySources.length > 0;
 
   return (
     <div className="w-full my-4 animate-fadeIn">
@@ -82,23 +77,19 @@ export function Message({
                       <span>Source Documents</span>
                     </div>
 
-                    {showStringSources ? (
-                      <p className="text-sm text-muted-foreground">{sources}</p>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-auto">
-                        {displaySources.map((source, index) => (
-                          <div
-                            className="h-fit transition-all"
-                            key={`${source.document_path}-${index}`}
-                          >
-                            <SourceDocumentCard
-                              source={source}
-                              forceExpanded={showExpandedSources}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-auto">
+                      {displaySources.map((source, index) => (
+                        <div
+                          className="h-fit transition-all"
+                          key={`${source.document_path}-${index}`}
+                        >
+                          <SourceDocumentCard
+                            source={source}
+                            forceExpanded={showExpandedSources}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </>
@@ -109,3 +100,6 @@ export function Message({
     </div>
   );
 }
+
+/** Memoized so a store update elsewhere doesn't re-render every bubble in the list. */
+export const Message = React.memo(MessageComponent);

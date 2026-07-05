@@ -8,7 +8,6 @@ const publicRoutes = [
   "/chat/callback",
   "/auth/callback",
   "/api/contact",
-  "/api/debug",
 ];
 
 function isPublicPath(pathname: string) {

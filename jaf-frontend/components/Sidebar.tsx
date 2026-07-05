@@ -4,7 +4,7 @@
  * Sidebar component - Manages chat history and new conversation creation.
  */
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Menu, Plus, Search, Star, Trash2, X } from "lucide-react";
 import { useChatStore } from "../store/chatStore";
 
@@ -25,15 +25,13 @@ function SidebarPanel({
   const [editingTitle, setEditingTitle] = useState("");
   const editInputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    chats,
-    currentChatId,
-    createChat,
-    deleteChat,
-    setCurrentChat,
-    toggleStarChat,
-    updateChatTitle,
-  } = useChatStore();
+  const chats = useChatStore((s) => s.chats);
+  const currentChatId = useChatStore((s) => s.currentChatId);
+  const createChat = useChatStore((s) => s.createChat);
+  const deleteChat = useChatStore((s) => s.deleteChat);
+  const setCurrentChat = useChatStore((s) => s.setCurrentChat);
+  const toggleStarChat = useChatStore((s) => s.toggleStarChat);
+  const updateChatTitle = useChatStore((s) => s.updateChatTitle);
 
   const existingNewChat = chats.find((chat) => chat.title === "New Chat");
   const isOnNewChat =
@@ -91,17 +89,18 @@ function SidebarPanel({
     }
   };
 
-  const filteredChats = chats.filter((chat) =>
-    chat.title.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
-  const sortedChats = [...filteredChats].sort((a, b) => {
-    if (a.starred && !b.starred) return -1;
-    if (!a.starred && b.starred) return 1;
-    return (
-      new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
-    );
-  });
+  const sortedChats = useMemo(() => {
+    const query = searchQuery.toLowerCase();
+    return chats
+      .filter((chat) => chat.title.toLowerCase().includes(query))
+      .sort((a, b) => {
+        if (a.starred && !b.starred) return -1;
+        if (!a.starred && b.starred) return 1;
+        return (
+          new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+        );
+      });
+  }, [chats, searchQuery]);
 
   const handleDeleteClick = (chatId: string, e: React.MouseEvent) => {
     e.stopPropagation();

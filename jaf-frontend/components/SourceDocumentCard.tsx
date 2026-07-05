@@ -18,7 +18,7 @@ interface SourceDocumentCardProps {
   forceExpanded?: boolean; 
 }
 
-export function SourceDocumentCard({ source, forceExpanded }: SourceDocumentCardProps) {
+function SourceDocumentCardComponent({ source, forceExpanded }: SourceDocumentCardProps) {
   const [isExpanded, setIsExpanded] = useState(forceExpanded || false);
   const [showAccessModal, setShowAccessModal] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -134,3 +134,6 @@ export function SourceDocumentCard({ source, forceExpanded }: SourceDocumentCard
     </>
   );
 }
+
+/** Memoized so re-renders of the message list don't rebuild every source card. */
+export const SourceDocumentCard = React.memo(SourceDocumentCardComponent);

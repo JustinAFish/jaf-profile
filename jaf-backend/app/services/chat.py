@@ -11,16 +11,18 @@ from app.core.rag import RAGPipeline
 logger = logging.getLogger(__name__)
 
 
+@lru_cache(maxsize=1)
+def get_rag_pipeline() -> RAGPipeline:
+    """Build the RAGPipeline once and reuse it (avoids re-establishing API/DB clients per request)."""
+    logger.debug("Creating RAGPipeline for ChatService")
+    return RAGPipeline()
+
+
 class ChatService:
     """Service for processing chat messages"""
 
     def __init__(self):
-        self.rag_pipeline = self._get_rag_pipeline()
-
-    @lru_cache(maxsize=1)
-    def _get_rag_pipeline(self) -> RAGPipeline:
-        logger.debug("Creating RAGPipeline for ChatService")
-        return RAGPipeline()
+        self.rag_pipeline = get_rag_pipeline()
 
     async def process_message(
         self,

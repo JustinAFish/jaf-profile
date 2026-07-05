@@ -1,36 +1,29 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { backendApiUrl } from "@/lib/backendApiUrl";
-import type { Chat, Message, Source } from "@/types/chat";
+import type { Chat, Message } from "@/types/chat";
 
 const STORAGE_NAME = "jaf-chat-storage";
 const LEGACY_STORAGE_NAME = "honda-chat-storage";
 
-function normalizeSource(raw: Record<string, unknown>): Source {
-  const relevance = raw.relevance;
-  return {
-    title: String(raw.title ?? ""),
-    content: String(raw.content ?? ""),
-    document_title: String(raw.document_title ?? raw.title ?? ""),
-    document_path: String(raw.document_path ?? ""),
-    relevance:
-      typeof relevance === "number"
-        ? relevance
-        : Number(relevance) || 0,
-  };
-}
+/** Shape of a persisted chat before dates are rehydrated: timestamps arrive as strings/numbers from JSON. */
+type PersistedChat = Omit<Chat, "createdAt" | "lastUpdated" | "messages"> & {
+  createdAt: string | number | Date;
+  lastUpdated?: string | number | Date;
+  updatedAt?: string | number | Date;
+  messages: (Omit<Message, "timestamp"> & {
+    timestamp: string | number | Date;
+  })[];
+};
 
+/** Convert the string/number timestamps from persisted JSON back into Date objects, in place. */
 function rehydrateDates(chats: Chat[]): void {
-  for (const chat of chats) {
-    const raw = chat as unknown as {
-      createdAt: unknown;
-      lastUpdated?: unknown;
-      updatedAt?: unknown;
-    };
-    chat.createdAt = new Date(raw.createdAt as string | number);
-    const lu = raw.lastUpdated ?? raw.updatedAt ?? raw.createdAt;
-    chat.lastUpdated = new Date(lu as string | number);
-    delete (chat as unknown as { updatedAt?: unknown }).updatedAt;
+  for (const persisted of chats as unknown as PersistedChat[]) {
+    const chat = persisted as unknown as Chat;
+    chat.createdAt = new Date(persisted.createdAt);
+    chat.lastUpdated = new Date(
+      persisted.lastUpdated ?? persisted.updatedAt ?? persisted.createdAt,
+    );
+    delete persisted.updatedAt;
     for (const m of chat.messages) {
       m.timestamp = new Date(m.timestamp as unknown as string | number);
     }
@@ -73,7 +66,6 @@ interface ChatStore {
   getCurrentChat: () => Chat | undefined;
   ensureActiveChat: () => void;
   setChats: (chats: Chat[]) => void;
-  fetchUserChats: () => Promise<void>;
   setIsExamplesOpen: (isOpen: boolean) => void;
   setWelcomeModalOpen: (open: boolean) => void;
 }
@@ -204,81 +196,6 @@ export const useChatStore = create<ChatStore>()(
           chats,
           currentChatId: chats.length > 0 ? chats[0].id : null,
         });
-      },
-
-      fetchUserChats: async () => {
-        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-        if (!backendUrl) {
-          return;
-        }
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-        try {
-          const response = await fetch(backendApiUrl("/api/chat/user/chats"), {
-            method: "GET",
-            signal: controller.signal,
-          });
-
-          clearTimeout(timeoutId);
-
-          if (!response.ok) {
-            if (response.status === 404) {
-              set({ chats: [] });
-              return;
-            }
-            return;
-          }
-
-          const data = await response.json();
-
-          type ServerMsg = {
-            id?: string;
-            role: "user" | "assistant";
-            content: string;
-            sources?: Record<string, unknown>[];
-            created_at: string;
-          };
-
-          const transformedChats: Chat[] = Array.isArray(data.chats)
-            ? data.chats.map(
-                (chat: {
-                  id: string;
-                  title?: string;
-                  messages?: ServerMsg[];
-                  created_at: string;
-                  updated_at: string;
-                }) => ({
-                  id: chat.id,
-                  title: chat.title || "New Chat",
-                  messages: Array.isArray(chat.messages)
-                    ? chat.messages.map((msg) => ({
-                        id: msg.id || crypto.randomUUID(),
-                        role: msg.role,
-                        content: msg.content,
-                        sources: Array.isArray(msg.sources)
-                          ? msg.sources.map((s) =>
-                              normalizeSource(s as Record<string, unknown>),
-                            )
-                          : [],
-                        timestamp: new Date(msg.created_at),
-                      }))
-                    : [],
-                  createdAt: new Date(chat.created_at),
-                  lastUpdated: new Date(chat.updated_at),
-                }),
-              )
-            : [];
-
-          set({ chats: transformedChats });
-
-          if (transformedChats.length > 0 && !get().currentChatId) {
-            set({ currentChatId: transformedChats[0].id });
-          }
-        } catch {
-          clearTimeout(timeoutId);
-        }
       },
 
       setIsExamplesOpen: (isOpen: boolean) => {

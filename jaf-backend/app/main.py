@@ -11,6 +11,10 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
+
+from app.core.rate_limit import limiter
 
 BACKEND_DIR = Path(__file__).parent.parent
 if str(BACKEND_DIR) not in sys.path:
@@ -45,6 +49,13 @@ def _cors_allowlist(st) -> tuple[list[str], bool]:
     parts = [p.strip() for p in str(raw).split(",") if p.strip()]
     if parts:
         return parts, True
+    # No explicit allowlist: fall back to the known frontend in production
+    # (avoids a wide-open "*"); development stays permissive for local work.
+    if getattr(st, "ENVIRONMENT", "development") == "production":
+        fallback = getattr(st, "CORS_PRODUCTION_FALLBACK", "") or ""
+        fallback_parts = [p.strip() for p in fallback.split(",") if p.strip()]
+        if fallback_parts:
+            return fallback_parts, True
     return ["*"], False
 
 
@@ -67,6 +78,10 @@ app = FastAPI(
     version=getattr(settings, "APP_VERSION", "1.0.0"),
     lifespan=lifespan,
 )
+
+# Per-IP rate limiting (slowapi). Routes opt in via @limiter.limit(...).
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 _allow_origins, _allow_credentials = _cors_allowlist(settings)
 app.add_middleware(

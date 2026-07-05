@@ -10,6 +10,9 @@ python-dotenv==1.0.1
 # Essential web handling
 python-multipart==0.0.9
 
+# Per-IP rate limiting for the public chat endpoint
+slowapi==0.1.10
+
 # ASGI server (Railway / start.py; not used on Lambda)
 uvicorn[standard]==0.32.1
 

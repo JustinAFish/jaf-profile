@@ -11,7 +11,6 @@ and result scoring.
 import logging
 import os
 from typing import List, Optional
-from functools import lru_cache
 
 # pinecone-plugin-inference (and related plugins) are deprecated; if installed,
 # pinecone's import raises. Clearing sys.modules does not fix it — uninstall the plugin.
@@ -35,9 +34,8 @@ logger = logging.getLogger(__name__)
 
 
 class PineconeService:
-    """Service for interacting with Pinecone vector search."""
+    """Service for interacting with Pinecone vector search. Instantiate once via get_pinecone_service() in core/rag.py."""
 
-    @lru_cache(maxsize=1)
     def __init__(self):
         """Initialize Pinecone connection and vector store."""
        

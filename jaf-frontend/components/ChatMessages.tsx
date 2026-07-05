@@ -13,6 +13,63 @@ interface ChatMessagesProps {
   showExpandedSources?: boolean;
 }
 
+/**
+ * Welcome-modal body: intro copy + the orbiting tech-stack animation.
+ * Declared at module scope so the OrbitingCircles subtree isn't remounted on
+ * every ChatMessages re-render.
+ */
+function WelcomeContent({ onGetStarted }: { onGetStarted: () => void }) {
+  return (
+    <div className="text-center space-y-4">
+      <h2 className="text-2xl font-heading font-semibold text-primary mb-2">
+        Speak to AI Justin
+      </h2>
+      <p className="text-paragraph text-lg font-medium">
+        Have an initial interview with AI Justin (although real Justin is
+        better)
+      </p>
+
+      <p className="text-paragraph text-md mt-2 text-left">
+        This simple RAG solution is purely an indicative demonstration of my
+        capability to develop full stack AI products. This solution will have
+        limitations regarding performance as it has been optimised for cost
+        efficiency.
+      </p>
+      <h2 className="text-xl font-heading font-semibold text-header mt-2">
+        Tech Stack
+      </h2>
+      <div className="relative flex h-[350px] w-full flex-col items-center justify-center overflow-hidden">
+        <OrbitingCircles iconSize={40} radius={140}>
+          <Icons.python />
+          <Icons.openai />
+          <Icons.langchain />
+          <Icons.pinecone />
+          <Icons.cohere />
+          <Icons.fastapi />
+          <Icons.aws />
+          <Icons.jwt />
+          <Icons.gitHub />
+        </OrbitingCircles>
+        <OrbitingCircles iconSize={40} radius={70} reverse speed={2}>
+          <Icons.nextjs />
+          <Icons.react />
+          <Icons.tailwind />
+          <Icons.magicui />
+          <Icons.shadcn />
+          <Icons.typescript />
+        </OrbitingCircles>
+      </div>
+      <button
+        type="button"
+        onClick={onGetStarted}
+        className="mt-2 px-4 py-2 bg-primary text-on-primary rounded-md primary-glow hover:bg-primary/90 transition-colors"
+      >
+        Get Started
+      </button>
+    </div>
+  );
+}
+
 export function ChatMessages({
   isLoading,
   showExpandedSources = false,
@@ -61,65 +118,18 @@ export function ChatMessages({
     return () => setWelcomeModalOpen(false);
   }, [showWelcomeModal]);
 
-  const WelcomeContent = () => (
-    <div className="text-center space-y-4">
-      <h2 className="text-2xl font-heading font-semibold text-primary mb-2">
-        Speak to AI Justin
-      </h2>
-      <p className="text-paragraph text-lg font-medium">
-        Have an initial interview with AI Justin (although real Justin is
-        better)
-      </p>
-
-      <p className="text-paragraph text-md mt-2 text-left">
-        This simple RAG solution is purely an indicatice demonstration of my capbility to develop full stack AI products. This
-        solution will have limitations regarding performance as it has been
-        optimised for cost efficiency.
-      </p>
-      <h2 className="text-xl font-heading font-semibold text-header mt-2">
-        Tech Stack
-      </h2>
-      <div className="relative flex h-[350px] w-full flex-col items-center justify-center overflow-hidden">
-        <OrbitingCircles iconSize={40} radius={140}>
-          <Icons.python />
-          <Icons.openai />
-          <Icons.langchain />
-          <Icons.pinecone />
-          <Icons.cohere />
-          <Icons.fastapi />
-          <Icons.aws />
-          <Icons.jwt />
-          <Icons.gitHub />
-        </OrbitingCircles>
-        <OrbitingCircles iconSize={40} radius={70} reverse speed={2}>
-          <Icons.nextjs />
-          <Icons.react />
-          <Icons.tailwind />
-          <Icons.magicui />
-          <Icons.shadcn />
-          <Icons.typescript />
-        </OrbitingCircles>
-      </div>
-      <button
-        type="button"
-        onClick={() => {
-          dismissWelcome();
-          setTimeout(() => {
-            useChatStore.getState().setIsExamplesOpen(true);
-          }, 100);
-        }}
-        className="mt-2 px-4 py-2 bg-primary text-on-primary rounded-md primary-glow hover:bg-primary/90 transition-colors"
-      >
-        Get Started
-      </button>
-    </div>
-  );
+  const handleGetStarted = useCallback(() => {
+    dismissWelcome();
+    setTimeout(() => {
+      useChatStore.getState().setIsExamplesOpen(true);
+    }, 100);
+  }, [dismissWelcome]);
 
   if (!currentChat) {
     return (
       <>
         <Modal isOpen={showWelcomeModal} onClose={dismissWelcome}>
-          <WelcomeContent />
+          <WelcomeContent onGetStarted={handleGetStarted} />
         </Modal>
         <div className="flex-1 fixed top-1/4 inset-0 -z-10 p-4 bg-transparent" />
         <div className="flex-1 fixed top-1/4 inset-0 -z-10 p-4 bg-transparent">
@@ -151,7 +161,7 @@ export function ChatMessages({
   return (
     <>
       <Modal isOpen={showWelcomeModal} onClose={dismissWelcome}>
-        <WelcomeContent />
+        <WelcomeContent onGetStarted={handleGetStarted} />
       </Modal>
       <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-4 pt-[calc(var(--site-header-height)+0.5rem)] bg-transparent relative">
         <div className="max-w-3xl mx-auto space-y-6">

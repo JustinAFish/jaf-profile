@@ -2,6 +2,7 @@
 RAG pipeline: Pinecone retrieval + LLM generation.
 """
 
+import asyncio
 import logging
 import os
 from functools import lru_cache
@@ -30,7 +31,8 @@ class ScoredRetriever(BaseRetriever, BaseModel):
         return cls(pinecone_service=pinecone_service)
 
     async def _aget_relevant_documents(self, query: str):
-        docs = self.pinecone_service.similarity_search(query)
+        # similarity_search does blocking network/embedding I/O; keep it off the event loop.
+        docs = await asyncio.to_thread(self.pinecone_service.similarity_search, query)
         logger.debug(
             "Retriever scores: %s",
             [doc.metadata.get("relevance", 0) for doc in docs],
@@ -103,7 +105,7 @@ class RAGPipeline:
         self,
         question: str,
         conversation_history: Optional[List[MessageHistory]] = None,
-        relevance_threshold: float = 0.5,
+        relevance_threshold: Optional[float] = None,
     ) -> AssistantResponse:
         try:
             threshold = (
@@ -146,8 +148,8 @@ class RAGPipeline:
                 return AssistantResponse(
                     answer=(
                         "I apologize, but I couldn't find any sufficiently relevant "
-                        "information in our documentation. Let me connect you with our "
-                        "Hypercare team for assistance."
+                        "information to answer that. Please contact Justin directly and "
+                        "he'll be happy to help you with this question."
                     ),
                     sources=[],
                     needs_escalation=True,
