@@ -63,6 +63,20 @@ interface ChatStore {
     chatId: string,
     message: Omit<Message, "id" | "timestamp">,
   ) => void;
+  /** Creates an empty streaming assistant message and returns its id. */
+  startAssistantMessage: (chatId: string) => string;
+  /** Appends a token batch to a streaming message's content. */
+  appendMessageContent: (
+    chatId: string,
+    messageId: string,
+    delta: string,
+  ) => void;
+  /** Marks streaming complete, attaching sources and/or replacing content on error. */
+  finalizeAssistantMessage: (
+    chatId: string,
+    messageId: string,
+    patch: { sources?: Message["sources"]; content?: string; error?: boolean },
+  ) => void;
   getCurrentChat: () => Chat | undefined;
   ensureActiveChat: () => void;
   setChats: (chats: Chat[]) => void;
@@ -172,6 +186,75 @@ export const useChatStore = create<ChatStore>()(
         }));
       },
 
+      startAssistantMessage: (chatId: string) => {
+        const id = crypto.randomUUID();
+        const message: Message = {
+          id,
+          role: "assistant",
+          content: "",
+          timestamp: new Date(),
+          isStreaming: true,
+        };
+
+        set((state) => ({
+          chats: state.chats.map((chat) =>
+            chat.id === chatId
+              ? {
+                  ...chat,
+                  messages: [...chat.messages, message],
+                  lastUpdated: new Date(),
+                }
+              : chat,
+          ),
+        }));
+
+        return id;
+      },
+
+      appendMessageContent: (chatId, messageId, delta) => {
+        set((state) => ({
+          chats: state.chats.map((chat) =>
+            chat.id === chatId
+              ? {
+                  ...chat,
+                  messages: chat.messages.map((m) =>
+                    m.id === messageId
+                      ? { ...m, content: m.content + delta }
+                      : m,
+                  ),
+                  lastUpdated: new Date(),
+                }
+              : chat,
+          ),
+        }));
+      },
+
+      finalizeAssistantMessage: (chatId, messageId, patch) => {
+        set((state) => ({
+          chats: state.chats.map((chat) =>
+            chat.id === chatId
+              ? {
+                  ...chat,
+                  messages: chat.messages.map((m) =>
+                    m.id === messageId
+                      ? {
+                          ...m,
+                          isStreaming: false,
+                          ...(patch.content !== undefined
+                            ? { content: patch.content }
+                            : {}),
+                          ...(patch.sources ? { sources: patch.sources } : {}),
+                          ...(patch.error ? { error: true } : {}),
+                        }
+                      : m,
+                  ),
+                  lastUpdated: new Date(),
+                }
+              : chat,
+          ),
+        }));
+      },
+
       getCurrentChat: () => {
         const state = get();
         return state.chats.find((chat) => chat.id === state.currentChatId);
@@ -217,6 +300,14 @@ export const useChatStore = create<ChatStore>()(
       onRehydrateStorage: () => (state) => {
         if (state?.chats?.length) {
           rehydrateDates(state.chats);
+          // A tab closed mid-stream persists isStreaming: true — clear the orphans.
+          for (const chat of state.chats) {
+            for (const m of chat.messages) {
+              if (m.isStreaming) {
+                m.isStreaming = false;
+              }
+            }
+          }
         }
       },
     },

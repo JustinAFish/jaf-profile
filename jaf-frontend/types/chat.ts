@@ -12,6 +12,10 @@ export interface Message {
   content: string;
   sources?: Source[];
   timestamp: Date;
+  /** True while tokens are still arriving for this assistant message (never persisted as true). */
+  isStreaming?: boolean;
+  /** True when the response ended in an error (content may hold partial output). */
+  error?: boolean;
 }
 
 export interface Chat {

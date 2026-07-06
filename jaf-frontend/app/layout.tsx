@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { AppChrome } from "@/components/AppChrome";
+import { GlRoot } from "@/components/gl/GlRoot";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -42,6 +43,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AppChrome />
+          <GlRoot />
           <div className="relative z-[2] min-h-screen">
             <Navbar />
             {children}

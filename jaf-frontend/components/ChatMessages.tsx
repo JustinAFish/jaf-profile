@@ -90,6 +90,12 @@ export function ChatMessages({
   const welcomeChatId = currentChat?.id;
   const welcomeMessageCount = currentChat?.messages.length ?? 0;
 
+  // While streaming, the assistant bubble itself renders progress — the
+  // separate loading placeholder only covers the pre-first-token wait.
+  const lastMessage = currentChat?.messages[currentChat.messages.length - 1];
+  const lastMessageIsStreaming =
+    lastMessage?.role === "assistant" && !!lastMessage.isStreaming;
+
   useEffect(() => {
     if (welcomeChatId === undefined) {
       setShowWelcomeModal(true);
@@ -181,12 +187,13 @@ export function ChatMessages({
                 type={message.role}
                 content={message.content}
                 sources={message.sources}
+                isStreaming={message.isStreaming}
                 showExpandedSources={showExpandedSources}
               />
             </div>
           ))}
 
-          {isLoading && (
+          {isLoading && !lastMessageIsStreaming && (
             <Message
               key="loading-message"
               type="assistant"

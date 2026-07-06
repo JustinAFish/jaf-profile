@@ -13,7 +13,8 @@ test.describe("chat with stub backend", () => {
     const input = page.getByTestId("chat-message-input");
     await input.fill("Hello from e2e");
     await input.press("Enter");
-    await expect(page.getByText("E2E stub reply")).toBeVisible({
+    // Streamed via the stub's /api/chat/stream SSE route.
+    await expect(page.getByText("E2E stub stream reply")).toBeVisible({
       timeout: 15_000,
     });
   });

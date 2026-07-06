@@ -73,6 +73,19 @@ class FakeChatService:
             escalate_to_hypercare=ar.needs_escalation,
         )
 
+    async def stream_message(self, content: str, conversation_history=None):
+        """Mirrors ChatService.stream_message: word-level token events then a final event."""
+        ar = await self._rag.get_response(content, conversation_history)
+        for i, word in enumerate(ar.answer.split(" ")):
+            yield ("token", word if i == 0 else f" {word}")
+        yield (
+            "final",
+            {
+                "sources": [s.model_dump() for s in ar.sources],
+                "escalate_to_hypercare": ar.needs_escalation,
+            },
+        )
+
 
 @pytest.fixture
 def fake_rag() -> FakeRAGPipeline:

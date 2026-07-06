@@ -3,7 +3,7 @@ Service for processing chat messages through the RAG pipeline.
 """
 import logging
 from functools import lru_cache
-from typing import List, Optional
+from typing import Any, AsyncIterator, List, Optional, Tuple
 
 from app.core.models import AssistantResponse, ChatResponse, MessageHistory
 from app.core.rag import RAGPipeline
@@ -39,3 +39,27 @@ class ChatService:
             sources=assistant_response.sources,
             escalate_to_hypercare=assistant_response.needs_escalation,
         )
+
+    async def stream_message(
+        self,
+        content: str,
+        conversation_history: Optional[List[MessageHistory]] = None,
+    ) -> AsyncIterator[Tuple[str, Any]]:
+        """
+        Streaming variant of process_message: yields ("token", str) events for answer
+        deltas, then one ("final", dict) event carrying sources and escalation state.
+        """
+        async for item in self.rag_pipeline.stream_response(
+            question=content,
+            conversation_history=conversation_history,
+        ):
+            if isinstance(item, AssistantResponse):
+                yield (
+                    "final",
+                    {
+                        "sources": [s.model_dump() for s in item.sources],
+                        "escalate_to_hypercare": item.needs_escalation,
+                    },
+                )
+            else:
+                yield ("token", item)

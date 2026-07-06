@@ -1,6 +1,7 @@
 /**
- * Minimal HTTP stub for POST /api/chat/message (Playwright E2E).
- * Playwright waits on GET / returning 200 before running tests.
+ * Minimal HTTP stub for POST /api/chat/message and /api/chat/stream (Playwright E2E).
+ * The stream route emits SSE token frames with small delays to exercise the
+ * frontend's incremental rendering. Playwright waits on GET / returning 200.
  */
 import http from "node:http";
 
@@ -39,6 +40,36 @@ const server = http.createServer((req, res) => {
           escalate_to_hypercare: false,
         }),
       );
+    });
+    return;
+  }
+
+  if (req.method === "POST" && req.url === "/api/chat/stream") {
+    req.on("data", () => {});
+    req.on("end", () => {
+      res.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        ...cors,
+      });
+      const frames = [
+        `event: token\ndata: ${JSON.stringify("E2E ")}\n\n`,
+        `event: token\ndata: ${JSON.stringify("stub ")}\n\n`,
+        `event: token\ndata: ${JSON.stringify("stream ")}\n\n`,
+        `event: token\ndata: ${JSON.stringify("reply")}\n\n`,
+        `event: final\ndata: ${JSON.stringify({ sources: [], escalate_to_hypercare: false })}\n\n`,
+        "event: done\ndata: {}\n\n",
+      ];
+      let i = 0;
+      const tick = () => {
+        if (i < frames.length) {
+          res.write(frames[i++]);
+          setTimeout(tick, 40);
+        } else {
+          res.end();
+        }
+      };
+      tick();
     });
     return;
   }

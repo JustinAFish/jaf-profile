@@ -8,6 +8,7 @@ configuration and error handling across the application.
 
 import logging
 import os
+from typing import AsyncIterator
 from openai import AsyncOpenAI
 from langchain_openai.chat_models import ChatOpenAI
 from app.config import get_settings
@@ -68,3 +69,17 @@ class LLMService:
             return completion.choices[0].message.content or ""
         except Exception as e:
             raise Exception(f"Error getting chat response: {str(e)}")
+
+    async def stream_chat_response(self, prompt: str) -> AsyncIterator[str]:
+        """Yield content deltas from a streaming chat completion for the given prompt."""
+        stream = await self.client.chat.completions.create(
+            model=self.model_name,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            stream=True,
+        )
+        async for chunk in stream:
+            delta = chunk.choices[0].delta.content if chunk.choices else None
+            if delta:
+                yield delta

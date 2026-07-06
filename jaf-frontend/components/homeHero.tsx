@@ -6,11 +6,14 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   motion,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
   useTransform,
 } from "motion/react";
 import { forwardRef, useEffect, useRef, type Ref } from "react";
+import { glBus } from "@/lib/glBus";
+import { useGlActive } from "@/components/gl/useGlActive";
 
 function assignRef<T>(ref: Ref<T> | undefined, value: T | null) {
   if (!ref) return;
@@ -31,6 +34,13 @@ const HomeHero = forwardRef<HTMLElement, object>(
     const { scrollYProgress } = useScroll({
       target: scrollRootRef,
       offset: ["start start", "end start"],
+    });
+    const glActive = useGlActive();
+
+    // Feed the existing MotionValue into the GL bus (no React re-renders) so
+    // HeroParticles can sync its fly-past exit with the text choreography.
+    useMotionValueEvent(scrollYProgress, "change", (v) => {
+      glBus.heroProgress = v;
     });
 
     const bgOpacity = useTransform(
@@ -158,19 +168,33 @@ const HomeHero = forwardRef<HTMLElement, object>(
         id="home"
         className="relative -mt-[var(--site-header-height)] h-[280vh] scroll-mt-[var(--site-header-height)]"
       >
-        <div className="sticky top-0 h-[100dvh] min-h-[100dvh] overflow-hidden flex items-start lg:items-center pt-[var(--site-header-height)] pb-8 sm:pb-12 sm:max-lg:pb-6 md:max-lg:pb-7 md:pb-10 lg:pb-16 xl:pb-20 2xl:pb-28 min-[1800px]:pb-32">
+        <div
+          className="sticky top-0 h-[100dvh] min-h-[100dvh] overflow-hidden flex items-start lg:items-center pt-[var(--site-header-height)] pb-8 sm:pb-12 sm:max-lg:pb-6 md:max-lg:pb-7 md:pb-10 lg:pb-16 xl:pb-20 2xl:pb-28 min-[1800px]:pb-32"
+          onPointerMove={(e) => {
+            glBus.pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+            glBus.pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+          }}
+        >
           <motion.div
             className="absolute inset-0 z-0"
             style={{ opacity: bgOpacity, scale: bgScale }}
           >
-            <Image
-              src="/data-background.jpeg"
-              alt="Background"
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-surface/75" />
+            {glActive ? (
+              // Translucent scrim so the shared WebGL canvas (z-[1], behind the
+              // z-[2] content wrapper) reads through as the hero background.
+              <div className="absolute inset-0 bg-gradient-to-b from-surface/70 via-surface/40 to-surface/15" />
+            ) : (
+              <>
+                <Image
+                  src="/data-background.jpeg"
+                  alt="Background"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                <div className="absolute inset-0 bg-surface/75" />
+              </>
+            )}
           </motion.div>
 
           <motion.div
