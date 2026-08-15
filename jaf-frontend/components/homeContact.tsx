@@ -16,7 +16,7 @@ export default function HomeContact() {
             Get in Touch
           </h2>
           <p className="text-lg md:text-xl text-paragraph mb-2">
-            Please don't hesitate to reach out if you require my expertise for your ambitious endeavor.
+            Please don&apos;t hesitate to reach out if you require my expertise for your ambitious endeavor.
           </p>
         </CardHeader>
         <CardContent className="relative z-10 px-4 sm:px-6 md:px-8">
