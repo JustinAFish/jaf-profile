@@ -16,10 +16,7 @@ export default function HomeContact() {
             Get in Touch
           </h2>
           <p className="text-lg md:text-xl text-paragraph mb-2">
-            Open to senior AI consulting, solutions architecture, and AI product
-            leadership roles. If you&apos;re building something ambitious with
-            AI — or looking for someone to bridge the gap between cutting-edge
-            technology and real-world business impact — let&apos;s talk.
+            Please don't hesitate to reach out if you require my expertise for your ambitious endeavor.
           </p>
         </CardHeader>
         <CardContent className="relative z-10 px-4 sm:px-6 md:px-8">
